@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hackitt | Sign Up</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <header class="navbar">
+
+        <div class="logo">
+            Hackitt
+        </div>
+
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="index.html#about">About</a>
+            <a href="index.html#features">Features</a>
+            <a href="login.html" class="nav-btn">
+                Login
+            </a>
+        </nav>
+
+    </header>
+
+
+    <!-- Signup Section -->
+    <main class="auth-page">
+
+        <div class="auth-container signup-container">
+
+            <div class="auth-header">
+
+                <p class="small-heading">
+                    JOIN HACKITT
+                </p>
+
+                <h1>
+                    Create your <span>account.</span>
+                </h1>
+
+                <p>
+                    Choose your role and get started.
+                </p>
+
+            </div>
+
+
+            <!-- Role Selection -->
+            <div class="role-selection">
+
+                <p class="role-title">
+                    I want to join as
+                </p>
+
+                <div class="role-options">
+
+                    <label class="role-card">
+
+                        <input
+                            type="radio"
+                            name="role"
+                            value="student"
+                            checked
+                        >
+
+                        <div class="role-content">
+
+                            <span class="role-icon">
+                                🎓
+                            </span>
+
+                            <span class="role-name">
+                                Student
+                            </span>
+
+                            <span class="role-description">
+                                Join hackathons and find your team.
+                            </span>
+
+                        </div>
+
+                    </label>
+
+
+                    <label class="role-card">
+
+                        <input
+                            type="radio"
+                            name="role"
+                            value="organizer"
+                        >
+
+                        <div class="role-content">
+
+                            <span class="role-icon">
+                                🏆
+                            </span>
+
+                            <span class="role-name">
+                                Organizer
+                            </span>
+
+                            <span class="role-description">
+                                Create hackathons and manage teams.
+                            </span>
+
+                        </div>
+
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- Signup Form -->
+            <form id="signupForm" class="auth-form">
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="firstName">
+                            First Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="firstName"
+                            name="firstName"
+                            placeholder="First name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="lastName">
+                            Last Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="lastName"
+                            name="lastName"
+                            placeholder="Last name"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="signupEmail">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="signupEmail"
+                        name="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="signupPassword">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="signupPassword"
+                        name="password"
+                        placeholder="Create a password"
+                        minlength="6"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="confirmPassword">
+                        Confirm Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        placeholder="Confirm your password"
+                        minlength="6"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="auth-btn"
+                >
+                    Create Account
+                </button>
+
+            </form>
+
+
+            <p class="auth-footer">
+
+                Already have an account?
+
+                <a href="login.html">
+                    Login
+                </a>
+
+            </p>
+
+        </div>
+
+    </main>
+
+
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>
