@@ -1,0 +1,462 @@
+
+.profile-page {
+    min-height: 100vh;
+
+    padding: 120px 7% 80px;
+
+    background:
+        radial-gradient(
+            circle at 20% 20%,
+            rgba(0, 229, 255, 0.10),
+            transparent 35%
+        ),
+        #050505;
+}
+
+.profile-layout {
+    display: grid;
+
+    grid-template-columns: 320px 1fr;
+
+    gap: 30px;
+
+    max-width: 1200px;
+
+    margin: 0 auto;
+}
+
+
+
+.profile-card {
+    height: fit-content;
+
+    padding: 35px 30px;
+
+    text-align: center;
+
+    background: rgba(255, 255, 255, 0.035);
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    border-radius: 18px;
+
+    backdrop-filter: blur(15px);
+}
+
+.profile-avatar {
+    width: 110px;
+    height: 110px;
+
+    margin: 0 auto 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 40px;
+    font-weight: 800;
+
+    color: #00e5ff;
+
+    background: rgba(0, 229, 255, 0.08);
+
+    border: 2px solid rgba(0, 229, 255, 0.4);
+
+    border-radius: 50%;
+}
+
+.profile-name {
+    font-size: 24px;
+    font-weight: 800;
+
+    letter-spacing: -0.5px;
+
+    margin-bottom: 8px;
+}
+
+.profile-role-badge {
+    display: inline-block;
+
+    padding: 5px 14px;
+
+    margin-bottom: 18px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+    color: #00e5ff;
+
+    background: rgba(0, 229, 255, 0.08);
+
+    border: 1px solid rgba(0, 229, 255, 0.35);
+
+    border-radius: 20px;
+}
+
+.profile-bio {
+    color: #999999;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+
+    margin-bottom: 25px;
+}
+
+.profile-edit-btn {
+    display: inline-block;
+
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    border-radius: 8px;
+
+    color: #ffffff;
+
+    background: transparent;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    text-decoration: none;
+
+    transition: 0.3s ease;
+}
+
+.profile-edit-btn:hover {
+    border-color: #00e5ff;
+
+    color: #00e5ff;
+}
+
+
+.profile-contact {
+    margin-top: 25px;
+
+    padding-top: 25px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+    text-align: left;
+}
+
+.profile-contact-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 12px;
+
+    font-size: 13px;
+
+    color: #aaaaaa;
+}
+
+.profile-contact-item:last-child {
+    margin-bottom: 0;
+}
+
+.profile-contact-item span.icon {
+    color: #00e5ff;
+
+    font-size: 14px;
+}
+
+.profile-contact-item a {
+    color: #aaaaaa;
+
+    text-decoration: none;
+
+    transition: 0.3s ease;
+}
+
+.profile-contact-item a:hover {
+    color: #00e5ff;
+}
+
+
+
+.profile-main {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 25px;
+}
+
+.profile-section {
+    padding: 30px;
+
+    background: rgba(255, 255, 255, 0.035);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 15px;
+}
+
+.profile-section h3 {
+    font-size: 20px;
+
+    letter-spacing: -0.5px;
+
+    margin-bottom: 20px;
+}
+
+
+
+
+.profile-stats {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 20px;
+}
+
+.stat-box {
+    padding: 22px;
+
+    text-align: center;
+
+    background: rgba(255, 255, 255, 0.035);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 15px;
+}
+
+.stat-number {
+    display: block;
+
+    font-size: 30px;
+    font-weight: 800;
+
+    color: #00e5ff;
+
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 13px;
+
+    color: #999999;
+}
+
+
+
+
+.skills-list {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+}
+
+.skill-tag {
+    padding: 8px 16px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    color: #00e5ff;
+
+    background: rgba(0, 229, 255, 0.07);
+
+    border: 1px solid rgba(0, 229, 255, 0.3);
+
+    border-radius: 20px;
+}
+
+.skill-tag.level-learning {
+    color: #aaaaaa;
+
+    background: rgba(255, 255, 255, 0.03);
+
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+
+
+.history-item {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 18px 0;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.history-item:last-child {
+    border-bottom: none;
+
+    padding-bottom: 0;
+}
+
+.history-info h4 {
+    font-size: 16px;
+
+    margin-bottom: 5px;
+}
+
+.history-info p {
+    font-size: 13px;
+
+    color: #888888;
+}
+
+.history-status {
+    padding: 5px 12px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+
+    border-radius: 20px;
+
+    white-space: nowrap;
+}
+
+.history-status.completed {
+    color: #00e5ff;
+
+    background: rgba(0, 229, 255, 0.08);
+
+    border: 1px solid rgba(0, 229, 255, 0.3);
+}
+
+.history-status.upcoming {
+    color: #ffd166;
+
+    background: rgba(255, 209, 102, 0.08);
+
+    border: 1px solid rgba(255, 209, 102, 0.3);
+}
+
+
+
+
+.team-status-banner {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    flex-wrap: wrap;
+
+    padding: 22px 30px;
+
+    background: rgba(0, 229, 255, 0.05);
+
+    border: 1px solid rgba(0, 229, 255, 0.25);
+
+    border-radius: 15px;
+}
+
+.team-status-banner h4 {
+    font-size: 16px;
+
+    margin-bottom: 4px;
+}
+
+.team-status-banner p {
+    font-size: 13px;
+
+    color: #999999;
+}
+
+
+
+.profile-name-row {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    margin-bottom: 8px;
+}
+
+.profile-name-row .profile-name {
+    margin-bottom: 0;
+}
+
+.verified-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 20px;
+    height: 20px;
+
+    font-size: 12px;
+
+    color: #000000;
+
+    background: #00e5ff;
+
+    border-radius: 50%;
+}
+
+.org-org-name {
+    color: #888888;
+
+    font-size: 13px;
+
+    margin-bottom: 18px;
+}
+
+.history-info p.host-name {
+    color: #00e5ff;
+}
+
+
+
+/* PROFILE RESPONSIVE */
+
+@media (max-width: 900px) {
+
+    .profile-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 500px) {
+
+    .profile-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .history-item {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+}
