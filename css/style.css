@@ -674,3 +674,115 @@ footer {
     }
 
 }
+
+/* stuudent.html page */
+.student-dashboard {
+    min-height: 100vh;
+    padding: 130px 7% 70px;
+    background:
+        radial-gradient(
+            circle at 70% 20%,
+            rgba(0, 229, 255, 0.1),
+            transparent 30%
+        ),
+        #050505;
+}
+
+.dashboard-header {
+    margin-bottom: 45px;
+}
+
+.dashboard-header h1 {
+    font-size: clamp(40px, 5vw, 65px);
+    letter-spacing: -2px;
+    margin: 10px 0 15px;
+}
+
+.dashboard-header h1 span {
+    color: #00e5ff;
+}
+
+.dashboard-header p:last-child {
+    color: #888;
+    font-size: 16px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.dashboard-card {
+    padding: 30px;
+    min-height: 210px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    transition: 0.3s;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(0, 229, 255, 0.5);
+}
+
+.dashboard-card h2 {
+    margin-bottom: 15px;
+}
+
+.dashboard-card p {
+    color: #888;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.dashboard-card a {
+    color: #00e5ff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.team-section {
+    margin-top: 25px;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+}
+
+.team-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.team-header h2 {
+    font-size: 30px;
+    margin-top: 5px;
+}
+
+.team-status {
+    padding: 8px 14px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #aaa;
+    font-size: 13px;
+}
+
+.team-message {
+    color: #888;
+    margin-top: 20px;
+}
+
+@media (max-width: 850px) {
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .student-dashboard {
+        padding: 120px 5% 60px;
+    }
+
+}
