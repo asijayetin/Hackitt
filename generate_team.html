@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Generate Teams | Hackitt</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profile.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <header class="navbar">
+
+        <div class="logo">
+            Hackitt
+        </div>
+
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="profile-organizer.html">Profile</a>
+            <a href="login.html" class="nav-btn">Log Out</a>
+        </nav>
+
+    </header>
+
+
+    <!-- Generate Teams Page -->
+    <section class="profile-page">
+
+        <div class="profile-layout" style="grid-template-columns: 1fr; max-width: 900px;">
+
+            <div class="profile-main">
+
+                <div class="profile-section">
+
+                    <h3>Generate Teams &mdash; Hackitt Summer Jam 2026</h3>
+
+                    <p class="section-description" style="margin-bottom: 25px;">
+                        <span id="participant-count">0</span> participants registered.
+                        Choose a team size and generate balanced teams based on
+                        participant skills.
+                    </p>
+
+                    <div class="generate-controls">
+
+                        <div class="form-group">
+                            <label for="team-size">Team size</label>
+                            <input type="number" id="team-size" value="4" min="2" max="10">
+                        </div>
+
+                        <button id="generate-btn" class="primary-btn">
+                            Generate Teams
+                        </button>
+
+                    </div>
+
+                    <p class="participant-count-note">
+                        Teams are balanced automatically so each one gets a mix
+                        of skills, not just people from one category.
+                    </p>
+
+                </div>
+
+                <div id="teams-results" class="teams-results">
+                    <!-- Team cards get inserted here by JS -->
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <p>
+            © 2026 Hackitt. Built for Hackathons.
+        </p>
+
+    </footer>
+
+
+    <script src="js/team-generator.js"></script>
+
+</body>
+
+</html>
