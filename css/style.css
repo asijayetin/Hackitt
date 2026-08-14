@@ -797,81 +797,54 @@ footer {
     }
 
 }
-
-
-/* ==============================
-   SITE-WIDE BACKGROUND ANIMATION
-   Fixed so it stays visible while scrolling through
-   every section, not just the hero.
-============================== */
-
 .site-bg-orbs {
     position: fixed;
-
     inset: 0;
-
     z-index: -1;
-
     overflow: hidden;
-
     pointer-events: none;
 }
 
 .bg-orb {
     position: absolute;
-
     border-radius: 50%;
-
     filter: blur(60px);
-
     animation: floatOrb 3.5s ease-in-out infinite;
 }
 
 .orb-1 {
     width: 400px;
     height: 400px;
-
     top: -5%;
     left: 5%;
-
     background: rgba(0, 200, 220, 0.6);
-
     animation-delay: 0s;
 }
 
 .orb-2 {
     width: 320px;
     height: 320px;
-
     top: 35%;
     left: 70%;
-
     background: rgba(0, 180, 200, 0.55);
-
     animation-delay: -1.2s;
 }
 
 .orb-3 {
     width: 300px;
     height: 300px;
-
     top: 70%;
     left: 15%;
-
     background: rgba(0, 190, 210, 0.5);
-
     animation-delay: -2.5s;
 }
 
 .orb-4 {
     width: 260px;
     height: 260px;
-
     top: 90%;
     left: 60%;
-
     background: rgba(0, 170, 190, 0.5);
-
     animation-delay: -3.7s;
 }
 
@@ -891,6 +864,122 @@ footer {
 
     .bg-orb {
         animation: none;
+    }
+}
+
+
+.organizer-dashboard {
+    min-height: 100vh;
+    padding: 130px 7% 70px;
+    background:
+        radial-gradient(
+            circle at 70% 20%,
+            rgba(0, 229, 255, 0.1),
+            transparent 30%
+        ),
+        #050505;
+}
+
+.organizer-dashboard .dashboard-header {
+    margin-bottom: 45px;
+}
+
+.organizer-dashboard .dashboard-header h1 {
+    font-size: clamp(40px, 5vw, 65px);
+    letter-spacing: -2px;
+    margin: 10px 0 15px;
+}
+
+.organizer-dashboard .dashboard-header h1 span {
+    color: #00e5ff;
+}
+
+.organizer-dashboard .dashboard-header p:last-child {
+    color: #888;
+    font-size: 16px;
+}
+
+.organizer-dashboard .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.organizer-dashboard .dashboard-card {
+    padding: 30px;
+    min-height: 210px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    transition: 0.3s;
+}
+
+.organizer-dashboard .dashboard-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(0, 229, 255, 0.5);
+}
+
+.organizer-dashboard .dashboard-card h2 {
+    margin-bottom: 15px;
+}
+
+.organizer-dashboard .dashboard-card p {
+    color: #888;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.organizer-dashboard .dashboard-card a {
+    color: #00e5ff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.generate-section {
+    margin-top: 25px;
+    padding: 35px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+}
+
+.generate-section h2 {
+    font-size: 30px;
+    margin: 8px 0 12px;
+}
+
+.generate-section p:not(.small-heading) {
+    color: #888;
+    max-width: 650px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.generate-btn {
+    padding: 13px 22px;
+    border: none;
+    border-radius: 8px;
+    background: #00e5ff;
+    color: #000;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.generate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 229, 255, 0.2);
+}
+
+@media (max-width: 850px) {
+
+    .organizer-dashboard .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .organizer-dashboard {
+        padding: 120px 5% 60px;
     }
 
 }

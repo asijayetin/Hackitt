@@ -13,7 +13,6 @@
 
 <body>
 
-    <!-- Navigation -->
     <header class="navbar">
 
         <div class="logo">
@@ -22,35 +21,38 @@
 
         <nav class="nav-links">
             <a href="index.html">Home</a>
-            <a href="dashboard.html">Dashboard</a>
+            <a href="organizer.html">Dashboard</a>
             <a href="profile-organizer.html">Profile</a>
-            <a href="login.html" class="nav-btn">Log Out</a>
+            <a href="#" id="navLogoutBtn" class="nav-btn">Log Out</a>
         </nav>
 
     </header>
 
 
-    <!-- Profile Page -->
     <section class="profile-page">
 
         <div class="profile-layout">
 
-            <!-- Sidebar -->
             <aside class="profile-card">
 
                 <div class="profile-avatar" id="profileOrgAvatar">
-                    RK
+                    OR
                 </div>
 
                 <div class="profile-name-row">
+
                     <h1 class="profile-name" id="profileOrgName">
-                        Rohan Kapoor
+                        Organizer
                     </h1>
-                    <span class="verified-badge" title="Verified Organizer">&#10003;</span>
+
+                    <span class="verified-badge" title="Verified Organizer">
+                        &#10003;
+                    </span>
+
                 </div>
 
                 <p class="org-org-name">
-                    Thapar Institute of Engineering
+                    Hackitt Organizer
                 </p>
 
                 <span class="profile-role-badge">
@@ -58,10 +60,8 @@
                 </span>
 
                 <p class="profile-bio">
-                    Runs hackathons for the CS department. Focused
-                    on building diverse, balanced teams so every
-                    participant gets a fair shot at shipping something
-                    real.
+                    Runs hackathons and manages participants
+                    and balanced team formation.
                 </p>
 
                 <a href="#" class="profile-edit-btn">
@@ -71,23 +71,41 @@
                 <div class="profile-contact">
 
                     <div class="profile-contact-item">
+
                         <span class="icon">&#9993;</span>
-                        <a href="mailto:rohan.kapoor@example.com" id="profileOrgEmail">rohan.kapoor@example.com</a>
+
+                        <a href="#" id="profileOrgEmail">
+                            organizer@example.com
+                        </a>
+
                     </div>
 
                     <div class="profile-contact-item">
+
                         <span class="icon">&#128187;</span>
-                        <a href="https://github.com/rohankapoor" target="_blank">github.com/rohankapoor</a>
+
+                        <a href="#">
+                            github.com
+                        </a>
+
                     </div>
 
                     <div class="profile-contact-item">
+
                         <span class="icon">&#128279;</span>
-                        <a href="https://linkedin.com/in/rohankapoor" target="_blank">linkedin.com/in/rohankapoor</a>
+
+                        <a href="#">
+                            linkedin.com
+                        </a>
+
                     </div>
 
                     <div class="profile-contact-item">
+
                         <span class="icon">&#127968;</span>
+
                         <span>Punjab, India</span>
+
                     </div>
 
                 </div>
@@ -95,15 +113,20 @@
             </aside>
 
 
-            <!-- Main Column -->
             <div class="profile-main">
 
-                <!-- Active event status -->
                 <div class="team-status-banner">
 
                     <div>
-                        <h4>Hackitt Summer Jam 2026 is live</h4>
-                        <p>142 participants registered &middot; teams not generated yet.</p>
+
+                        <h4>
+                            Hackitt Summer Jam 2026
+                        </h4>
+
+                        <p>
+                            Manage participants and generate balanced teams.
+                        </p>
+
                     </div>
 
                     <a href="generate_team.html" class="primary-btn">
@@ -113,99 +136,119 @@
                 </div>
 
 
-                <!-- Stats -->
                 <div class="profile-stats">
 
                     <div class="stat-box">
-                        <span class="stat-number">12</span>
-                        <span class="stat-label">Events Hosted</span>
+
+                        <span class="stat-number">
+                            0
+                        </span>
+
+                        <span class="stat-label">
+                            Events Hosted
+                        </span>
+
                     </div>
 
-                    <div class="stat-box">
-                        <span class="stat-number">86</span>
-                        <span class="stat-label">Teams Generated</span>
-                    </div>
 
                     <div class="stat-box">
-                        <span class="stat-number">1,240</span>
-                        <span class="stat-label">Participants Managed</span>
+
+                        <span class="stat-number">
+                            0
+                        </span>
+
+                        <span class="stat-label">
+                            Teams Generated
+                        </span>
+
+                    </div>
+
+
+                    <div class="stat-box">
+
+                        <span class="stat-number">
+                            0
+                        </span>
+
+                        <span class="stat-label">
+                            Participants Managed
+                        </span>
+
                     </div>
 
                 </div>
 
 
-                <!-- Focus areas -->
                 <div class="profile-section">
 
-                    <h3>Focus Areas</h3>
+                    <h3>
+                        Focus Areas
+                    </h3>
 
                     <div class="skills-list">
-                        <span class="skill-tag">Web Development</span>
-                        <span class="skill-tag">AI / ML</span>
-                        <span class="skill-tag">Open Source</span>
-                        <span class="skill-tag level-learning">Web3</span>
-                        <span class="skill-tag level-learning">Hardware</span>
+
+                        <span class="skill-tag">
+                            Web Development
+                        </span>
+
+                        <span class="skill-tag">
+                            AI / ML
+                        </span>
+
+                        <span class="skill-tag">
+                            Open Source
+                        </span>
+
+                        <span class="skill-tag level-learning">
+                            Web3
+                        </span>
+
+                        <span class="skill-tag level-learning">
+                            Hardware
+                        </span>
+
                     </div>
 
                 </div>
 
 
-                <!-- About -->
                 <div class="profile-section">
 
-                    <h3>About</h3>
+                    <h3>
+                        About
+                    </h3>
 
                     <p class="section-description">
-                        Faculty coordinator for the CS department's hackathon
-                        program. I've organized inter-college and department-level
-                        events for the past two years, with a focus on making
-                        team formation fair for students who don't come in
-                        with a pre-built squad.
+                        Hackitt organizers can manage hackathons,
+                        participants and generate balanced teams
+                        based on student skills.
                     </p>
 
                 </div>
 
 
-                <!-- Events hosted -->
                 <div class="profile-section">
 
-                    <h3>Events Hosted</h3>
+                    <h3>
+                        Events Hosted
+                    </h3>
 
                     <div class="history-item">
 
                         <div class="history-info">
-                            <h4>Hackitt Summer Jam 2026</h4>
-                            <p>142 participants &middot; 24 teams planned</p>
+
+                            <h4>
+                                Hackitt Summer Jam 2026
+                            </h4>
+
+                            <p>
+                                Current hackathon
+                            </p>
+
                         </div>
 
                         <span class="history-status upcoming">
                             Ongoing
-                        </span>
-
-                    </div>
-
-                    <div class="history-item">
-
-                        <div class="history-info">
-                            <h4>Hackitt Winter Sprint 2026</h4>
-                            <p>98 participants &middot; 18 teams formed</p>
-                        </div>
-
-                        <span class="history-status completed">
-                            Completed
-                        </span>
-
-                    </div>
-
-                    <div class="history-item">
-
-                        <div class="history-info">
-                            <h4>Smart India Hackathon &mdash; Campus Round</h4>
-                            <p>210 participants &middot; 35 teams formed</p>
-                        </div>
-
-                        <span class="history-status completed">
-                            Completed
                         </span>
 
                     </div>
@@ -217,9 +260,6 @@
         </div>
 
     </section>
-
-
-    <!-- Footer -->
     <footer>
 
         <p>
