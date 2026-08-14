@@ -68,6 +68,7 @@
                             type="radio"
                             name="role"
                             value="student"
+                            id="roleStudent"
                             checked
                         >
 
@@ -96,6 +97,7 @@
                             type="radio"
                             name="role"
                             value="organizer"
+                            id="roleOrganizer"
                         >
 
                         <div class="role-content">
@@ -175,6 +177,28 @@
                         placeholder="Enter your email"
                         required
                     >
+
+                </div>
+
+
+                <!--
+                    Only shown when "Student" is selected above.
+                    This is what the team generator uses to balance
+                    teams by skill.
+                -->
+                <div class="form-group" id="skillField">
+
+                    <label for="skill">
+                        Primary Skill
+                    </label>
+
+                    <select id="skill" name="skill">
+                        <option value="Frontend">Frontend</option>
+                        <option value="Backend">Backend</option>
+                        <option value="Design">Design</option>
+                        <option value="ML/Data">ML / Data</option>
+                        <option value="Mobile">Mobile</option>
+                    </select>
 
                 </div>
 
