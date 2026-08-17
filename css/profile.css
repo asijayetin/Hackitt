@@ -4,9 +4,7 @@
 
 .profile-page {
     min-height: 100vh;
-
     padding: 120px 7% 80px;
-
     background:
         radial-gradient(
             circle at 20% 20%,
@@ -18,13 +16,9 @@
 
 .profile-layout {
     display: grid;
-
     grid-template-columns: 320px 1fr;
-
     gap: 30px;
-
     max-width: 1200px;
-
     margin: 0 auto;
 }
 
@@ -35,111 +29,74 @@
 
 .profile-card {
     height: fit-content;
-
     padding: 35px 30px;
-
     text-align: center;
-
     background: rgba(255, 255, 255, 0.035);
-
     border: 1px solid rgba(255, 255, 255, 0.1);
-
     border-radius: 18px;
-
     backdrop-filter: blur(15px);
 }
 
 .profile-avatar {
     width: 110px;
     height: 110px;
-
     margin: 0 auto 20px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     font-size: 40px;
     font-weight: 800;
-
     color: #00e5ff;
-
     background: rgba(0, 229, 255, 0.08);
-
     border: 2px solid rgba(0, 229, 255, 0.4);
-
     border-radius: 50%;
 }
 
 .profile-name {
     font-size: 24px;
     font-weight: 800;
-
     letter-spacing: -0.5px;
-
     margin-bottom: 8px;
 }
 
 .profile-role-badge {
     display: inline-block;
-
     padding: 5px 14px;
-
     margin-bottom: 18px;
-
     font-size: 12px;
     font-weight: 700;
-
     letter-spacing: 1px;
     text-transform: uppercase;
-
     color: #00e5ff;
-
     background: rgba(0, 229, 255, 0.08);
-
     border: 1px solid rgba(0, 229, 255, 0.35);
-
     border-radius: 20px;
 }
 
 .profile-bio {
     color: #999999;
-
     font-size: 14px;
-
     line-height: 1.6;
-
     margin-bottom: 25px;
 }
 
 .profile-edit-btn {
     display: inline-block;
-
     width: 100%;
-
     padding: 12px;
-
     border: 1px solid rgba(255, 255, 255, 0.2);
-
     border-radius: 8px;
-
     color: #ffffff;
-
     background: transparent;
-
     font-size: 14px;
     font-weight: 600;
-
     cursor: pointer;
-
     text-decoration: none;
-
     transition: 0.3s ease;
 }
 
 .profile-edit-btn:hover {
     border-color: #00e5ff;
-
     color: #00e5ff;
 }
 
@@ -150,25 +107,17 @@
 
 .profile-contact {
     margin-top: 25px;
-
     padding-top: 25px;
-
     border-top: 1px solid rgba(255, 255, 255, 0.08);
-
     text-align: left;
 }
 
 .profile-contact-item {
     display: flex;
-
     align-items: center;
-
     gap: 10px;
-
     margin-bottom: 12px;
-
     font-size: 13px;
-
     color: #aaaaaa;
 }
 
@@ -178,15 +127,12 @@
 
 .profile-contact-item span.icon {
     color: #00e5ff;
-
     font-size: 14px;
 }
 
 .profile-contact-item a {
     color: #aaaaaa;
-
     text-decoration: none;
-
     transition: 0.3s ease;
 }
 
@@ -201,28 +147,26 @@
 
 .profile-main {
     display: flex;
-
     flex-direction: column;
-
     gap: 25px;
 }
 
 .profile-section {
     padding: 30px;
-
     background: rgba(255, 255, 255, 0.035);
-
     border: 1px solid rgba(255, 255, 255, 0.08);
-
     border-radius: 15px;
 }
 
 .profile-section h3 {
     font-size: 20px;
-
     letter-spacing: -0.5px;
-
     margin-bottom: 20px;
+}
+
+.section-description {
+    color: #aaaaaa;
+    line-height: 1.8;
 }
 
 
@@ -232,38 +176,28 @@
 
 .profile-stats {
     display: grid;
-
     grid-template-columns: repeat(3, 1fr);
-
     gap: 20px;
 }
 
 .stat-box {
     padding: 22px;
-
     text-align: center;
-
     background: rgba(255, 255, 255, 0.035);
-
     border: 1px solid rgba(255, 255, 255, 0.08);
-
     border-radius: 15px;
 }
 
 .stat-number {
     display: block;
-
     font-size: 30px;
     font-weight: 800;
-
     color: #00e5ff;
-
     margin-bottom: 5px;
 }
 
 .stat-label {
     font-size: 13px;
-
     color: #999999;
 }
 
@@ -274,32 +208,23 @@
 
 .skills-list {
     display: flex;
-
     flex-wrap: wrap;
-
     gap: 10px;
 }
 
 .skill-tag {
     padding: 8px 16px;
-
     font-size: 13px;
     font-weight: 600;
-
     color: #00e5ff;
-
     background: rgba(0, 229, 255, 0.07);
-
     border: 1px solid rgba(0, 229, 255, 0.3);
-
     border-radius: 20px;
 }
 
 .skill-tag.level-learning {
     color: #aaaaaa;
-
     background: rgba(255, 255, 255, 0.03);
-
     border-color: rgba(255, 255, 255, 0.15);
 }
 
@@ -310,62 +235,46 @@
 
 .history-item {
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
     gap: 15px;
-
     padding: 18px 0;
-
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .history-item:last-child {
     border-bottom: none;
-
     padding-bottom: 0;
 }
 
 .history-info h4 {
     font-size: 16px;
-
     margin-bottom: 5px;
 }
 
 .history-info p {
     font-size: 13px;
-
     color: #888888;
 }
 
 .history-status {
     padding: 5px 12px;
-
     font-size: 12px;
     font-weight: 700;
-
     letter-spacing: 0.5px;
-
     border-radius: 20px;
-
     white-space: nowrap;
 }
 
 .history-status.completed {
     color: #00e5ff;
-
     background: rgba(0, 229, 255, 0.08);
-
     border: 1px solid rgba(0, 229, 255, 0.3);
 }
 
 .history-status.upcoming {
     color: #ffd166;
-
     background: rgba(255, 209, 102, 0.08);
-
     border: 1px solid rgba(255, 209, 102, 0.3);
 }
 
@@ -376,33 +285,23 @@
 
 .team-status-banner {
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
     gap: 15px;
-
     flex-wrap: wrap;
-
     padding: 22px 30px;
-
     background: rgba(0, 229, 255, 0.05);
-
     border: 1px solid rgba(0, 229, 255, 0.25);
-
     border-radius: 15px;
 }
 
 .team-status-banner h4 {
     font-size: 16px;
-
     margin-bottom: 4px;
 }
 
 .team-status-banner p {
     font-size: 13px;
-
     color: #999999;
 }
 
@@ -413,13 +312,9 @@
 
 .profile-name-row {
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     gap: 8px;
-
     margin-bottom: 8px;
 }
 
@@ -429,28 +324,19 @@
 
 .verified-badge {
     display: inline-flex;
-
     align-items: center;
-
     justify-content: center;
-
     width: 20px;
     height: 20px;
-
     font-size: 12px;
-
     color: #000000;
-
     background: #00e5ff;
-
     border-radius: 50%;
 }
 
 .org-org-name {
     color: #888888;
-
     font-size: 13px;
-
     margin-bottom: 18px;
 }
 
@@ -465,11 +351,8 @@
 
 .generate-controls {
     display: flex;
-
     align-items: flex-end;
-
     gap: 20px;
-
     flex-wrap: wrap;
 }
 
@@ -479,27 +362,20 @@
 
 .generate-controls .primary-btn {
     border: none;
-
     cursor: pointer;
-
     font-size: 15px;
 }
 
 .participant-count-note {
     color: #888888;
-
     font-size: 13px;
-
     margin-top: 4px;
 }
 
 .teams-results {
     display: none;
-
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-
     gap: 20px;
-
     margin-top: 30px;
 }
 
@@ -509,19 +385,14 @@
 
 .team-card {
     padding: 22px;
-
     background: rgba(255, 255, 255, 0.035);
-
     border: 1px solid rgba(255, 255, 255, 0.08);
-
     border-radius: 15px;
 }
 
 .team-card h4 {
     font-size: 17px;
-
     color: #00e5ff;
-
     margin-bottom: 14px;
 }
 
@@ -531,19 +402,12 @@
 
 .team-member-list li {
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
     gap: 10px;
-
     padding: 8px 0;
-
     font-size: 14px;
-
     color: #dddddd;
-
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -554,20 +418,223 @@
 .team-member-skill {
     font-size: 11px;
     font-weight: 700;
-
     letter-spacing: 0.5px;
-
     color: #00e5ff;
-
     background: rgba(0, 229, 255, 0.07);
+    border: 1px solid rgba(0, 229, 255, 0.25);
+    border-radius: 20px;
+    padding: 3px 10px;
+    white-space: nowrap;
+}
+
+
+/* ==============================
+   EDIT PROFILE MODAL
+============================== */
+
+.edit-profile-modal {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0, 0, 0, 0.75);
+
+    backdrop-filter: blur(8px);
+
+    z-index: 9999;
+}
+
+.edit-profile-modal.active {
+    display: flex;
+}
+
+
+/* ==============================
+   EDIT PROFILE BOX
+============================== */
+
+.edit-profile-box {
+    position: relative;
+
+    width: 100%;
+    max-width: 500px;
+
+    padding: 35px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(10, 25, 27, 0.98),
+            rgba(5, 5, 5, 0.98)
+        );
 
     border: 1px solid rgba(0, 229, 255, 0.25);
 
-    border-radius: 20px;
+    border-radius: 18px;
 
-    padding: 3px 10px;
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.6),
+        0 0 30px rgba(0, 229, 255, 0.05);
 
-    white-space: nowrap;
+    animation: editModalOpen 0.25s ease;
+}
+
+@keyframes editModalOpen {
+
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+.edit-profile-box h2 {
+    margin-bottom: 28px;
+
+    font-size: 26px;
+
+    color: #ffffff;
+}
+
+
+/* ==============================
+   CLOSE BUTTON
+============================== */
+
+.close-edit {
+    position: absolute;
+
+    top: 15px;
+    right: 18px;
+
+    width: 35px;
+    height: 35px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #888888;
+
+    font-size: 28px;
+
+    cursor: pointer;
+
+    transition: 0.3s ease;
+}
+
+.close-edit:hover {
+    color: #00e5ff;
+
+    transform: rotate(90deg);
+}
+
+
+/* ==============================
+   EDIT FORM
+============================== */
+
+.edit-form-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    margin-bottom: 18px;
+}
+
+.edit-form-group label {
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: #dddddd;
+}
+
+.edit-form-group input {
+    width: 100%;
+
+    padding: 13px 15px;
+
+    color: #ffffff;
+
+    background: rgba(255, 255, 255, 0.04);
+
+    border: 1px solid rgba(255, 255, 255, 0.15);
+
+    border-radius: 8px;
+
+    outline: none;
+
+    font-size: 14px;
+
+    transition: 0.3s ease;
+}
+
+.edit-form-group input:focus {
+    border-color: #00e5ff;
+
+    background: rgba(0, 229, 255, 0.04);
+
+    box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.08);
+}
+
+.edit-form-group input::placeholder {
+    color: #666666;
+}
+
+
+/* ==============================
+   SAVE BUTTON
+============================== */
+
+#saveProfileBtn {
+    width: 100%;
+
+    margin-top: 8px;
+
+    padding: 13px 20px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    color: #000000;
+
+    background: #00e5ff;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.3s ease;
+}
+
+#saveProfileBtn:hover {
+    background: #ffffff;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 8px 20px rgba(0, 229, 255, 0.15);
 }
 
 
@@ -584,9 +651,23 @@
     .profile-stats {
         grid-template-columns: 1fr 1fr;
     }
+
 }
 
+
 @media (max-width: 500px) {
+
+    .profile-page {
+        padding: 100px 5% 60px;
+    }
+
+    .profile-card {
+        padding: 28px 20px;
+    }
+
+    .profile-section {
+        padding: 22px;
+    }
 
     .profile-stats {
         grid-template-columns: 1fr;
@@ -594,7 +675,15 @@
 
     .history-item {
         flex-direction: column;
-
         align-items: flex-start;
     }
+
+    .edit-profile-box {
+        padding: 28px 20px;
+    }
+
+    .edit-profile-box h2 {
+        font-size: 22px;
+    }
+
 }

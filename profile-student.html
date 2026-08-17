@@ -13,7 +13,6 @@
 
 <body>
 
-    <!-- Navigation -->
     <header class="navbar">
 
         <div class="logo">
@@ -22,23 +21,21 @@
 
         <nav class="nav-links">
             <a href="index.html">Home</a>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="profile-student.html">Profile</a>
-            <a href="login.html" class="nav-btn">Log Out</a>
+            <a href="#" id="navDashboardBtn">Dashboard</a>
+            <a href="#" id="navProfileBtn">Profile</a>
+            <a href="#" id="navLogoutBtn" class="nav-btn">Log Out</a>
         </nav>
 
     </header>
 
 
-    <!-- Profile Page -->
     <section class="profile-page">
 
         <div class="profile-layout">
 
-            <!-- Sidebar -->
             <aside class="profile-card">
 
-                <div class="profile-avatar">
+                <div class="profile-avatar" id="profileStudentAvatar">
                     AS
                 </div>
 
@@ -54,7 +51,7 @@
                     that ships.
                 </p>
 
-                <a href="#" class="profile-edit-btn">
+                <a href="#" class="profile-edit-btn" id="editProfileBtn">
                     Edit Profile
                 </a>
 
@@ -62,21 +59,31 @@
 
                     <div class="profile-contact-item">
                         <span class="icon">&#9993;</span>
-                        <a href="mailto:aditi.sharma@example.com">aditi.sharma@example.com</a>
+
+                        <a href="#" id="profileStudentEmail">
+                            student@example.com
+                        </a>
                     </div>
 
                     <div class="profile-contact-item">
                         <span class="icon">&#128187;</span>
-                        <a href="https://github.com/aditisharma" target="_blank">github.com/aditisharma</a>
+
+                        <a href="#" target="_blank">
+                            github.com
+                        </a>
                     </div>
 
                     <div class="profile-contact-item">
                         <span class="icon">&#128279;</span>
-                        <a href="https://linkedin.com/in/aditisharma" target="_blank">linkedin.com/in/aditisharma</a>
+
+                        <a href="#" target="_blank">
+                            linkedin.com
+                        </a>
                     </div>
 
                     <div class="profile-contact-item">
                         <span class="icon">&#127968;</span>
+
                         <span>Punjab, India</span>
                     </div>
 
@@ -85,18 +92,25 @@
             </aside>
 
 
-            <!-- Main Column -->
             <div class="profile-main">
 
-                <!-- Team status -->
+                <!-- Current Hackathon -->
+
                 <div class="team-status-banner">
 
                     <div>
-                        <h4>Not in a team yet</h4>
-                        <p>Join a hackathon and get matched based on your skills.</p>
+
+                        <h4>
+                            Hackitt Summer Jam 2026
+                        </h4>
+
+                        <p>
+                            Registration open &middot; Team not yet assigned
+                        </p>
+
                     </div>
 
-                    <a href="#" class="primary-btn">
+                    <a href="find_team.html" class="primary-btn">
                         Find a Team
                     </a>
 
@@ -104,71 +118,138 @@
 
 
                 <!-- Stats -->
+
                 <div class="profile-stats">
 
                     <div class="stat-box">
-                        <span class="stat-number">5</span>
-                        <span class="stat-label">Hackathons Joined</span>
+
+                        <span class="stat-number">
+                            5
+                        </span>
+
+                        <span class="stat-label">
+                            Hackathons Joined
+                        </span>
+
                     </div>
 
-                    <div class="stat-box">
-                        <span class="stat-number">3</span>
-                        <span class="stat-label">Teams Formed</span>
-                    </div>
 
                     <div class="stat-box">
-                        <span class="stat-number">8</span>
-                        <span class="stat-label">Skills Listed</span>
+
+                        <span class="stat-number">
+                            3
+                        </span>
+
+                        <span class="stat-label">
+                            Teams Formed
+                        </span>
+
+                    </div>
+
+
+                    <div class="stat-box">
+
+                        <span class="stat-number">
+                            8
+                        </span>
+
+                        <span class="stat-label">
+                            Skills Listed
+                        </span>
+
                     </div>
 
                 </div>
 
 
                 <!-- Skills -->
+
                 <div class="profile-section">
 
-                    <h3>Skills</h3>
+                    <h3>
+                        Skills
+                    </h3>
 
                     <div class="skills-list">
-                        <span class="skill-tag">React</span>
-                        <span class="skill-tag">Node.js</span>
-                        <span class="skill-tag">Python</span>
-                        <span class="skill-tag">UI/UX Design</span>
-                        <span class="skill-tag">MongoDB</span>
-                        <span class="skill-tag level-learning">Machine Learning</span>
-                        <span class="skill-tag level-learning">Figma</span>
-                        <span class="skill-tag level-learning">Solidity</span>
+
+                        <span class="skill-tag">
+                            React
+                        </span>
+
+                        <span class="skill-tag">
+                            Node.js
+                        </span>
+
+                        <span class="skill-tag">
+                            Python
+                        </span>
+
+                        <span class="skill-tag">
+                            UI/UX Design
+                        </span>
+
+                        <span class="skill-tag">
+                            MongoDB
+                        </span>
+
+                        <span class="skill-tag level-learning">
+                            Machine Learning
+                        </span>
+
+                        <span class="skill-tag level-learning">
+                            Figma
+                        </span>
+
+                        <span class="skill-tag level-learning">
+                            Solidity
+                        </span>
+
                     </div>
 
                 </div>
 
 
                 <!-- About -->
+
                 <div class="profile-section">
 
-                    <h3>About</h3>
+                    <h3>
+                        About
+                    </h3>
 
                     <p class="section-description">
-                        3rd year CS student at Thapar Institute. I mainly
-                        build with the MERN stack and enjoy working on
-                        product-focused projects over pure algorithm
-                        challenges. Comfortable taking on frontend or
-                        backend depending on what the team needs.
+                        3rd year CS student at Thapar Institute.
+                        I mainly build with the MERN stack and enjoy
+                        working on product-focused projects over pure
+                        algorithm challenges. Comfortable taking on
+                        frontend or backend depending on what the team needs.
                     </p>
 
                 </div>
 
 
-                <!-- Hackathon history -->
+                <!-- Hackathon History -->
+
                 <div class="profile-section">
 
-                    <h3>Hackathon History</h3>
+                    <h3>
+                        Hackathon History
+                    </h3>
+
 
                     <div class="history-item">
 
                         <div class="history-info">
-                            <h4>Hackitt Winter Sprint 2026</h4>
-                            <p>Team: CodeCrafters &middot; Role: Frontend</p>
+
+                            <h4>
+                                Hackitt Winter Sprint 2026
+                            </h4>
+
+                            <p>
+                                Team: CodeCrafters &middot;
+                                Role: Frontend
+                            </p>
+
                         </div>
 
                         <span class="history-status completed">
@@ -177,11 +258,20 @@
 
                     </div>
 
+
                     <div class="history-item">
 
                         <div class="history-info">
-                            <h4>Smart India Hackathon</h4>
-                            <p>Team: ByteForce &middot; Role: Full Stack</p>
+
+                            <h4>
+                                Smart India Hackathon
+                            </h4>
+
+                            <p>
+                                Team: ByteForce &middot;
+                                Role: Full Stack
+                            </p>
+
                         </div>
 
                         <span class="history-status completed">
@@ -190,11 +280,20 @@
 
                     </div>
 
+
                     <div class="history-item">
 
                         <div class="history-info">
-                            <h4>Hackitt Summer Jam 2026</h4>
-                            <p>Registration open &middot; Team not yet assigned</p>
+
+                            <h4>
+                                Hackitt Summer Jam 2026
+                            </h4>
+
+                            <p>
+                                Registration open &middot;
+                                Team not yet assigned
+                            </p>
+
                         </div>
 
                         <span class="history-status upcoming">
@@ -212,7 +311,90 @@
     </section>
 
 
-    <!-- Footer -->
+    <!-- Edit Profile Modal -->
+
+    <div id="editProfileModal" class="edit-profile-modal">
+
+        <div class="edit-profile-box">
+
+            <button id="closeEditProfile" class="close-edit">
+                &times;
+            </button>
+
+            <h2>
+                Edit Profile
+            </h2>
+
+
+            <div class="edit-form-group">
+
+                <label for="editFirstName">
+                    First Name
+                </label>
+
+                <input
+                    type="text"
+                    id="editFirstName"
+                    placeholder="Enter first name">
+
+            </div>
+
+
+            <div class="edit-form-group">
+
+                <label for="editLastName">
+                    Last Name
+                </label>
+
+                <input
+                    type="text"
+                    id="editLastName"
+                    placeholder="Enter last name">
+
+            </div>
+
+
+            <div class="edit-form-group">
+
+                <label for="editEmail">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="editEmail"
+                    placeholder="Enter email">
+
+            </div>
+
+
+            <div class="edit-form-group">
+
+                <label for="editSkill">
+                    Skill
+                </label>
+
+                <input
+                    type="text"
+                    id="editSkill"
+                    placeholder="Enter your skill">
+
+            </div>
+
+
+            <button
+                id="saveProfileBtn"
+                class="primary-btn">
+
+                Save Changes
+
+            </button>
+
+        </div>
+
+    </div>
+
+
     <footer>
 
         <p>
