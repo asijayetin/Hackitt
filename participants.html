@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Participants | Hackitt</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/profile.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+
+        <div class="logo">
+            Hackitt
+        </div>
+
+        <nav class="nav-links">
+
+            <a href="./index.html">
+                Home
+            </a>
+
+            <a href="./organizer.html">
+                Dashboard
+            </a>
+
+            <a href="./profile-organizer.html">
+                Profile
+            </a>
+
+            <a href="#" id="navLogoutBtn" class="nav-btn">
+                Log Out
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <main class="organizer-dashboard">
+
+        <section class="dashboard-header">
+
+            <p class="small-heading">
+                PARTICIPANTS
+            </p>
+
+            <h1>
+                Registered Participants
+            </h1>
+
+            <p>
+                Students registered for Hackitt Summer Jam 2026.
+            </p>
+
+        </section>
+
+
+        <section
+            id="participantsList"
+            class="dashboard-grid">
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            © 2026 Hackitt. Built for Hackathons.
+        </p>
+
+    </footer>
+
+
+    <script src="./js/app.js"></script>
+
+    <script>
+
+        let participants =
+            JSON.parse(
+                localStorage.getItem("hackitt_participants")
+            ) || [];
+
+
+        let participantsList =
+            document.getElementById("participantsList");
+
+
+        if(participants.length === 0){
+
+            participantsList.innerHTML = `
+
+                <div class="dashboard-card">
+
+                    <h2>
+                        No Participants Yet
+                    </h2>
+
+                    <p>
+                        No students have registered
+                        for the hackathon yet.
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+        else{
+
+            for(let i = 0; i < participants.length; i++){
+
+                let participant = participants[i];
+
+                let card =
+                    document.createElement("div");
+
+                card.className =
+                    "dashboard-card";
+
+                card.innerHTML = `
+
+                    <h2>
+                        ${participant.name}
+                    </h2>
+
+                    <p>
+                        <strong>Email:</strong>
+                        ${participant.email}
+                    </p>
+
+                    <p>
+                        <strong>Skill:</strong>
+                        ${participant.skill || "General"}
+                    </p>
+
+                `;
+
+                participantsList.appendChild(card);
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>
