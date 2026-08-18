@@ -65,6 +65,10 @@ function generateTeams(people, numTeams){
     return teams;
 }
 
+// Keeps the most recently generated teams so the download
+// button can use them without re-reading localStorage.
+let lastGeneratedTeams = [];
+
 function renderTeams(teams, teamSize){
 
     let resultsContainer =
@@ -127,8 +131,69 @@ function renderTeams(teams, teamSize){
         JSON.stringify(savedTeams)
     );
 
+    lastGeneratedTeams = savedTeams;
+
     resultsContainer.classList.add("visible");
 }
+
+
+/* ==========================================================
+   DOWNLOAD TEAMS AS EXCEL (CSV)
+   CSV files open directly in Excel, so we don't need any
+   extra library for this. Each row is one team member, with
+   which team they landed in.
+========================================================== */
+
+function downloadTeamsAsCSV(teams){
+
+    if(!teams || teams.length === 0){
+        alert("Generate teams first before downloading.");
+        return;
+    }
+
+    let rows = [];
+
+    // Header row
+    rows.push(["Team", "Name", "Skill", "Email"]);
+
+    teams.forEach(function(team){
+
+        team.members.forEach(function(person){
+
+            rows.push([
+                team.name,
+                person.name,
+                person.skill,
+                person.email || ""
+            ]);
+        });
+    });
+
+    // Turn each row into a comma-separated line.
+    // Wrapping values in quotes handles names/emails that
+    // might contain commas.
+    let csvContent = rows.map(function(row){
+
+        return row.map(function(value){
+            return '"' + String(value).replace(/"/g, '""') + '"';
+        }).join(",");
+
+    }).join("\n");
+
+    let blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    let url = URL.createObjectURL(blob);
+
+    let link = document.createElement("a");
+    link.href = url;
+    link.download = "hackitt_teams.csv";
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+}
+
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -136,6 +201,9 @@ document.addEventListener(
 
         let generateBtn =
             document.getElementById("generate-btn");
+
+        let downloadBtn =
+            document.getElementById("download-btn");
 
         let teamSizeInput =
             document.getElementById("team-size");
@@ -194,11 +262,25 @@ document.addEventListener(
                     teamSize
                 );
 
+                // Now that teams exist, show the download button
+                if(downloadBtn){
+                    downloadBtn.style.display = "inline-block";
+                }
+
                 alert(
                     numTeams +
                     " teams generated successfully!"
                 );
             }
         );
+
+        if(downloadBtn){
+            downloadBtn.addEventListener(
+                "click",
+                function(){
+                    downloadTeamsAsCSV(lastGeneratedTeams);
+                }
+            );
+        }
     }
 );
