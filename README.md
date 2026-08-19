@@ -2,7 +2,7 @@
 
 Hackitt is a hackathon management and team formation platform designed to connect students and organizers.
 
-The platform allows students to register, create profiles, view hackathons, find teams and join suitable teams. Organizers can manage participants, view hackathon details and generate balanced teams based on participant skills.
+The platform allows students to register, create profiles, view hackathons, find teams and join suitable teams. Organizers can manage participants, view hackathon details and generate balanced team suggestions based on participant skills.
 
 ---
 
@@ -58,7 +58,6 @@ For students, skills can also be provided.
 
 <img width="502" height="800" alt="image" src="https://github.com/user-attachments/assets/ffe934a9-33b7-4623-bd1b-47321b33e8a4" />
 
-
 ---
 
 ## 2. Login
@@ -79,6 +78,7 @@ Organizer → Organizer Dashboard
 
 <img width="454" height="540" alt="image" src="https://github.com/user-attachments/assets/ec38227b-95d8-4e96-a89e-bb591e67770c" />
 
+---
 
 # Student Workflow
 
@@ -93,8 +93,9 @@ The student can access:
 - Find a Team
 - Team information
 
-<img width="1912" height="778" alt="image" src="https://github.com/user-attachments/assets/503fefc2-1877-4361-9cad-ae55a08b0837" />
+<img width="1912" height="778" alt="image" src="https://github.com/user-attachments/assets/503fefc2-1877-4361-9cad-e55a08b0837" />
 
+---
 
 ## 4. Student Profile
 
@@ -112,6 +113,7 @@ The student can use the profile to view their participation information.
 
 <img width="946" height="825" alt="image" src="https://github.com/user-attachments/assets/382cb851-4392-4560-8e44-5f01c336a858" />
 
+---
 
 ## 5. View Hackathon
 
@@ -127,6 +129,7 @@ Students can view the hackathon details and registration information.
 
 <img width="1847" height="620" alt="image" src="https://github.com/user-attachments/assets/339cbae2-3713-45c2-a06f-4a2f01ea222f" />
 
+---
 
 ## 6. Find a Team
 
@@ -139,9 +142,11 @@ Each team displays:
 - Maximum team size
 - Team members
 - Member skills
+- Join Team option when space is available
 
 <img width="1855" height="766" alt="image" src="https://github.com/user-attachments/assets/d42a954e-d774-4837-b30f-5a43719e117b" />
 
+---
 
 ## 7. Join a Team
 
@@ -151,12 +156,20 @@ If a team has available space, the student can click:
 
 The student is added to the selected team.
 
+The system checks whether the student is already part of another team before allowing them to join.
+
 A student cannot join multiple teams.
 
-After joining, the team information is stored and the student can see that they are already part of a team.
+After joining:
+
+- The student is added to the selected team's member list.
+- The team's member count is updated.
+- The student cannot join another team.
+- The student's team status can be viewed from the student side.
 
 <img width="1718" height="747" alt="image" src="https://github.com/user-attachments/assets/37d0c2d0-2b86-478d-9206-05dcb5a4021c" />
 
+---
 
 # Organizer Workflow
 
@@ -173,6 +186,7 @@ The dashboard provides options to:
 
 <img width="1725" height="616" alt="image" src="https://github.com/user-attachments/assets/012300d0-a88c-4610-aa89-b4d511273f92" />
 
+---
 
 ## 9. View Participants
 
@@ -188,6 +202,7 @@ The participant data is taken from the registered student information.
 
 <img width="1813" height="719" alt="image" src="https://github.com/user-attachments/assets/a978ae8e-566c-4c3a-9f8f-ac7011e2b90a" />
 
+---
 
 ## 10. View Hackathon
 
@@ -201,10 +216,11 @@ The page also provides access to team generation.
 
 <img width="1791" height="755" alt="image" src="https://github.com/user-attachments/assets/ebdd307c-524f-4379-9cb5-e0f4d2f103de" />
 
+---
 
 ## 11. Generate Teams
 
-The organizer can generate balanced teams based on participant skills.
+The organizer can generate balanced team suggestions based on participant skills.
 
 The organizer selects the desired team size.
 
@@ -215,14 +231,36 @@ For example:
 
 The system generates:
 
-- Team 1 → 4 members
-- Team 2 → 4 members
-- Team 3 → 4 members
+- Team 1
+- Team 2
+- Team 3
 
-The team generation algorithm distributes participants across teams while attempting to maintain a mixture of different skills.
+The team generation algorithm distributes participants across teams based on their skills and displays recommended members for each team.
+
+The recommended members are shown to help students identify suitable teams.
+
+Students are **not automatically added** to the generated teams.
+
+The generated teams initially have available space. Students can later open the **Find a Team** page and choose a suitable team.
+
+### Example
+
+If there are:
+
+- 12 participants
+- Team size = 4
+
+The system creates:
+
+- Team 1
+- Team 2
+- Team 3
+
+Each team has a maximum capacity of 4 members.
 
 <img width="1831" height="746" alt="image" src="https://github.com/user-attachments/assets/c5e812b9-cd81-465c-8f24-8a9b135bfa63" />
 
+---
 
 # Team Formation Workflow
 
@@ -233,9 +271,13 @@ Student Signup
        ↓
 Student Login
        ↓
-Student Registered
+Student Adds Profile & Skill
+       ↓
+Student Data Stored
        ↓
 Organizer Views Participants
+       ↓
+Organizer Selects Team Size
        ↓
 Organizer Generates Teams
        ↓
@@ -245,6 +287,12 @@ Student Opens Find a Team
        ↓
 Student Views Available Teams
        ↓
-Student Joins a Team
+Student Selects a Suitable Team
        ↓
-Student Becomes a Team Member
+Student Clicks Join Team
+       ↓
+Student Added to Team
+       ↓
+Team Member Count Updated
+       ↓
+Student Team Status Updated
