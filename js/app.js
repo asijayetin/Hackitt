@@ -1,20 +1,22 @@
-let roleStudent = document.getElementById("roleStudent");
-let roleOrganizer = document.getElementById("roleOrganizer");
-let skillField = document.getElementById("skillField");
+/* ==============================
+   ROLE / SKILL
+============================== */
 
-function toggleSkillField(){
+const roleStudent = document.getElementById("roleStudent");
+const roleOrganizer = document.getElementById("roleOrganizer");
+const skillField = document.getElementById("skillField");
 
-    if(!skillField) return;
+function toggleSkillField() {
 
-    if(roleOrganizer && roleOrganizer.checked){
-        skillField.style.display = "none";
-    }
-    else{
-        skillField.style.display = "flex";
-    }
+    if (!skillField) return;
+
+    skillField.style.display =
+        roleOrganizer && roleOrganizer.checked
+            ? "none"
+            : "flex";
 }
 
-if(roleStudent && roleOrganizer){
+if (roleStudent && roleOrganizer) {
 
     roleStudent.addEventListener(
         "change",
@@ -34,57 +36,62 @@ if(roleStudent && roleOrganizer){
    SIGNUP
 ============================== */
 
-let signupForm = document.getElementById("signupForm");
+const signupForm =
+    document.getElementById("signupForm");
 
-if(signupForm){
+if (signupForm) {
 
     signupForm.addEventListener(
         "submit",
-        function(event){
+        function (event) {
 
             event.preventDefault();
 
-            let firstName =
-                document.getElementById("firstName").value.trim();
+            const firstName =
+                document.getElementById("firstName")
+                    .value.trim();
 
-            let lastName =
-                document.getElementById("lastName").value.trim();
+            const lastName =
+                document.getElementById("lastName")
+                    .value.trim();
 
-            let email =
-                document.getElementById("signupEmail").value.trim();
+            const email =
+                document.getElementById("signupEmail")
+                    .value.trim();
 
-            let password =
-                document.getElementById("signupPassword").value;
+            const password =
+                document.getElementById("signupPassword")
+                    .value;
 
-            let confirmPassword =
-                document.getElementById("confirmPassword").value;
+            const confirmPassword =
+                document.getElementById("confirmPassword")
+                    .value;
 
-
-            let selectedRole =
+            const selectedRole =
                 document.querySelector(
                     'input[name="role"]:checked'
                 );
 
-
-            if(!selectedRole){
+            if (!selectedRole) {
 
                 alert("Please select a role!");
 
                 return;
             }
 
+            const role =
+                selectedRole.value;
 
-            let role = selectedRole.value;
-
-
-            let skillInput =
+            const skillInput =
                 document.getElementById("skill");
 
-            let skill =
-                skillInput ? skillInput.value.trim() : null;
+            const skill =
+                skillInput
+                    ? skillInput.value.trim()
+                    : null;
 
 
-            if(password !== confirmPassword){
+            if (password !== confirmPassword) {
 
                 alert("Passwords do not match!");
 
@@ -98,36 +105,31 @@ if(signupForm){
                 ) || [];
 
 
-            for(let i = 0; i < users.length; i++){
+            if (
+                users.some(
+                    user => user.email === email
+                )
+            ) {
 
-                if(users[i].email === email){
+                alert("Email already registered!");
 
-                    alert("Email already registered!");
-
-                    return;
-                }
+                return;
             }
 
 
-            let newUser = {
+            const newUser = {
 
-                firstName: firstName,
-
-                lastName: lastName,
-
-                email: email,
-
-                password: password,
-
-                role: role,
-
-                skill: skill
+                firstName,
+                lastName,
+                email,
+                password,
+                role,
+                skill
 
             };
 
 
             users.push(newUser);
-
 
             localStorage.setItem(
                 "hackittUsers",
@@ -135,7 +137,9 @@ if(signupForm){
             );
 
 
-            if(role === "student"){
+            /* Add student to participants */
+
+            if (role === "student") {
 
                 let participants =
                     JSON.parse(
@@ -145,35 +149,23 @@ if(signupForm){
                     ) || [];
 
 
-                let alreadyIn = false;
-
-
-                for(let i = 0; i < participants.length; i++){
-
-                    if(participants[i].email === email){
-
-                        alreadyIn = true;
-
-                        break;
-                    }
-                }
-
-
-                if(!alreadyIn){
+                if (
+                    !participants.some(
+                        person =>
+                            person.email === email
+                    )
+                ) {
 
                     participants.push({
 
                         name:
-                            firstName +
-                            " " +
-                            lastName,
+                            `${firstName} ${lastName}`,
 
-                        email: email,
+                        email,
 
-                        skill: skill
+                        skill
 
                     });
-
 
                     localStorage.setItem(
                         "hackitt_participants",
@@ -187,7 +179,6 @@ if(signupForm){
                 "Account created successfully!"
             );
 
-
             window.location.href =
                 "login.html";
         }
@@ -199,54 +190,41 @@ if(signupForm){
    LOGIN
 ============================== */
 
-let loginForm =
+const loginForm =
     document.getElementById("loginForm");
 
-
-if(loginForm){
+if (loginForm) {
 
     loginForm.addEventListener(
         "submit",
-        function(event){
+        function (event) {
 
             event.preventDefault();
 
-
-            let email =
+            const email =
                 document.getElementById("email")
-                .value
-                .trim();
+                    .value.trim();
 
-
-            let password =
+            const password =
                 document.getElementById("password")
-                .value;
+                    .value;
 
 
-            let users =
+            const users =
                 JSON.parse(
                     localStorage.getItem("hackittUsers")
                 ) || [];
 
 
-            let foundUser = null;
+            const foundUser =
+                users.find(
+                    user =>
+                        user.email === email &&
+                        user.password === password
+                );
 
 
-            for(let i = 0; i < users.length; i++){
-
-                if(
-                    users[i].email === email &&
-                    users[i].password === password
-                ){
-
-                    foundUser = users[i];
-
-                    break;
-                }
-            }
-
-
-            if(foundUser === null){
+            if (!foundUser) {
 
                 alert(
                     "Invalid email or password!"
@@ -256,29 +234,29 @@ if(loginForm){
             }
 
 
-            localStorage.setItem(
+            /* Current login session */
+
+            sessionStorage.setItem(
                 "currentUser",
                 JSON.stringify(foundUser)
             );
 
 
-            alert(
-                "Login successful!"
-            );
+            alert("Login successful!");
 
 
-            if(foundUser.role === "student"){
+            if (
+                foundUser.role === "student"
+            ) {
 
                 window.location.href =
                     "student.html";
 
-            }
-            else{
+            } else {
 
                 window.location.href =
                     "organizer.html";
             }
-
         }
     );
 }
@@ -290,7 +268,7 @@ if(loginForm){
 
 let currentUser =
     JSON.parse(
-        localStorage.getItem("currentUser")
+        sessionStorage.getItem("currentUser")
     );
 
 
@@ -298,290 +276,212 @@ let currentUser =
    DISPLAY USER DATA
 ============================== */
 
-if(currentUser){
+function setText(id, value) {
 
-    let studentName =
-        document.getElementById(
-            "studentName"
-        );
+    const element =
+        document.getElementById(id);
 
-
-    if(studentName){
-
-        studentName.innerText =
-            currentUser.firstName;
-    }
-
-
-    let profileStudentName =
-        document.getElementById(
-            "profileStudentName"
-        );
-
-
-    if(profileStudentName){
-
-        profileStudentName.innerText =
-            currentUser.firstName +
-            " " +
-            currentUser.lastName;
-    }
-
-
-    let profileStudentAvatar =
-        document.getElementById(
-            "profileStudentAvatar"
-        );
-
-
-    if(profileStudentAvatar){
-
-        let firstInitial =
-            currentUser.firstName
-                ? currentUser.firstName.charAt(0)
-                : "";
-
-
-        let lastInitial =
-            currentUser.lastName
-                ? currentUser.lastName.charAt(0)
-                : "";
-
-
-        profileStudentAvatar.innerText =
-            (
-                firstInitial +
-                lastInitial
-            ).toUpperCase();
-    }
-
-
-    let profileStudentEmail =
-        document.getElementById(
-            "profileStudentEmail"
-        );
-
-
-    if(profileStudentEmail){
-
-        profileStudentEmail.innerText =
-            currentUser.email;
-
-
-        profileStudentEmail.href =
-            "mailto:" +
-            currentUser.email;
-    }
-
-
-    let organizerName =
-        document.getElementById(
-            "organizerName"
-        );
-
-
-    if(organizerName){
-
-        organizerName.innerText =
-            currentUser.firstName;
-    }
-
-
-    let profileOrgName =
-        document.getElementById(
-            "profileOrgName"
-        );
-
-
-    if(profileOrgName){
-
-        profileOrgName.innerText =
-            currentUser.firstName +
-            " " +
-            currentUser.lastName;
-    }
-
-
-    let profileOrgAvatar =
-        document.getElementById(
-            "profileOrgAvatar"
-        );
-
-
-    if(profileOrgAvatar){
-
-        let firstInitial =
-            currentUser.firstName
-                ? currentUser.firstName.charAt(0)
-                : "";
-
-
-        let lastInitial =
-            currentUser.lastName
-                ? currentUser.lastName.charAt(0)
-                : "";
-
-
-        profileOrgAvatar.innerText =
-            (
-                firstInitial +
-                lastInitial
-            ).toUpperCase();
-    }
-
-
-    let profileOrgEmail =
-        document.getElementById(
-            "profileOrgEmail"
-        );
-
-
-    if(profileOrgEmail){
-
-        profileOrgEmail.innerText =
-            currentUser.email;
-
-
-        profileOrgEmail.href =
-            "mailto:" +
-            currentUser.email;
+    if (element) {
+        element.innerText = value;
     }
 }
+
+
+function setEmail(id, email) {
+
+    const element =
+        document.getElementById(id);
+
+    if (element) {
+
+        element.innerText = email;
+
+        element.href =
+            "mailto:" + email;
+    }
+}
+
+
+function setAvatar(id, firstName, lastName) {
+
+    const element =
+        document.getElementById(id);
+
+    if (!element) return;
+
+    const first =
+        firstName
+            ? firstName.charAt(0)
+            : "";
+
+    const last =
+        lastName
+            ? lastName.charAt(0)
+            : "";
+
+    element.innerText =
+        (first + last).toUpperCase();
+}
+
+
+function displayUserData() {
+
+    if (!currentUser) return;
+
+
+    /* Student */
+
+    setText(
+        "studentName",
+        currentUser.firstName
+    );
+
+    setText(
+        "profileStudentName",
+        `${currentUser.firstName} ${currentUser.lastName}`
+    );
+
+    setAvatar(
+        "profileStudentAvatar",
+        currentUser.firstName,
+        currentUser.lastName
+    );
+
+    setEmail(
+        "profileStudentEmail",
+        currentUser.email
+    );
+
+
+    /* Organizer */
+
+    setText(
+        "organizerName",
+        currentUser.firstName
+    );
+
+    setText(
+        "profileOrgName",
+        `${currentUser.firstName} ${currentUser.lastName}`
+    );
+
+    setAvatar(
+        "profileOrgAvatar",
+        currentUser.firstName,
+        currentUser.lastName
+    );
+
+    setEmail(
+        "profileOrgEmail",
+        currentUser.email
+    );
+}
+
+
+displayUserData();
 
 
 /* ==============================
    NAVIGATION
 ============================== */
 
-let navLoginBtn =
-    document.getElementById(
-        "navLoginBtn"
+const navLoginBtn =
+    document.getElementById("navLoginBtn");
+
+const navSignupBtn =
+    document.getElementById("navSignupBtn");
+
+const navDashboardBtn =
+    document.getElementById("navDashboardBtn");
+
+const navProfileBtn =
+    document.getElementById("navProfileBtn");
+
+const navLogoutBtn =
+    document.getElementById("navLogoutBtn");
+
+
+function logout(event) {
+
+    if (event) {
+        event.preventDefault();
+    }
+
+    sessionStorage.removeItem(
+        "currentUser"
     );
 
-let navSignupBtn =
-    document.getElementById(
-        "navSignupBtn"
-    );
-
-let navDashboardBtn =
-    document.getElementById(
-        "navDashboardBtn"
-    );
-
-let navProfileBtn =
-    document.getElementById(
-        "navProfileBtn"
-    );
-
-let navLogoutBtn =
-    document.getElementById(
-        "navLogoutBtn"
-    );
+    window.location.href =
+        "index.html";
+}
 
 
-if(currentUser){
+if (currentUser) {
 
-    if(navDashboardBtn){
+    /* Dashboard */
 
-        if(currentUser.role === "student"){
+    if (navDashboardBtn) {
 
-            navDashboardBtn.href =
-                "profile-student.html";
-
-        }
-        else{
-
-            navDashboardBtn.href =
-                "profile-organizer.html";
-        }
+        navDashboardBtn.href =
+            currentUser.role === "student"
+                ? "student.html"
+                : "organizer.html";
     }
 
 
-    if(navProfileBtn){
+    /* Profile */
 
-        if(currentUser.role === "student"){
+    if (navProfileBtn) {
 
-            navProfileBtn.href =
-                "profile-student.html";
-
-        }
-        else{
-
-            navProfileBtn.href =
-                "profile-organizer.html";
-        }
+        navProfileBtn.href =
+            currentUser.role === "student"
+                ? "profile-student.html"
+                : "profile-organizer.html";
     }
 
 
-    if(navLoginBtn){
-
-        navLoginBtn.style.display =
-            "none";
+    if (navLoginBtn) {
+        navLoginBtn.style.display = "none";
     }
 
-
-    if(navSignupBtn){
-
-        navSignupBtn.style.display =
-            "none";
+    if (navSignupBtn) {
+        navSignupBtn.style.display = "none";
     }
 
-
-    if(navProfileBtn){
-
+    if (navProfileBtn) {
         navProfileBtn.style.display =
             "inline-block";
     }
 
-
-    if(navLogoutBtn){
+    if (navLogoutBtn) {
 
         navLogoutBtn.style.display =
             "inline-block";
 
-
         navLogoutBtn.addEventListener(
             "click",
-            function(event){
-
-                event.preventDefault();
-
-                localStorage.removeItem(
-                    "currentUser"
-                );
-
-                window.location.href =
-                    "index.html";
-            }
+            logout
         );
     }
 
-}
-else{
+} else {
 
-    if(navLoginBtn){
-
+    if (navLoginBtn) {
         navLoginBtn.style.display =
             "inline-block";
     }
 
-
-    if(navSignupBtn){
-
+    if (navSignupBtn) {
         navSignupBtn.style.display =
             "inline-block";
     }
 
-
-    if(navProfileBtn){
-
+    if (navProfileBtn) {
         navProfileBtn.style.display =
             "none";
     }
 
-
-    if(navLogoutBtn){
-
+    if (navLogoutBtn) {
         navLogoutBtn.style.display =
             "none";
     }
@@ -589,30 +489,17 @@ else{
 
 
 /* ==============================
-   DASHBOARD / LOGOUT BUTTON
+   NORMAL LOGOUT BUTTON
 ============================== */
 
-let logoutBtn =
-    document.getElementById(
-        "logoutBtn"
-    );
+const logoutBtn =
+    document.getElementById("logoutBtn");
 
-
-if(logoutBtn){
+if (logoutBtn) {
 
     logoutBtn.addEventListener(
         "click",
-        function(event){
-
-            event.preventDefault();
-
-            localStorage.removeItem(
-                "currentUser"
-            );
-
-            window.location.href =
-                "index.html";
-        }
+        logout
     );
 }
 
@@ -621,52 +508,47 @@ if(logoutBtn){
    EDIT PROFILE
 ============================== */
 
-let editButton =
+const editButton =
     document.querySelector(
         ".profile-edit-btn"
     );
 
 
-if(editButton && currentUser){
+if (editButton && currentUser) {
 
     editButton.addEventListener(
         "click",
-        function(event){
+        function (event) {
 
             event.preventDefault();
 
             openEditProfile();
-
         }
     );
 }
 
 
 /* ==============================
-   CREATE EDIT PROFILE MODAL
+   OPEN EDIT PROFILE
 ============================== */
 
-function openEditProfile(){
+function openEditProfile() {
 
-    let oldModal =
+    const oldModal =
         document.getElementById(
             "editProfileModal"
         );
 
-
-    if(oldModal){
-
+    if (oldModal) {
         oldModal.remove();
     }
 
 
-    let modal =
+    const modal =
         document.createElement("div");
-
 
     modal.id =
         "editProfileModal";
-
 
     modal.className =
         "edit-profile-modal active";
@@ -679,12 +561,16 @@ function openEditProfile(){
             <button
                 class="close-edit"
                 id="closeEditProfile">
+
                 &times;
+
             </button>
+
 
             <h2>
                 Edit Profile
             </h2>
+
 
             <div class="edit-form-group">
 
@@ -696,6 +582,7 @@ function openEditProfile(){
                     type="text"
                     id="editFirstName"
                     value="${currentUser.firstName || ""}">
+
             </div>
 
 
@@ -709,6 +596,7 @@ function openEditProfile(){
                     type="text"
                     id="editLastName"
                     value="${currentUser.lastName || ""}">
+
             </div>
 
 
@@ -722,29 +610,30 @@ function openEditProfile(){
                     type="email"
                     id="editEmail"
                     value="${currentUser.email || ""}">
+
             </div>
 
 
             ${
                 currentUser.role === "student"
-                ?
-                `
-                <div class="edit-form-group">
+                    ? `
 
-                    <label>
-                        Skill
-                    </label>
+                    <div class="edit-form-group">
 
-                    <input
-                        type="text"
-                        id="editSkill"
-                        value="${currentUser.skill || ""}"
-                        placeholder="Enter your skill">
+                        <label>
+                            Skill
+                        </label>
 
-                </div>
-                `
-                :
-                ""
+                        <input
+                            type="text"
+                            id="editSkill"
+                            value="${currentUser.skill || ""}"
+                            placeholder="Enter your skill">
+
+                    </div>
+
+                    `
+                    : ""
             }
 
 
@@ -756,57 +645,40 @@ function openEditProfile(){
             </button>
 
         </div>
-
     `;
 
 
-    document.body.appendChild(
-        modal
-    );
+    document.body.appendChild(modal);
 
 
-    let closeButton =
-        document.getElementById(
-            "closeEditProfile"
+    document
+        .getElementById("closeEditProfile")
+        .addEventListener(
+            "click",
+            function () {
+
+                modal.remove();
+            }
         );
-
-
-    let saveButton =
-        document.getElementById(
-            "saveProfileBtn"
-        );
-
-
-    closeButton.addEventListener(
-        "click",
-        function(){
-
-            modal.remove();
-
-        }
-    );
 
 
     modal.addEventListener(
         "click",
-        function(event){
+        function (event) {
 
-            if(event.target === modal){
-
+            if (event.target === modal) {
                 modal.remove();
             }
         }
     );
 
 
-    saveButton.addEventListener(
-        "click",
-        function(){
-
-            saveProfile();
-
-        }
-    );
+    document
+        .getElementById("saveProfileBtn")
+        .addEventListener(
+            "click",
+            saveProfile
+        );
 }
 
 
@@ -814,43 +686,43 @@ function openEditProfile(){
    SAVE PROFILE
 ============================== */
 
-function saveProfile(){
+function saveProfile() {
 
-    let firstName =
+    const firstName =
         document.getElementById(
             "editFirstName"
         ).value.trim();
 
 
-    let lastName =
+    const lastName =
         document.getElementById(
             "editLastName"
         ).value.trim();
 
 
-    let email =
+    const email =
         document.getElementById(
             "editEmail"
         ).value.trim();
 
 
-    let skillInput =
+    const skillInput =
         document.getElementById(
             "editSkill"
         );
 
 
-    let skill =
+    const skill =
         skillInput
-        ? skillInput.value.trim()
-        : currentUser.skill;
+            ? skillInput.value.trim()
+            : currentUser.skill;
 
 
-    if(
-        firstName === "" ||
-        lastName === "" ||
-        email === ""
-    ){
+    if (
+        !firstName ||
+        !lastName ||
+        !email
+    ) {
 
         alert(
             "Please fill all required fields."
@@ -860,7 +732,7 @@ function saveProfile(){
     }
 
 
-    let oldEmail =
+    const oldEmail =
         currentUser.email;
 
 
@@ -872,61 +744,56 @@ function saveProfile(){
         ) || [];
 
 
-    for(let i = 0; i < users.length; i++){
+    /* Check duplicate email */
 
-        if(
-            users[i].email === email &&
-            users[i].email !== oldEmail
-        ){
-
-            alert(
-                "Email already registered!"
-            );
-
-            return;
-        }
-    }
-
-
-    let userFound = false;
-
-
-    for(let i = 0; i < users.length; i++){
-
-        if(
-            users[i].email === oldEmail
-        ){
-
-            users[i].firstName =
-                firstName;
-
-            users[i].lastName =
-                lastName;
-
-            users[i].email =
-                email;
-
-            users[i].skill =
-                skill;
-
-            currentUser =
-                users[i];
-
-            userFound = true;
-
-            break;
-        }
-    }
-
-
-    if(!userFound){
+    if (
+        users.some(
+            user =>
+                user.email === email &&
+                user.email !== oldEmail
+        )
+    ) {
 
         alert(
-            "User not found!"
+            "Email already registered!"
         );
 
         return;
     }
+
+
+    /* Update user */
+
+    const user =
+        users.find(
+            user =>
+                user.email === oldEmail
+        );
+
+
+    if (!user) {
+
+        alert("User not found!");
+
+        return;
+    }
+
+
+    user.firstName =
+        firstName;
+
+    user.lastName =
+        lastName;
+
+    user.email =
+        email;
+
+    user.skill =
+        skill;
+
+
+    currentUser =
+        user;
 
 
     localStorage.setItem(
@@ -935,7 +802,9 @@ function saveProfile(){
     );
 
 
-    localStorage.setItem(
+    /* Update login session */
+
+    sessionStorage.setItem(
         "currentUser",
         JSON.stringify(currentUser)
     );
@@ -953,24 +822,22 @@ function saveProfile(){
         ) || [];
 
 
-    for(let i = 0; i < participants.length; i++){
+    participants.forEach(
+        person => {
 
-        if(
-            participants[i].email === oldEmail
-        ){
+            if (person.email === oldEmail) {
 
-            participants[i].name =
-                firstName +
-                " " +
-                lastName;
+                person.name =
+                    `${firstName} ${lastName}`;
 
-            participants[i].email =
-                email;
+                person.email =
+                    email;
 
-            participants[i].skill =
-                skill;
+                person.skill =
+                    skill;
+            }
         }
-    }
+    );
 
 
     localStorage.setItem(
@@ -991,33 +858,32 @@ function saveProfile(){
         ) || [];
 
 
-    for(let i = 0; i < teams.length; i++){
+    teams.forEach(
+        team => {
 
-        if(!teams[i].members){
-            continue;
+            if (!team.members) return;
+
+
+            team.members.forEach(
+                member => {
+
+                    if (
+                        member.email === oldEmail
+                    ) {
+
+                        member.name =
+                            `${firstName} ${lastName}`;
+
+                        member.email =
+                            email;
+
+                        member.skill =
+                            skill;
+                    }
+                }
+            );
         }
-
-
-        for(let j = 0; j < teams[i].members.length; j++){
-
-            if(
-                teams[i].members[j].email ===
-                oldEmail
-            ){
-
-                teams[i].members[j].name =
-                    firstName +
-                    " " +
-                    lastName;
-
-                teams[i].members[j].email =
-                    email;
-
-                teams[i].members[j].skill =
-                    skill;
-            }
-        }
-    }
+    );
 
 
     localStorage.setItem(
@@ -1030,136 +896,57 @@ function saveProfile(){
        UPDATE PAGE
     ============================== */
 
-    let profileStudentName =
-        document.getElementById(
-            "profileStudentName"
-        );
+    setText(
+        "profileStudentName",
+        `${firstName} ${lastName}`
+    );
+
+    setAvatar(
+        "profileStudentAvatar",
+        firstName,
+        lastName
+    );
+
+    setEmail(
+        "profileStudentEmail",
+        email
+    );
 
 
-    if(profileStudentName){
+    setText(
+        "profileOrgName",
+        `${firstName} ${lastName}`
+    );
 
-        profileStudentName.innerText =
-            firstName +
-            " " +
-            lastName;
-    }
+    setAvatar(
+        "profileOrgAvatar",
+        firstName,
+        lastName
+    );
 
-
-    let profileStudentAvatar =
-        document.getElementById(
-            "profileStudentAvatar"
-        );
-
-
-    if(profileStudentAvatar){
-
-        profileStudentAvatar.innerText =
-            (
-                firstName.charAt(0) +
-                lastName.charAt(0)
-            ).toUpperCase();
-    }
+    setEmail(
+        "profileOrgEmail",
+        email
+    );
 
 
-    let profileStudentEmail =
-        document.getElementById(
-            "profileStudentEmail"
-        );
+    setText(
+        "studentName",
+        firstName
+    );
+
+    setText(
+        "organizerName",
+        firstName
+    );
 
 
-    if(profileStudentEmail){
-
-        profileStudentEmail.innerText =
-            email;
-
-        profileStudentEmail.href =
-            "mailto:" +
-            email;
-    }
-
-
-    let profileOrgName =
-        document.getElementById(
-            "profileOrgName"
-        );
-
-
-    if(profileOrgName){
-
-        profileOrgName.innerText =
-            firstName +
-            " " +
-            lastName;
-    }
-
-
-    let profileOrgAvatar =
-        document.getElementById(
-            "profileOrgAvatar"
-        );
-
-
-    if(profileOrgAvatar){
-
-        profileOrgAvatar.innerText =
-            (
-                firstName.charAt(0) +
-                lastName.charAt(0)
-            ).toUpperCase();
-    }
-
-
-    let profileOrgEmail =
-        document.getElementById(
-            "profileOrgEmail"
-        );
-
-
-    if(profileOrgEmail){
-
-        profileOrgEmail.innerText =
-            email;
-
-        profileOrgEmail.href =
-            "mailto:" +
-            email;
-    }
-
-
-    let organizerName =
-        document.getElementById(
-            "organizerName"
-        );
-
-
-    if(organizerName){
-
-        organizerName.innerText =
-            firstName;
-    }
-
-
-    let studentName =
-        document.getElementById(
-            "studentName"
-        );
-
-
-    if(studentName){
-
-        studentName.innerText =
-            firstName;
-    }
-
-
-    let modal =
+    const modal =
         document.getElementById(
             "editProfileModal"
         );
 
-
-    if(modal){
-
+    if (modal) {
         modal.remove();
     }
 

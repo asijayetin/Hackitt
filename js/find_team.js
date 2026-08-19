@@ -1,10 +1,15 @@
 let loggedInUser = JSON.parse(
-    localStorage.getItem("currentUser")
+    sessionStorage.getItem("currentUser")
 );
 
 let teamList = document.getElementById("teamList");
 
+
 function showTeams(){
+
+    loggedInUser = JSON.parse(
+        sessionStorage.getItem("currentUser")
+    );
 
     let teams = JSON.parse(
         localStorage.getItem("hackitt_teams")
@@ -17,151 +22,142 @@ function showTeams(){
         teamList.innerHTML = `
             <div class="dashboard-card">
                 <h2>Teams Coming Soon</h2>
-
-                <p>
-                    The organizer has not generated teams yet.
-                </p>
+                <p>The organizer has not generated teams yet.</p>
             </div>
         `;
 
         return;
     }
 
-    let alreadyJoined = false;
+
+    // Check if current user already joined a team
+
     let joinedTeam = null;
 
     if(loggedInUser){
 
-        for(let i = 0; i < teams.length; i++){
+        for(let team of teams){
 
-            for(let j = 0; j < teams[i].members.length; j++){
-
-                if(
-                    teams[i].members[j].email ===
-                    loggedInUser.email
-                ){
-
-                    alreadyJoined = true;
-                    joinedTeam = teams[i];
-
-                    break;
-                }
+            if(!team.members){
+                team.members = [];
             }
 
-            if(alreadyJoined){
+            if(
+                team.members.some(
+                    member =>
+                        member.email === loggedInUser.email
+                )
+            ){
+
+                joinedTeam = team;
                 break;
             }
         }
     }
 
-    if(alreadyJoined){
 
-        let members = "";
+    // Show joined team
 
-        for(let i = 0; i < joinedTeam.members.length; i++){
+    if(joinedTeam){
 
-            members += `
-                <p>
-                    ${joinedTeam.members[i].name}
-                    - ${joinedTeam.members[i].skill || "General"}
-                </p>
-            `;
-        }
+        let members = joinedTeam.members
+            .map(
+                member =>
+                    `<p>${member.name} - ${member.skill || "General"}</p>`
+            )
+            .join("");
 
         teamList.innerHTML = `
             <div class="dashboard-card">
 
-                <h2>
-                    ${joinedTeam.name}
-                </h2>
+                <h2>You are already in a team</h2>
 
                 <p>
-                    ${joinedTeam.members.length} /
-                    ${joinedTeam.maxSize} members
+                    You joined ${joinedTeam.name}.
+                </p>
+
+                <p>
+                    ${joinedTeam.members.length}
+                    /
+                    ${joinedTeam.maxSize}
+                    members
                 </p>
 
                 ${members}
 
-                <p style="color:#00e5ff; font-weight:bold;">
-                    ✓ You are a member of this team
-                </p>
-
             </div>
         `;
-
-        localStorage.setItem(
-            "hackitt_current_team",
-            JSON.stringify(joinedTeam)
-        );
 
         return;
     }
 
-    for(let i = 0; i < teams.length; i++){
 
-        let team = teams[i];
+    // Show available teams
 
-        let card = document.createElement("div");
+    teams.forEach(
+        (team, index) => {
 
-        card.className = "dashboard-card";
+            if(!team.members){
+                team.members = [];
+            }
 
-        let members = "";
+            let members = team.members
+                .map(
+                    member =>
+                        `<p>${member.name} - ${member.skill || "General"}</p>`
+                )
+                .join("");
 
-        for(let j = 0; j < team.members.length; j++){
 
-            members += `
-                <p>
-                    ${team.members[j].name}
-                    - ${team.members[j].skill || "General"}
-                </p>
+            let action =
+                team.members.length < team.maxSize
+
+                ? `
+                    <button
+                        class="generate-btn"
+                        onclick="joinTeam(${index})">
+
+                        Join Team
+
+                    </button>
+                  `
+
+                : `<p>Team Full</p>`;
+
+
+            teamList.innerHTML += `
+
+                <div class="dashboard-card">
+
+                    <h2>
+                        ${team.name}
+                    </h2>
+
+                    <p>
+                        ${team.members.length}
+                        /
+                        ${team.maxSize}
+                        members
+                    </p>
+
+                    ${members}
+
+                    ${action}
+
+                </div>
+
             `;
         }
-
-        let button = "";
-
-        if(team.members.length < team.maxSize){
-
-            button = `
-                <button
-                    class="generate-btn"
-                    onclick="joinTeam(${i})">
-                    Join Team
-                </button>
-            `;
-
-        }
-        else{
-
-            button = `
-                <p>
-                    Team Full
-                </p>
-            `;
-        }
-
-        card.innerHTML = `
-
-            <h2>
-                ${team.name}
-            </h2>
-
-            <p>
-                ${team.members.length} /
-                ${team.maxSize} members
-            </p>
-
-            ${members}
-
-            ${button}
-
-        `;
-
-        teamList.appendChild(card);
-    }
+    );
 }
 
 
 function joinTeam(teamIndex){
+
+    loggedInUser = JSON.parse(
+        sessionStorage.getItem("currentUser")
+    );
+
 
     if(!loggedInUser){
 
@@ -170,18 +166,24 @@ function joinTeam(teamIndex){
         return;
     }
 
+
     let teams = JSON.parse(
         localStorage.getItem("hackitt_teams")
     ) || [];
 
+
     let team = teams[teamIndex];
 
+
     if(!team){
-
-        alert("Team not found.");
-
         return;
     }
+
+
+    if(!team.members){
+        team.members = [];
+    }
+
 
     if(team.members.length >= team.maxSize){
 
@@ -190,60 +192,55 @@ function joinTeam(teamIndex){
         return;
     }
 
-    for(let i = 0; i < teams.length; i++){
 
-        for(let j = 0; j < teams[i].members.length; j++){
+    // Check if student is already in any team
 
-            if(
-                teams[i].members[j].email ===
-                loggedInUser.email
-            ){
+    let alreadyJoined = teams.some(
+        team =>
+            (team.members || []).some(
+                member =>
+                    member.email === loggedInUser.email
+            )
+    );
 
-                alert(
-                    "You are already in a team."
-                );
 
-                return;
-            }
-        }
+    if(alreadyJoined){
+
+        alert("You are already in a team.");
+
+        return;
     }
 
-    let newMember = {
+
+    // Add student
+
+    team.members.push({
 
         name:
-            loggedInUser.firstName +
-            " " +
-            loggedInUser.lastName,
+            `${loggedInUser.firstName || ""} ${loggedInUser.lastName || ""}`.trim(),
 
         email:
             loggedInUser.email,
 
         skill:
-            loggedInUser.skill ||
-            "General"
-    };
+            loggedInUser.skill || "General"
 
-    team.members.push(newMember);
+    });
+
 
     localStorage.setItem(
         "hackitt_teams",
         JSON.stringify(teams)
     );
 
-    localStorage.setItem(
-        "hackitt_current_team",
-        JSON.stringify(team)
-    );
 
     alert(
-        "You joined " +
-        team.name +
-        " successfully!"
+        `You joined ${team.name}!`
     );
+
 
     showTeams();
 }
 
 
 showTeams();
-

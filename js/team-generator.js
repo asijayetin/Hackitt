@@ -13,47 +13,64 @@ const mockParticipants = [
     { name: "Arjun Reddy", skill: "Frontend", email: "arjun@example.com" }
 ];
 
-function loadParticipants(){
-    let stored = localStorage.getItem("hackitt_participants");
 
-    if(stored){
-        let realParticipants = JSON.parse(stored);
+function loadParticipants() {
 
-        if(realParticipants.length > 0){
-            return realParticipants;
+    let stored =
+        localStorage.getItem("hackitt_participants");
+
+    if (stored) {
+
+        let participants =
+            JSON.parse(stored);
+
+        if (participants.length > 0) {
+            return participants;
         }
     }
 
     return mockParticipants;
 }
 
-const participants = loadParticipants();
 
-function generateTeams(people, numTeams){
+let participants = loadParticipants();
+
+let lastGeneratedTeams = [];
+
+
+/* ==============================
+   GENERATE BALANCED TEAMS
+============================== */
+
+function generateTeams(people, numTeams) {
 
     let groups = {};
 
-    people.forEach(function(person){
+    people.forEach(function(person) {
 
-        if(!groups[person.skill]){
-            groups[person.skill] = [];
+        let skill =
+            person.skill || "General";
+
+        if (!groups[skill]) {
+            groups[skill] = [];
         }
 
-        groups[person.skill].push(person);
+        groups[skill].push(person);
     });
 
+
     let teams = Array.from(
-        {length: numTeams},
-        function(){
-            return [];
-        }
+        { length: numTeams },
+        () => []
     );
+
 
     let teamIndex = 0;
 
-    Object.values(groups).forEach(function(group){
 
-        group.forEach(function(person){
+    Object.values(groups).forEach(function(group) {
+
+        group.forEach(function(person) {
 
             teams[teamIndex].push(person);
 
@@ -62,165 +79,283 @@ function generateTeams(people, numTeams){
         });
     });
 
+
     return teams;
 }
 
-// Keeps the most recently generated teams so the download
-// button can use them without re-reading localStorage.
-let lastGeneratedTeams = [];
 
-function renderTeams(teams, teamSize){
+/* ==============================
+   DISPLAY GENERATED TEAMS
+============================== */
+
+function renderTeams(teams, teamSize) {
 
     let resultsContainer =
         document.getElementById("teams-results");
+
+    if (!resultsContainer) {
+        return;
+    }
 
     resultsContainer.innerHTML = "";
 
     let savedTeams = [];
 
-    teams.forEach(function(team, index){
+
+    teams.forEach(function(team, index) {
+
+        /*
+         * Actual team members remain empty.
+         * Students join later from Find a Team.
+         */
 
         let teamData = {
-            name: "Team " + (index + 1),
-            maxSize: teamSize,
-            members: team
+
+            name:
+                "Team " + (index + 1),
+
+            maxSize:
+                teamSize,
+
+            members: []
+
         };
 
+
         savedTeams.push(teamData);
+
 
         let card =
             document.createElement("div");
 
-        card.className = "team-card";
+        card.className =
+            "team-card";
 
-        let heading =
-            document.createElement("h4");
 
-        heading.textContent =
-            teamData.name;
+        let recommendedMembers =
+            team.map(function(person) {
 
-        card.appendChild(heading);
+                return `
+                    <li>
+                        ${person.name}
 
-        let memberList =
-            document.createElement("ul");
+                        <span class="team-member-skill">
+                            ${person.skill || "General"}
+                        </span>
+                    </li>
+                `;
 
-        memberList.className =
-            "team-member-list";
+            }).join("");
 
-        team.forEach(function(person){
 
-            let item =
-                document.createElement("li");
+        card.innerHTML = `
 
-            item.innerHTML =
-                person.name +
-                " <span class='team-member-skill'>" +
-                person.skill +
-                "</span>";
+            <h4>
+                ${teamData.name}
+            </h4>
 
-            memberList.appendChild(item);
-        });
+            <p>
+                Recommended members based on skills:
+            </p>
 
-        card.appendChild(memberList);
+            <ul class="team-member-list">
+                ${recommendedMembers}
+            </ul>
+
+            <p>
+                Team size: ${teamSize}
+            </p>
+
+        `;
+
 
         resultsContainer.appendChild(card);
+
     });
+
+
+    /*
+     * Save empty teams.
+     * Students are added only after Join Team.
+     */
 
     localStorage.setItem(
         "hackitt_teams",
         JSON.stringify(savedTeams)
     );
 
+
     lastGeneratedTeams = savedTeams;
 
-    resultsContainer.classList.add("visible");
+
+    resultsContainer.classList.add(
+        "visible"
+    );
 }
 
 
-/* ==========================================================
-   DOWNLOAD TEAMS AS EXCEL (CSV)
-   CSV files open directly in Excel, so we don't need any
-   extra library for this. Each row is one team member, with
-   which team they landed in.
-========================================================== */
+/* ==============================
+   DOWNLOAD TEAMS AS CSV
+============================== */
 
-function downloadTeamsAsCSV(teams){
+function downloadTeamsAsCSV(teams) {
 
-    if(!teams || teams.length === 0){
-        alert("Generate teams first before downloading.");
+    if (!teams || teams.length === 0) {
+
+        alert(
+            "Generate teams first before downloading."
+        );
+
         return;
     }
 
-    let rows = [];
 
-    // Header row
-    rows.push(["Team", "Name", "Skill", "Email"]);
+    let rows = [
+        ["Team", "Name", "Skill", "Email"]
+    ];
 
-    teams.forEach(function(team){
 
-        team.members.forEach(function(person){
+    teams.forEach(function(team) {
+
+        /*
+         * If students have joined,
+         * export actual members.
+         */
+
+        if (
+            team.members &&
+            team.members.length > 0
+        ) {
+
+            team.members.forEach(function(person) {
+
+                rows.push([
+                    team.name,
+                    person.name,
+                    person.skill || "General",
+                    person.email || ""
+                ]);
+
+            });
+
+        }
+        else {
 
             rows.push([
                 team.name,
-                person.name,
-                person.skill,
-                person.email || ""
+                "No members joined yet",
+                "",
+                ""
             ]);
-        });
+
+        }
+
     });
 
-    // Turn each row into a comma-separated line.
-    // Wrapping values in quotes handles names/emails that
-    // might contain commas.
-    let csvContent = rows.map(function(row){
 
-        return row.map(function(value){
-            return '"' + String(value).replace(/"/g, '""') + '"';
-        }).join(",");
+    let csvContent =
+        rows.map(function(row) {
 
-    }).join("\n");
+            return row.map(function(value) {
 
-    let blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    let url = URL.createObjectURL(blob);
+                return '"' +
+                    String(value)
+                        .replace(/"/g, '""') +
+                    '"';
 
-    let link = document.createElement("a");
-    link.href = url;
-    link.download = "hackitt_teams.csv";
+            }).join(",");
+
+        }).join("\n");
+
+
+    let blob =
+        new Blob(
+            [csvContent],
+            {
+                type:
+                    "text/csv;charset=utf-8;"
+            }
+        );
+
+
+    let url =
+        URL.createObjectURL(blob);
+
+
+    let link =
+        document.createElement("a");
+
+    link.href =
+        url;
+
+    link.download =
+        "hackitt_teams.csv";
+
 
     document.body.appendChild(link);
+
     link.click();
+
     document.body.removeChild(link);
 
     URL.revokeObjectURL(url);
 }
 
 
+/* ==============================
+   PAGE LOAD
+============================== */
+
 document.addEventListener(
     "DOMContentLoaded",
-    function(){
+    function() {
 
         let generateBtn =
-            document.getElementById("generate-btn");
+            document.getElementById(
+                "generate-btn"
+            );
+
 
         let downloadBtn =
-            document.getElementById("download-btn");
+            document.getElementById(
+                "download-btn"
+            );
+
 
         let teamSizeInput =
-            document.getElementById("team-size");
+            document.getElementById(
+                "team-size"
+            );
 
-        let participantCountEl =
-            document.getElementById("participant-count");
 
-        if(!generateBtn || !teamSizeInput){
+        let participantCount =
+            document.getElementById(
+                "participant-count"
+            );
+
+
+        if (
+            !generateBtn ||
+            !teamSizeInput
+        ) {
             return;
         }
 
-        participantCountEl.textContent =
-            participants.length;
+
+        if (participantCount) {
+
+            participantCount.textContent =
+                participants.length;
+        }
+
+
+        /* ==============================
+           GENERATE BUTTON
+        ============================== */
 
         generateBtn.addEventListener(
             "click",
-            function(){
+            function() {
 
                 let teamSize =
                     parseInt(
@@ -228,7 +363,11 @@ document.addEventListener(
                         10
                     );
 
-                if(!teamSize || teamSize < 2){
+
+                if (
+                    !teamSize ||
+                    teamSize < 2
+                ) {
 
                     alert(
                         "Please enter a team size of at least 2."
@@ -237,7 +376,11 @@ document.addEventListener(
                     return;
                 }
 
-                if(teamSize > participants.length){
+
+                if (
+                    teamSize >
+                    participants.length
+                ) {
 
                     alert(
                         "Team size cannot be greater than the number of participants."
@@ -246,10 +389,13 @@ document.addEventListener(
                     return;
                 }
 
+
                 let numTeams =
                     Math.ceil(
-                        participants.length / teamSize
+                        participants.length /
+                        teamSize
                     );
+
 
                 let teams =
                     generateTeams(
@@ -257,30 +403,46 @@ document.addEventListener(
                         numTeams
                     );
 
+
                 renderTeams(
                     teams,
                     teamSize
                 );
 
-                // Now that teams exist, show the download button
-                if(downloadBtn){
-                    downloadBtn.style.display = "inline-block";
+
+                if (downloadBtn) {
+
+                    downloadBtn.style.display =
+                        "inline-block";
                 }
+
 
                 alert(
                     numTeams +
                     " teams generated successfully!"
                 );
+
             }
         );
 
-        if(downloadBtn){
+
+        /* ==============================
+           DOWNLOAD BUTTON
+        ============================== */
+
+        if (downloadBtn) {
+
             downloadBtn.addEventListener(
                 "click",
-                function(){
-                    downloadTeamsAsCSV(lastGeneratedTeams);
+                function() {
+
+                    downloadTeamsAsCSV(
+                        lastGeneratedTeams
+                    );
+
                 }
             );
         }
+
     }
 );
