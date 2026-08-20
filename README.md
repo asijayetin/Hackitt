@@ -93,7 +93,8 @@ The student can access:
 - Find a Team
 - Team information
 
-<img width="1912" height="778" alt="image" src="https://github.com/user-attachments/assets/503fefc2-1877-4361-9cad-e55a08b0837" />
+<img width="1913" height="765" alt="image" src="https://github.com/user-attachments/assets/c50e5fef-abd2-4931-9145-bfbfcaa88cf1" />
+
 
 ---
 
