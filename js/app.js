@@ -1,22 +1,46 @@
-/* ==============================
-   ROLE / SKILL
-============================== */
+/* =========================================================
+   HACKITT - APP.JS
+========================================================= */
 
-const roleStudent = document.getElementById("roleStudent");
-const roleOrganizer = document.getElementById("roleOrganizer");
-const skillField = document.getElementById("skillField");
+
+/* =========================================================
+   ROLE / SKILL
+========================================================= */
+
+const roleStudent =
+    document.getElementById("roleStudent");
+
+const roleOrganizer =
+    document.getElementById("roleOrganizer");
+
+const skillField =
+    document.getElementById("skillField");
+
 
 function toggleSkillField() {
 
     if (!skillField) return;
 
-    skillField.style.display =
-        roleOrganizer && roleOrganizer.checked
-            ? "none"
-            : "flex";
+    if (
+        roleOrganizer &&
+        roleOrganizer.checked
+    ) {
+
+        skillField.style.display =
+            "none";
+
+    } else {
+
+        skillField.style.display =
+            "flex";
+    }
 }
 
-if (roleStudent && roleOrganizer) {
+
+if (
+    roleStudent &&
+    roleOrganizer
+) {
 
     roleStudent.addEventListener(
         "change",
@@ -32,12 +56,89 @@ if (roleStudent && roleOrganizer) {
 }
 
 
-/* ==============================
+/* =========================================================
+   USER STORAGE
+========================================================= */
+
+/*
+   hackittUsers
+   = ALL registered users
+
+   currentUser
+   = ONLY currently logged-in user
+*/
+
+const USERS_KEY =
+    "hackittUsers";
+
+
+function getUsers() {
+
+    let users =
+        JSON.parse(
+            localStorage.getItem(
+                USERS_KEY
+            )
+        ) || [];
+
+
+    /*
+       If an old key exists and
+       hackittUsers is empty,
+       migrate old users.
+    */
+
+    if (users.length === 0) {
+
+        const oldUsers =
+            JSON.parse(
+                localStorage.getItem(
+                    "teamforge_users"
+                )
+            ) || [];
+
+
+        if (
+            oldUsers.length > 0
+        ) {
+
+            users =
+                oldUsers;
+
+            localStorage.setItem(
+                USERS_KEY,
+                JSON.stringify(
+                    users
+                )
+            );
+        }
+    }
+
+
+    return users;
+}
+
+
+function saveUsers(users) {
+
+    localStorage.setItem(
+        USERS_KEY,
+        JSON.stringify(
+            users
+        )
+    );
+}
+
+
+/* =========================================================
    SIGNUP
-============================== */
+========================================================= */
 
 const signupForm =
-    document.getElementById("signupForm");
+    document.getElementById(
+        "signupForm"
+    );
+
 
 if (signupForm) {
 
@@ -47,99 +148,182 @@ if (signupForm) {
 
             event.preventDefault();
 
+
+            /* ==============================
+               GET FORM DATA
+            ============================== */
+
             const firstName =
-                document.getElementById("firstName")
-                    .value.trim();
+                document.getElementById(
+                    "firstName"
+                ).value.trim();
+
 
             const lastName =
-                document.getElementById("lastName")
-                    .value.trim();
+                document.getElementById(
+                    "lastName"
+                ).value.trim();
+
 
             const email =
-                document.getElementById("signupEmail")
-                    .value.trim();
+                document.getElementById(
+                    "signupEmail"
+                ).value
+                    .trim()
+                    .toLowerCase();
+
 
             const password =
-                document.getElementById("signupPassword")
-                    .value;
+                document.getElementById(
+                    "signupPassword"
+                ).value;
+
 
             const confirmPassword =
-                document.getElementById("confirmPassword")
-                    .value;
+                document.getElementById(
+                    "confirmPassword"
+                ).value;
+
 
             const selectedRole =
                 document.querySelector(
                     'input[name="role"]:checked'
                 );
 
+
+            /* ==============================
+               VALIDATION
+            ============================== */
+
             if (!selectedRole) {
 
-                alert("Please select a role!");
+                alert(
+                    "Please select a role!"
+                );
 
                 return;
             }
+
 
             const role =
                 selectedRole.value;
 
+
             const skillInput =
-                document.getElementById("skill");
+                document.getElementById(
+                    "skill"
+                );
+
 
             const skill =
                 skillInput
                     ? skillInput.value.trim()
-                    : null;
-
-
-            if (password !== confirmPassword) {
-
-                alert("Passwords do not match!");
-
-                return;
-            }
-
-
-            let users =
-                JSON.parse(
-                    localStorage.getItem("hackittUsers")
-                ) || [];
+                    : "General";
 
 
             if (
-                users.some(
-                    user => user.email === email
-                )
+                password !==
+                confirmPassword
             ) {
 
-                alert("Email already registered!");
+                alert(
+                    "Passwords do not match!"
+                );
 
                 return;
             }
 
 
+            /* ==============================
+               GET ALL USERS
+            ============================== */
+
+            let users =
+                getUsers();
+
+
+            /* ==============================
+               CHECK DUPLICATE EMAIL
+            ============================== */
+
+            const alreadyExists =
+                users.some(
+                    function (user) {
+
+                        return (
+                            user.email &&
+                            user.email
+                                .toLowerCase() ===
+                            email
+                        );
+
+                    }
+                );
+
+
+            if (alreadyExists) {
+
+                alert(
+                    "Email already registered!"
+                );
+
+                return;
+            }
+
+
+            /* ==============================
+               CREATE USER
+            ============================== */
+
             const newUser = {
 
-                firstName,
-                lastName,
-                email,
-                password,
-                role,
-                skill
+                id:
+                    Date.now().toString(),
 
+                firstName:
+                    firstName,
+
+                lastName:
+                    lastName,
+
+                email:
+                    email,
+
+                password:
+                    password,
+
+                role:
+                    role,
+
+                skill:
+                    role === "student"
+                        ? skill
+                        : "General"
             };
 
 
-            users.push(newUser);
+            /* ==============================
+               ADD USER
+               WITHOUT DELETING OLD USERS
+            ============================== */
 
-            localStorage.setItem(
-                "hackittUsers",
-                JSON.stringify(users)
+            users.push(
+                newUser
             );
 
 
-            /* Add student to participants */
+            saveUsers(
+                users
+            );
 
-            if (role === "student") {
+
+            /* =================================================
+               ADD STUDENT TO PARTICIPANTS
+            ================================================= */
+
+            if (
+                role === "student"
+            ) {
 
                 let participants =
                     JSON.parse(
@@ -149,49 +333,73 @@ if (signupForm) {
                     ) || [];
 
 
-                if (
-                    !participants.some(
-                        person =>
-                            person.email === email
-                    )
-                ) {
+                const exists =
+                    participants.some(
+                        function (person) {
+
+                            return (
+                                person.email &&
+                                person.email
+                                    .toLowerCase() ===
+                                email
+                            );
+
+                        }
+                    );
+
+
+                if (!exists) {
 
                     participants.push({
 
                         name:
                             `${firstName} ${lastName}`,
 
-                        email,
+                        email:
+                            email,
 
-                        skill
+                        skill:
+                            skill || "General"
 
                     });
 
+
                     localStorage.setItem(
                         "hackitt_participants",
-                        JSON.stringify(participants)
+                        JSON.stringify(
+                            participants
+                        )
                     );
                 }
             }
 
 
+            /* ==============================
+               SUCCESS
+            ============================== */
+
             alert(
                 "Account created successfully!"
             );
 
+
             window.location.href =
                 "login.html";
+
         }
     );
 }
 
 
-/* ==============================
+/* =========================================================
    LOGIN
-============================== */
+========================================================= */
 
 const loginForm =
-    document.getElementById("loginForm");
+    document.getElementById(
+        "loginForm"
+    );
+
 
 if (loginForm) {
 
@@ -201,26 +409,47 @@ if (loginForm) {
 
             event.preventDefault();
 
+
             const email =
-                document.getElementById("email")
-                    .value.trim();
+                document.getElementById(
+                    "email"
+                ).value
+                    .trim()
+                    .toLowerCase();
+
 
             const password =
-                document.getElementById("password")
-                    .value;
+                document.getElementById(
+                    "password"
+                ).value;
 
+
+            /* ==============================
+               GET ALL REGISTERED USERS
+            ============================== */
 
             const users =
-                JSON.parse(
-                    localStorage.getItem("hackittUsers")
-                ) || [];
+                getUsers();
 
+
+            /* ==============================
+               FIND LOGIN USER
+            ============================== */
 
             const foundUser =
                 users.find(
-                    user =>
-                        user.email === email &&
-                        user.password === password
+                    function (user) {
+
+                        return (
+                            user.email &&
+                            user.email
+                                .toLowerCase() ===
+                            email &&
+                            user.password ===
+                            password
+                        );
+
+                    }
                 );
 
 
@@ -234,19 +463,33 @@ if (loginForm) {
             }
 
 
-            /* Current login session */
+            /* ==============================
+               SAVE CURRENT USER ONLY
+            ============================== */
 
             sessionStorage.setItem(
                 "currentUser",
-                JSON.stringify(foundUser)
+                JSON.stringify(
+                    foundUser
+                )
             );
 
 
-            alert("Login successful!");
+            localStorage.setItem(
+                "currentUser",
+                JSON.stringify(
+                    foundUser
+                )
+            );
 
+
+            /* ==============================
+               REDIRECT BY ROLE
+            ============================== */
 
             if (
-                foundUser.role === "student"
+                foundUser.role ===
+                "student"
             ) {
 
                 window.location.href =
@@ -257,44 +500,65 @@ if (loginForm) {
                 window.location.href =
                     "organizer.html";
             }
+
         }
     );
 }
 
 
-/* ==============================
+/* =========================================================
    CURRENT USER
-============================== */
+========================================================= */
 
 let currentUser =
     JSON.parse(
-        sessionStorage.getItem("currentUser")
+        sessionStorage.getItem(
+            "currentUser"
+        ) ||
+        localStorage.getItem(
+            "currentUser"
+        )
     );
 
 
-/* ==============================
-   DISPLAY USER DATA
-============================== */
+/* =========================================================
+   HELPER FUNCTIONS
+========================================================= */
 
-function setText(id, value) {
+function setText(
+    id,
+    value
+) {
 
     const element =
-        document.getElementById(id);
+        document.getElementById(
+            id
+        );
+
 
     if (element) {
-        element.innerText = value;
+
+        element.innerText =
+            value;
     }
 }
 
 
-function setEmail(id, email) {
+function setEmail(
+    id,
+    email
+) {
 
     const element =
-        document.getElementById(id);
+        document.getElementById(
+            id
+        );
+
 
     if (element) {
 
-        element.innerText = email;
+        element.innerText =
+            email;
 
         element.href =
             "mailto:" + email;
@@ -302,44 +566,65 @@ function setEmail(id, email) {
 }
 
 
-function setAvatar(id, firstName, lastName) {
+function setAvatar(
+    id,
+    firstName,
+    lastName
+) {
 
     const element =
-        document.getElementById(id);
+        document.getElementById(
+            id
+        );
+
 
     if (!element) return;
+
 
     const first =
         firstName
             ? firstName.charAt(0)
             : "";
 
+
     const last =
         lastName
             ? lastName.charAt(0)
             : "";
 
+
     element.innerText =
-        (first + last).toUpperCase();
+        (
+            first +
+            last
+        ).toUpperCase();
 }
 
+
+/* =========================================================
+   DISPLAY CURRENT USER
+========================================================= */
 
 function displayUserData() {
 
     if (!currentUser) return;
 
 
-    /* Student */
+    /* ==============================
+       STUDENT
+    ============================== */
 
     setText(
         "studentName",
         currentUser.firstName
     );
 
+
     setText(
         "profileStudentName",
         `${currentUser.firstName} ${currentUser.lastName}`
     );
+
 
     setAvatar(
         "profileStudentAvatar",
@@ -347,29 +632,35 @@ function displayUserData() {
         currentUser.lastName
     );
 
+
     setEmail(
         "profileStudentEmail",
         currentUser.email
     );
 
 
-    /* Organizer */
+    /* ==============================
+       ORGANIZER
+    ============================== */
 
     setText(
         "organizerName",
         currentUser.firstName
     );
 
+
     setText(
         "profileOrgName",
         `${currentUser.firstName} ${currentUser.lastName}`
     );
+
 
     setAvatar(
         "profileOrgAvatar",
         currentUser.firstName,
         currentUser.lastName
     );
+
 
     setEmail(
         "profileOrgEmail",
@@ -381,40 +672,70 @@ function displayUserData() {
 displayUserData();
 
 
-/* ==============================
+/* =========================================================
    NAVIGATION
-============================== */
+========================================================= */
 
 const navLoginBtn =
-    document.getElementById("navLoginBtn");
+    document.getElementById(
+        "navLoginBtn"
+    );
+
 
 const navSignupBtn =
-    document.getElementById("navSignupBtn");
+    document.getElementById(
+        "navSignupBtn"
+    );
+
 
 const navDashboardBtn =
-    document.getElementById("navDashboardBtn");
+    document.getElementById(
+        "navDashboardBtn"
+    );
+
 
 const navProfileBtn =
-    document.getElementById("navProfileBtn");
+    document.getElementById(
+        "navProfileBtn"
+    );
+
 
 const navLogoutBtn =
-    document.getElementById("navLogoutBtn");
+    document.getElementById(
+        "navLogoutBtn"
+    );
 
+
+/* =========================================================
+   LOGOUT
+========================================================= */
 
 function logout(event) {
 
     if (event) {
+
         event.preventDefault();
     }
+
 
     sessionStorage.removeItem(
         "currentUser"
     );
 
+
+    localStorage.removeItem(
+        "currentUser"
+    );
+
+
     window.location.href =
         "index.html";
 }
 
+
+/* =========================================================
+   NAVIGATION BASED ON LOGIN
+========================================================= */
 
 if (currentUser) {
 
@@ -441,22 +762,31 @@ if (currentUser) {
 
 
     if (navLoginBtn) {
-        navLoginBtn.style.display = "none";
+
+        navLoginBtn.style.display =
+            "none";
     }
+
 
     if (navSignupBtn) {
-        navSignupBtn.style.display = "none";
+
+        navSignupBtn.style.display =
+            "none";
     }
 
+
     if (navProfileBtn) {
+
         navProfileBtn.style.display =
             "inline-block";
     }
+
 
     if (navLogoutBtn) {
 
         navLogoutBtn.style.display =
             "inline-block";
+
 
         navLogoutBtn.addEventListener(
             "click",
@@ -467,33 +797,43 @@ if (currentUser) {
 } else {
 
     if (navLoginBtn) {
+
         navLoginBtn.style.display =
             "inline-block";
     }
 
+
     if (navSignupBtn) {
+
         navSignupBtn.style.display =
             "inline-block";
     }
 
+
     if (navProfileBtn) {
+
         navProfileBtn.style.display =
             "none";
     }
 
+
     if (navLogoutBtn) {
+
         navLogoutBtn.style.display =
             "none";
     }
 }
 
 
-/* ==============================
-   NORMAL LOGOUT BUTTON
-============================== */
+/* =========================================================
+   LOGOUT BUTTON
+========================================================= */
 
 const logoutBtn =
-    document.getElementById("logoutBtn");
+    document.getElementById(
+        "logoutBtn"
+    );
+
 
 if (logoutBtn) {
 
@@ -504,9 +844,9 @@ if (logoutBtn) {
 }
 
 
-/* ==============================
-   EDIT PROFILE
-============================== */
+/* =========================================================
+   EDIT PROFILE BUTTON
+========================================================= */
 
 const editButton =
     document.querySelector(
@@ -514,7 +854,10 @@ const editButton =
     );
 
 
-if (editButton && currentUser) {
+if (
+    editButton &&
+    currentUser
+) {
 
     editButton.addEventListener(
         "click",
@@ -528,9 +871,9 @@ if (editButton && currentUser) {
 }
 
 
-/* ==============================
+/* =========================================================
    OPEN EDIT PROFILE
-============================== */
+========================================================= */
 
 function openEditProfile() {
 
@@ -539,16 +882,22 @@ function openEditProfile() {
             "editProfileModal"
         );
 
+
     if (oldModal) {
+
         oldModal.remove();
     }
 
 
     const modal =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     modal.id =
         "editProfileModal";
+
 
     modal.className =
         "edit-profile-modal active";
@@ -581,7 +930,8 @@ function openEditProfile() {
                 <input
                     type="text"
                     id="editFirstName"
-                    value="${currentUser.firstName || ""}">
+                    value="${currentUser.firstName || ""}"
+                >
 
             </div>
 
@@ -595,7 +945,8 @@ function openEditProfile() {
                 <input
                     type="text"
                     id="editLastName"
-                    value="${currentUser.lastName || ""}">
+                    value="${currentUser.lastName || ""}"
+                >
 
             </div>
 
@@ -609,7 +960,8 @@ function openEditProfile() {
                 <input
                     type="email"
                     id="editEmail"
-                    value="${currentUser.email || ""}">
+                    value="${currentUser.email || ""}"
+                >
 
             </div>
 
@@ -628,7 +980,8 @@ function openEditProfile() {
                             type="text"
                             id="editSkill"
                             value="${currentUser.skill || ""}"
-                            placeholder="Enter your skill">
+                            placeholder="Enter your skill"
+                        >
 
                     </div>
 
@@ -648,11 +1001,15 @@ function openEditProfile() {
     `;
 
 
-    document.body.appendChild(modal);
+    document.body.appendChild(
+        modal
+    );
 
 
     document
-        .getElementById("closeEditProfile")
+        .getElementById(
+            "closeEditProfile"
+        )
         .addEventListener(
             "click",
             function () {
@@ -666,7 +1023,11 @@ function openEditProfile() {
         "click",
         function (event) {
 
-            if (event.target === modal) {
+            if (
+                event.target ===
+                modal
+            ) {
+
                 modal.remove();
             }
         }
@@ -674,7 +1035,9 @@ function openEditProfile() {
 
 
     document
-        .getElementById("saveProfileBtn")
+        .getElementById(
+            "saveProfileBtn"
+        )
         .addEventListener(
             "click",
             saveProfile
@@ -682,9 +1045,9 @@ function openEditProfile() {
 }
 
 
-/* ==============================
+/* =========================================================
    SAVE PROFILE
-============================== */
+========================================================= */
 
 function saveProfile() {
 
@@ -703,7 +1066,9 @@ function saveProfile() {
     const email =
         document.getElementById(
             "editEmail"
-        ).value.trim();
+        ).value
+            .trim()
+            .toLowerCase();
 
 
     const skillInput =
@@ -733,26 +1098,39 @@ function saveProfile() {
 
 
     const oldEmail =
-        currentUser.email;
+        currentUser.email
+            .toLowerCase();
 
+
+    /* ==============================
+       GET ALL USERS
+    ============================== */
 
     let users =
-        JSON.parse(
-            localStorage.getItem(
-                "hackittUsers"
-            )
-        ) || [];
+        getUsers();
 
 
-    /* Check duplicate email */
+    /* ==============================
+       CHECK DUPLICATE EMAIL
+    ============================== */
 
-    if (
+    const duplicate =
         users.some(
-            user =>
-                user.email === email &&
-                user.email !== oldEmail
-        )
-    ) {
+            function (user) {
+
+                return (
+                    user.email &&
+                    user.email.toLowerCase() ===
+                    email &&
+                    user.email.toLowerCase() !==
+                    oldEmail
+                );
+
+            }
+        );
+
+
+    if (duplicate) {
 
         alert(
             "Email already registered!"
@@ -762,31 +1140,49 @@ function saveProfile() {
     }
 
 
-    /* Update user */
+    /* ==============================
+       FIND USER
+    ============================== */
 
     const user =
         users.find(
-            user =>
-                user.email === oldEmail
+            function (user) {
+
+                return (
+                    user.email &&
+                    user.email.toLowerCase() ===
+                    oldEmail
+                );
+
+            }
         );
 
 
     if (!user) {
 
-        alert("User not found!");
+        alert(
+            "User not found!"
+        );
 
         return;
     }
 
 
+    /* ==============================
+       UPDATE USER
+    ============================== */
+
     user.firstName =
         firstName;
+
 
     user.lastName =
         lastName;
 
+
     user.email =
         email;
+
 
     user.skill =
         skill;
@@ -796,23 +1192,38 @@ function saveProfile() {
         user;
 
 
-    localStorage.setItem(
-        "hackittUsers",
-        JSON.stringify(users)
-    );
+    /* ==============================
+       SAVE ALL USERS
+    ============================== */
 
-
-    /* Update login session */
-
-    sessionStorage.setItem(
-        "currentUser",
-        JSON.stringify(currentUser)
+    saveUsers(
+        users
     );
 
 
     /* ==============================
-       UPDATE PARTICIPANT
+       UPDATE CURRENT USER
     ============================== */
+
+    sessionStorage.setItem(
+        "currentUser",
+        JSON.stringify(
+            currentUser
+        )
+    );
+
+
+    localStorage.setItem(
+        "currentUser",
+        JSON.stringify(
+            currentUser
+        )
+    );
+
+
+    /* =================================================
+       UPDATE PARTICIPANTS
+    ================================================= */
 
     let participants =
         JSON.parse(
@@ -823,9 +1234,13 @@ function saveProfile() {
 
 
     participants.forEach(
-        person => {
+        function (person) {
 
-            if (person.email === oldEmail) {
+            if (
+                person.email &&
+                person.email.toLowerCase() ===
+                oldEmail
+            ) {
 
                 person.name =
                     `${firstName} ${lastName}`;
@@ -842,13 +1257,15 @@ function saveProfile() {
 
     localStorage.setItem(
         "hackitt_participants",
-        JSON.stringify(participants)
+        JSON.stringify(
+            participants
+        )
     );
 
 
-    /* ==============================
+    /* =================================================
        UPDATE TEAM MEMBER
-    ============================== */
+    ================================================= */
 
     let teams =
         JSON.parse(
@@ -859,16 +1276,20 @@ function saveProfile() {
 
 
     teams.forEach(
-        team => {
+        function (team) {
 
-            if (!team.members) return;
+            if (
+                !team.members
+            ) return;
 
 
             team.members.forEach(
-                member => {
+                function (member) {
 
                     if (
-                        member.email === oldEmail
+                        member.email &&
+                        member.email.toLowerCase() ===
+                        oldEmail
                     ) {
 
                         member.name =
@@ -888,7 +1309,9 @@ function saveProfile() {
 
     localStorage.setItem(
         "hackitt_teams",
-        JSON.stringify(teams)
+        JSON.stringify(
+            teams
+        )
     );
 
 
@@ -901,11 +1324,13 @@ function saveProfile() {
         `${firstName} ${lastName}`
     );
 
+
     setAvatar(
         "profileStudentAvatar",
         firstName,
         lastName
     );
+
 
     setEmail(
         "profileStudentEmail",
@@ -918,11 +1343,13 @@ function saveProfile() {
         `${firstName} ${lastName}`
     );
 
+
     setAvatar(
         "profileOrgAvatar",
         firstName,
         lastName
     );
+
 
     setEmail(
         "profileOrgEmail",
@@ -935,6 +1362,7 @@ function saveProfile() {
         firstName
     );
 
+
     setText(
         "organizerName",
         firstName
@@ -946,7 +1374,9 @@ function saveProfile() {
             "editProfileModal"
         );
 
+
     if (modal) {
+
         modal.remove();
     }
 
