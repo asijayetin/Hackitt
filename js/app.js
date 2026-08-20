@@ -1,12 +1,3 @@
-/* =========================================================
-   HACKITT - APP.JS
-========================================================= */
-
-
-/* =========================================================
-   ROLE / SKILL
-========================================================= */
-
 const roleStudent =
     document.getElementById("roleStudent");
 
@@ -17,6 +8,10 @@ const skillField =
     document.getElementById("skillField");
 
 
+/* =========================================================
+   ROLE / SKILL FIELD
+========================================================= */
+
 function toggleSkillField() {
 
     if (!skillField) return;
@@ -26,13 +21,11 @@ function toggleSkillField() {
         roleOrganizer.checked
     ) {
 
-        skillField.style.display =
-            "none";
+        skillField.style.display = "none";
 
     } else {
 
-        skillField.style.display =
-            "flex";
+        skillField.style.display = "flex";
     }
 }
 
@@ -57,59 +50,39 @@ if (
 
 
 /* =========================================================
-   USER STORAGE
+   USERS
 ========================================================= */
 
-/*
-   hackittUsers
-   = ALL registered users
-
-   currentUser
-   = ONLY currently logged-in user
-*/
-
-const USERS_KEY =
-    "hackittUsers";
+const USERS_KEY = "hackittUsers";
 
 
 function getUsers() {
 
     let users =
         JSON.parse(
-            localStorage.getItem(
-                USERS_KEY
-            )
+            localStorage.getItem(USERS_KEY)
         ) || [];
 
 
     /*
-       If an old key exists and
-       hackittUsers is empty,
-       migrate old users.
-    */
+     * Old users migration.
+     */
 
     if (users.length === 0) {
 
         const oldUsers =
             JSON.parse(
-                localStorage.getItem(
-                    "teamforge_users"
-                )
+                localStorage.getItem("teamforge_users")
             ) || [];
 
 
-        if (
-            oldUsers.length > 0
-        ) {
+        if (oldUsers.length > 0) {
 
-            users =
-                oldUsers;
+            users = oldUsers;
 
             localStorage.setItem(
                 USERS_KEY,
-                JSON.stringify(
-                    users
-                )
+                JSON.stringify(users)
             );
         }
     }
@@ -123,9 +96,7 @@ function saveUsers(users) {
 
     localStorage.setItem(
         USERS_KEY,
-        JSON.stringify(
-            users
-        )
+        JSON.stringify(users)
     );
 }
 
@@ -135,9 +106,7 @@ function saveUsers(users) {
 ========================================================= */
 
 const signupForm =
-    document.getElementById(
-        "signupForm"
-    );
+    document.getElementById("signupForm");
 
 
 if (signupForm) {
@@ -148,10 +117,6 @@ if (signupForm) {
 
             event.preventDefault();
 
-
-            /* ==============================
-               GET FORM DATA
-            ============================== */
 
             const firstName =
                 document.getElementById(
@@ -191,10 +156,6 @@ if (signupForm) {
                 );
 
 
-            /* ==============================
-               VALIDATION
-            ============================== */
-
             if (!selectedRole) {
 
                 alert(
@@ -210,9 +171,7 @@ if (signupForm) {
 
 
             const skillInput =
-                document.getElementById(
-                    "skill"
-                );
+                document.getElementById("skill");
 
 
             const skill =
@@ -234,17 +193,17 @@ if (signupForm) {
             }
 
 
-            /* ==============================
-               GET ALL USERS
-            ============================== */
+            /*
+             * Get ALL existing users.
+             */
 
             let users =
                 getUsers();
 
 
-            /* ==============================
-               CHECK DUPLICATE EMAIL
-            ============================== */
+            /*
+             * Duplicate email check.
+             */
 
             const alreadyExists =
                 users.some(
@@ -256,7 +215,6 @@ if (signupForm) {
                                 .toLowerCase() ===
                             email
                         );
-
                     }
                 );
 
@@ -271,9 +229,9 @@ if (signupForm) {
             }
 
 
-            /* ==============================
-               CREATE USER
-            ============================== */
+            /*
+             * Create new user.
+             */
 
             const newUser = {
 
@@ -302,28 +260,22 @@ if (signupForm) {
             };
 
 
-            /* ==============================
-               ADD USER
-               WITHOUT DELETING OLD USERS
-            ============================== */
+            /*
+             * IMPORTANT:
+             * Push new user.
+             * Old users are NOT deleted.
+             */
 
-            users.push(
-                newUser
-            );
+            users.push(newUser);
 
-
-            saveUsers(
-                users
-            );
+            saveUsers(users);
 
 
-            /* =================================================
-               ADD STUDENT TO PARTICIPANTS
-            ================================================= */
+            /*
+             * Add student to participants.
+             */
 
-            if (
-                role === "student"
-            ) {
+            if (role === "student") {
 
                 let participants =
                     JSON.parse(
@@ -343,7 +295,6 @@ if (signupForm) {
                                     .toLowerCase() ===
                                 email
                             );
-
                         }
                     );
 
@@ -360,7 +311,6 @@ if (signupForm) {
 
                         skill:
                             skill || "General"
-
                     });
 
 
@@ -374,10 +324,6 @@ if (signupForm) {
             }
 
 
-            /* ==============================
-               SUCCESS
-            ============================== */
-
             alert(
                 "Account created successfully!"
             );
@@ -385,7 +331,6 @@ if (signupForm) {
 
             window.location.href =
                 "login.html";
-
         }
     );
 }
@@ -396,9 +341,7 @@ if (signupForm) {
 ========================================================= */
 
 const loginForm =
-    document.getElementById(
-        "loginForm"
-    );
+    document.getElementById("loginForm");
 
 
 if (loginForm) {
@@ -424,17 +367,17 @@ if (loginForm) {
                 ).value;
 
 
-            /* ==============================
-               GET ALL REGISTERED USERS
-            ============================== */
+            /*
+             * Get ALL registered users.
+             */
 
             const users =
                 getUsers();
 
 
-            /* ==============================
-               FIND LOGIN USER
-            ============================== */
+            /*
+             * Find matching user.
+             */
 
             const foundUser =
                 users.find(
@@ -448,7 +391,6 @@ if (loginForm) {
                             user.password ===
                             password
                         );
-
                     }
                 );
 
@@ -463,29 +405,27 @@ if (loginForm) {
             }
 
 
-            /* ==============================
-               SAVE CURRENT USER ONLY
-            ============================== */
+            /*
+             * IMPORTANT:
+             *
+             * Current user is stored ONLY
+             * in sessionStorage.
+             *
+             * It is NOT stored in localStorage.
+             *
+             * Therefore all registered users
+             * stay in hackittUsers.
+             */
 
             sessionStorage.setItem(
                 "currentUser",
-                JSON.stringify(
-                    foundUser
-                )
+                JSON.stringify(foundUser)
             );
 
 
-            localStorage.setItem(
-                "currentUser",
-                JSON.stringify(
-                    foundUser
-                )
-            );
-
-
-            /* ==============================
-               REDIRECT BY ROLE
-            ============================== */
+            /*
+             * Redirect according to role.
+             */
 
             if (
                 foundUser.role ===
@@ -500,7 +440,6 @@ if (loginForm) {
                 window.location.href =
                     "organizer.html";
             }
-
         }
     );
 }
@@ -510,12 +449,18 @@ if (loginForm) {
    CURRENT USER
 ========================================================= */
 
+/*
+ * IMPORTANT:
+ * Only sessionStorage is checked.
+ *
+ * This prevents an old user from
+ * automatically appearing as logged in
+ * from localStorage.
+ */
+
 let currentUser =
     JSON.parse(
         sessionStorage.getItem(
-            "currentUser"
-        ) ||
-        localStorage.getItem(
             "currentUser"
         )
     );
@@ -525,15 +470,10 @@ let currentUser =
    HELPER FUNCTIONS
 ========================================================= */
 
-function setText(
-    id,
-    value
-) {
+function setText(id, value) {
 
     const element =
-        document.getElementById(
-            id
-        );
+        document.getElementById(id);
 
 
     if (element) {
@@ -544,15 +484,10 @@ function setText(
 }
 
 
-function setEmail(
-    id,
-    email
-) {
+function setEmail(id, email) {
 
     const element =
-        document.getElementById(
-            id
-        );
+        document.getElementById(id);
 
 
     if (element) {
@@ -573,9 +508,7 @@ function setAvatar(
 ) {
 
     const element =
-        document.getElementById(
-            id
-        );
+        document.getElementById(id);
 
 
     if (!element) return;
@@ -610,9 +543,9 @@ function displayUserData() {
     if (!currentUser) return;
 
 
-    /* ==============================
-       STUDENT
-    ============================== */
+    /*
+     * Student
+     */
 
     setText(
         "studentName",
@@ -639,9 +572,9 @@ function displayUserData() {
     );
 
 
-    /* ==============================
-       ORGANIZER
-    ============================== */
+    /*
+     * Organizer
+     */
 
     setText(
         "organizerName",
@@ -718,10 +651,22 @@ function logout(event) {
     }
 
 
+    /*
+     * Remove ONLY current login session.
+     *
+     * Registered users remain safe
+     * inside hackittUsers.
+     */
+
     sessionStorage.removeItem(
         "currentUser"
     );
 
+
+    /*
+     * Also remove old currentUser
+     * key if it exists from previous version.
+     */
 
     localStorage.removeItem(
         "currentUser"
@@ -739,7 +684,9 @@ function logout(event) {
 
 if (currentUser) {
 
-    /* Dashboard */
+    /*
+     * Dashboard
+     */
 
     if (navDashboardBtn) {
 
@@ -750,7 +697,9 @@ if (currentUser) {
     }
 
 
-    /* Profile */
+    /*
+     * Profile
+     */
 
     if (navProfileBtn) {
 
@@ -761,12 +710,20 @@ if (currentUser) {
     }
 
 
+    /*
+     * Hide Login
+     */
+
     if (navLoginBtn) {
 
         navLoginBtn.style.display =
             "none";
     }
 
+
+    /*
+     * Hide Signup
+     */
 
     if (navSignupBtn) {
 
@@ -775,12 +732,20 @@ if (currentUser) {
     }
 
 
+    /*
+     * Show Profile
+     */
+
     if (navProfileBtn) {
 
         navProfileBtn.style.display =
             "inline-block";
     }
 
+
+    /*
+     * Show Logout
+     */
 
     if (navLogoutBtn) {
 
@@ -794,7 +759,12 @@ if (currentUser) {
         );
     }
 
+
 } else {
+
+    /*
+     * User is NOT logged in.
+     */
 
     if (navLoginBtn) {
 
@@ -1102,17 +1072,17 @@ function saveProfile() {
             .toLowerCase();
 
 
-    /* ==============================
-       GET ALL USERS
-    ============================== */
+    /*
+     * Get all users.
+     */
 
     let users =
         getUsers();
 
 
-    /* ==============================
-       CHECK DUPLICATE EMAIL
-    ============================== */
+    /*
+     * Duplicate email check.
+     */
 
     const duplicate =
         users.some(
@@ -1120,12 +1090,13 @@ function saveProfile() {
 
                 return (
                     user.email &&
-                    user.email.toLowerCase() ===
+                    user.email
+                        .toLowerCase() ===
                     email &&
-                    user.email.toLowerCase() !==
+                    user.email
+                        .toLowerCase() !==
                     oldEmail
                 );
-
             }
         );
 
@@ -1140,9 +1111,9 @@ function saveProfile() {
     }
 
 
-    /* ==============================
-       FIND USER
-    ============================== */
+    /*
+     * Find current user.
+     */
 
     const user =
         users.find(
@@ -1150,10 +1121,10 @@ function saveProfile() {
 
                 return (
                     user.email &&
-                    user.email.toLowerCase() ===
+                    user.email
+                        .toLowerCase() ===
                     oldEmail
                 );
-
             }
         );
 
@@ -1168,21 +1139,18 @@ function saveProfile() {
     }
 
 
-    /* ==============================
-       UPDATE USER
-    ============================== */
+    /*
+     * Update user.
+     */
 
     user.firstName =
         firstName;
 
-
     user.lastName =
         lastName;
 
-
     user.email =
         email;
-
 
     user.skill =
         skill;
@@ -1192,18 +1160,17 @@ function saveProfile() {
         user;
 
 
-    /* ==============================
-       SAVE ALL USERS
-    ============================== */
+    /*
+     * Save ALL users.
+     */
 
-    saveUsers(
-        users
-    );
+    saveUsers(users);
 
 
-    /* ==============================
-       UPDATE CURRENT USER
-    ============================== */
+    /*
+     * IMPORTANT:
+     * Current user ONLY in sessionStorage.
+     */
 
     sessionStorage.setItem(
         "currentUser",
@@ -1213,17 +1180,9 @@ function saveProfile() {
     );
 
 
-    localStorage.setItem(
-        "currentUser",
-        JSON.stringify(
-            currentUser
-        )
-    );
-
-
-    /* =================================================
-       UPDATE PARTICIPANTS
-    ================================================= */
+    /*
+     * Update participants.
+     */
 
     let participants =
         JSON.parse(
@@ -1238,7 +1197,8 @@ function saveProfile() {
 
             if (
                 person.email &&
-                person.email.toLowerCase() ===
+                person.email
+                    .toLowerCase() ===
                 oldEmail
             ) {
 
@@ -1263,9 +1223,9 @@ function saveProfile() {
     );
 
 
-    /* =================================================
-       UPDATE TEAM MEMBER
-    ================================================= */
+    /*
+     * Update team member information.
+     */
 
     let teams =
         JSON.parse(
@@ -1278,9 +1238,7 @@ function saveProfile() {
     teams.forEach(
         function (team) {
 
-            if (
-                !team.members
-            ) return;
+            if (!team.members) return;
 
 
             team.members.forEach(
@@ -1288,7 +1246,8 @@ function saveProfile() {
 
                     if (
                         member.email &&
-                        member.email.toLowerCase() ===
+                        member.email
+                            .toLowerCase() ===
                         oldEmail
                     ) {
 
@@ -1315,9 +1274,9 @@ function saveProfile() {
     );
 
 
-    /* ==============================
-       UPDATE PAGE
-    ============================== */
+    /*
+     * Update page.
+     */
 
     setText(
         "profileStudentName",

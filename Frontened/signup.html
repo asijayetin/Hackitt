@@ -7,7 +7,7 @@
 
     <title>Hackitt | Sign Up</title>
 
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
@@ -20,12 +20,27 @@
         </div>
 
         <nav class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="index.html#about">About</a>
-            <a href="index.html#features">Features</a>
-            <a href="login.html" class="nav-btn">
-                Login
+
+            <a href="index.html">
+                Home
             </a>
+
+            <a href="index.html#about">
+                About
+            </a>
+
+            <a href="index.html#features">
+                Features
+            </a>
+
+            <a
+                href="login.html"
+                class="nav-btn">
+
+                Login
+
+            </a>
+
         </nav>
 
     </header>
@@ -124,7 +139,9 @@
 
 
             <!-- Signup Form -->
-            <form id="signupForm" class="auth-form">
+            <form
+                id="signupForm"
+                class="auth-form">
 
                 <div class="form-row">
 
@@ -181,23 +198,39 @@
                 </div>
 
 
-                <!--
-                    Only shown when "Student" is selected above.
-                    This is what the team generator uses to balance
-                    teams by skill.
-                -->
-                <div class="form-group" id="skillField">
+                <!-- Student Skill -->
+                <div
+                    class="form-group"
+                    id="skillField">
 
                     <label for="skill">
                         Primary Skill
                     </label>
 
-                    <select id="skill" name="skill">
-                        <option value="Frontend">Frontend</option>
-                        <option value="Backend">Backend</option>
-                        <option value="Design">Design</option>
-                        <option value="ML/Data">ML / Data</option>
-                        <option value="Mobile">Mobile</option>
+                    <select
+                        id="skill"
+                        name="skill">
+
+                        <option value="Frontend">
+                            Frontend
+                        </option>
+
+                        <option value="Backend">
+                            Backend
+                        </option>
+
+                        <option value="Design">
+                            Design
+                        </option>
+
+                        <option value="ML/Data">
+                            ML / Data
+                        </option>
+
+                        <option value="Mobile">
+                            Mobile
+                        </option>
+
                     </select>
 
                 </div>
@@ -241,9 +274,10 @@
 
                 <button
                     type="submit"
-                    class="auth-btn"
-                >
+                    class="auth-btn">
+
                     Create Account
+
                 </button>
 
             </form>
@@ -264,7 +298,7 @@
     </main>
 
 
-    <script src="js/app.js"></script>
+    <script src="../js/app.js"></script>
 
 </body>
 

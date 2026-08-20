@@ -7,8 +7,8 @@
 
     <title>Participants | Hackitt</title>
 
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="./css/profile.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/profile.css">
 </head>
 
 <body>
@@ -21,20 +21,25 @@
 
         <nav class="nav-links">
 
-            <a href="./index.html">
+            <a href="index.html">
                 Home
             </a>
 
-            <a href="./organizer.html">
+            <a href="organizer.html">
                 Dashboard
             </a>
 
-            <a href="./profile-organizer.html">
+            <a href="profile-organizer.html">
                 Profile
             </a>
 
-            <a href="#" id="navLogoutBtn" class="nav-btn">
+            <a
+                href="#"
+                id="navLogoutBtn"
+                class="nav-btn">
+
                 Log Out
+
             </a>
 
         </nav>
@@ -79,21 +84,28 @@
     </footer>
 
 
-    <script src="./js/app.js"></script>
+    <script src="../js/app.js"></script>
+
 
     <script>
 
         let participants =
             JSON.parse(
-                localStorage.getItem("hackitt_participants")
+                localStorage.getItem(
+                    "hackitt_participants"
+                )
             ) || [];
 
 
         let participantsList =
-            document.getElementById("participantsList");
+            document.getElementById(
+                "participantsList"
+            );
 
 
-        if(participants.length === 0){
+        if (
+            participants.length === 0
+        ) {
 
             participantsList.innerHTML = `
 
@@ -112,18 +124,27 @@
 
             `;
 
-        }
-        else{
+        } else {
 
-            for(let i = 0; i < participants.length; i++){
+            for (
+                let i = 0;
+                i < participants.length;
+                i++
+            ) {
 
-                let participant = participants[i];
+                let participant =
+                    participants[i];
+
 
                 let card =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
+
 
                 card.className =
                     "dashboard-card";
+
 
                 card.innerHTML = `
 
@@ -143,7 +164,10 @@
 
                 `;
 
-                participantsList.appendChild(card);
+
+                participantsList.appendChild(
+                    card
+                );
             }
         }
 
