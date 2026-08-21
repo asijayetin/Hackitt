@@ -31,7 +31,7 @@
 
             <a
                 href="#"
-                id="logoutBtn"
+                id="navLogoutBtn"
                 class="nav-btn">
 
                 Logout
@@ -99,7 +99,7 @@
                     Add your skills to help create a balanced team.
                 </p>
 
-                <a href="#">
+                <a href="profile-student.html">
                     Select Skills
                 </a>
 
@@ -118,7 +118,7 @@
                     View the hackathon you have joined.
                 </p>
 
-                <a href="#">
+                <a href="check.html">
                     View Hackathon
                 </a>
 
@@ -127,7 +127,8 @@
         </section>
 
 
-        <!-- TEAM SECTION -->
+        <!-- TEAM SECTION: filled in dynamically by app.js
+             based on hackitt_teams + currentUser -->
 
         <section class="team-section">
 
@@ -139,24 +140,27 @@
                         TEAM
                     </p>
 
-                    <h2>
+                    <h2 id="myTeamName">
                         My Team
                     </h2>
 
                 </div>
 
 
-                <span class="team-status">
+                <span class="team-status" id="myTeamStatus">
                     Not Assigned
                 </span>
 
             </div>
 
 
-            <p class="team-message">
+            <p class="team-message" id="myTeamMessage">
                 Your team will appear here once the organizer
                 generates the teams.
             </p>
+
+
+            <div id="myTeamMembers"></div>
 
         </section>
 

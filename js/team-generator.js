@@ -105,8 +105,10 @@ function renderTeams(teams, teamSize) {
     teams.forEach(function(team, index) {
 
         /*
-         * Actual team members remain empty.
-         * Students join later from Find a Team.
+         * Save the actual skill-balanced group as the
+         * team's real members, so students are assigned
+         * immediately when the organizer generates teams
+         * (not left empty for manual joining).
          */
 
         let teamData = {
@@ -117,7 +119,7 @@ function renderTeams(teams, teamSize) {
             maxSize:
                 teamSize,
 
-            members: []
+            members: team
 
         };
 
@@ -155,7 +157,7 @@ function renderTeams(teams, teamSize) {
             </h4>
 
             <p>
-                Recommended members based on skills:
+                Team members:
             </p>
 
             <ul class="team-member-list">
@@ -163,7 +165,7 @@ function renderTeams(teams, teamSize) {
             </ul>
 
             <p>
-                Team size: ${teamSize}
+                Team size: ${team.length} / ${teamSize}
             </p>
 
         `;
@@ -175,8 +177,9 @@ function renderTeams(teams, teamSize) {
 
 
     /*
-     * Save empty teams.
-     * Students are added only after Join Team.
+     * Save the fully assigned teams — students are
+     * placed immediately, no separate "join" step needed
+     * for the algorithm-assigned members.
      */
 
     localStorage.setItem(
@@ -216,11 +219,6 @@ function downloadTeamsAsCSV(teams) {
 
 
     teams.forEach(function(team) {
-
-        /*
-         * If students have joined,
-         * export actual members.
-         */
 
         if (
             team.members &&

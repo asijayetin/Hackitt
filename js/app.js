@@ -387,13 +387,15 @@ if(teamBannerTitle && teamBannerText && teamBannerBtn){
         let myTeam = null;
 
         if(currentUser){
+            let myBannerEmail = (currentUser.email || "").trim().toLowerCase();
+
             for(let team of teams){
                 if(!team.members){
                     team.members = [];
                 }
 
                 let isMember = team.members.some(function(member){
-                    return member.email === currentUser.email;
+                    return (member.email || "").trim().toLowerCase() === myBannerEmail;
                 });
 
                 if(isMember){
@@ -420,5 +422,80 @@ if(teamBannerTitle && teamBannerText && teamBannerBtn){
             teamBannerBtn.innerText = "Check Team";
             teamBannerBtn.href = "check.html";
         }
+    }
+}
+
+
+/* ==========================================================
+   STUDENT DASHBOARD: "MY TEAM" WIDGET (student.html)
+   Same idea as the profile banner above, but for the
+   dashboard's team-section card.
+========================================================== */
+
+let myTeamStatus = document.getElementById("myTeamStatus");
+let myTeamMessage = document.getElementById("myTeamMessage");
+let myTeamName = document.getElementById("myTeamName");
+let myTeamMembers = document.getElementById("myTeamMembers");
+
+if(myTeamStatus && myTeamMessage){
+
+    let dashboardTeams = JSON.parse(localStorage.getItem("hackitt_teams")) || [];
+
+    let myAssignedTeam = null;
+
+    if(currentUser){
+
+        let myEmail = (currentUser.email || "").trim().toLowerCase();
+
+        for(let team of dashboardTeams){
+            if(!team.members){
+                team.members = [];
+            }
+
+            let isMember = team.members.some(function(member){
+                return (member.email || "").trim().toLowerCase() === myEmail;
+            });
+
+            if(isMember){
+                myAssignedTeam = team;
+                break;
+            }
+        }
+    }
+
+    if(myAssignedTeam){
+
+        // Student has a team: show it
+        myTeamStatus.innerText = "Assigned";
+        myTeamStatus.style.color = "#00e5ff";
+
+        if(myTeamName){
+            myTeamName.innerText = myAssignedTeam.name;
+        }
+
+        myTeamMessage.innerText =
+            myAssignedTeam.members.length + "/" + myAssignedTeam.maxSize + " members";
+
+        if(myTeamMembers){
+            myTeamMembers.innerHTML = myAssignedTeam.members
+                .map(function(member){
+                    return "<p>" + member.name + " - " + (member.skill || "General") + "</p>";
+                })
+                .join("");
+        }
+
+    } else if(dashboardTeams.length === 0){
+
+        // No teams generated yet at all
+        myTeamStatus.innerText = "Not Assigned";
+        myTeamMessage.innerText =
+            "Your team will appear here once the organizer generates the teams.";
+
+    } else {
+
+        // Teams exist, but this student hasn't joined one
+        myTeamStatus.innerText = "Not Assigned";
+        myTeamMessage.innerText =
+            "Teams are ready! Go to Check Team to join one.";
     }
 }
