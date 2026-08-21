@@ -31,10 +31,14 @@ function showTeams(){
 
 
     // Check if current user already joined a team
+    // (compare emails case-insensitively and trimmed, so a
+    // capital letter or stray space doesn't break the match)
 
     let joinedTeam = null;
 
     if(loggedInUser){
+
+        let myEmail = (loggedInUser.email || "").trim().toLowerCase();
 
         for(let team of teams){
 
@@ -45,7 +49,7 @@ function showTeams(){
             if(
                 team.members.some(
                     member =>
-                        member.email === loggedInUser.email
+                        (member.email || "").trim().toLowerCase() === myEmail
                 )
             ){
 
@@ -194,12 +198,15 @@ function joinTeam(teamIndex){
 
 
     // Check if student is already in any team
+    // (same case-insensitive, trimmed comparison as showTeams())
+
+    let myEmail = (loggedInUser.email || "").trim().toLowerCase();
 
     let alreadyJoined = teams.some(
         team =>
             (team.members || []).some(
                 member =>
-                    member.email === loggedInUser.email
+                    (member.email || "").trim().toLowerCase() === myEmail
             )
     );
 
