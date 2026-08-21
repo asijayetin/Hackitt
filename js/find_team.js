@@ -1,5 +1,5 @@
 let loggedInUser = JSON.parse(
-    sessionStorage.getItem("currentUser")
+    localStorage.getItem("currentUser")
 );
 
 let teamList = document.getElementById("teamList");
@@ -8,7 +8,7 @@ let teamList = document.getElementById("teamList");
 function showTeams(){
 
     loggedInUser = JSON.parse(
-        sessionStorage.getItem("currentUser")
+        localStorage.getItem("currentUser")
     );
 
     let teams = JSON.parse(
@@ -155,7 +155,7 @@ function showTeams(){
 function joinTeam(teamIndex){
 
     loggedInUser = JSON.parse(
-        sessionStorage.getItem("currentUser")
+        localStorage.getItem("currentUser")
     );
 
 

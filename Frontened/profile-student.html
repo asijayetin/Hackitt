@@ -25,11 +25,11 @@
                 Home
             </a>
 
-            <a href="#" id="navDashboardBtn">
+            <a href="student.html" id="navDashboardBtn">
                 Dashboard
             </a>
 
-            <a href="#" id="navProfileBtn">
+            <a href="profile-student.html" id="navProfileBtn">
                 Profile
             </a>
 
@@ -126,26 +126,26 @@
             <div class="profile-main">
 
 
-                <!-- Current Hackathon -->
+                <!-- Current Hackathon: filled in dynamically by app.js
+                     based on whether teams exist / student joined one -->
 
                 <div class="team-status-banner">
 
                     <div>
 
-                        <h4>
+                        <h4 id="teamBannerTitle">
                             Hackitt Summer Jam 2026
                         </h4>
 
-                        <p>
-                            Registration open &middot;
-                            Team not yet assigned
+                        <p id="teamBannerText">
+                            Teams have not been generated yet.
                         </p>
 
                     </div>
 
 
-                    <a href="find_team.html" class="primary-btn">
-                        Find a Team
+                    <a href="check.html" class="primary-btn" id="teamBannerBtn">
+                        Check Team
                     </a>
 
                 </div>
