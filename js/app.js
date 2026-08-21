@@ -190,10 +190,124 @@ if(currentUser){
 
 
 /* ==========================================================
-   NAVBAR LOGIN STATE (index.html and any page with these IDs)
-   If someone is logged in, hide Login/Get Started and show
-   Profile/Log Out instead.
+   EDIT PROFILE MODAL (profile-student.html)
+   Opens the modal pre-filled with the logged-in student's
+   data, and saves changes back to localStorage in all 3
+   places that need to stay in sync: currentUser, the
+   hackittUsers list, and the hackitt_participants list
+   (which the team generator reads from).
 ========================================================== */
+
+let editProfileBtn = document.getElementById("editProfileBtn");
+let editProfileModal = document.getElementById("editProfileModal");
+let closeEditProfile = document.getElementById("closeEditProfile");
+let saveProfileBtn = document.getElementById("saveProfileBtn");
+
+if(editProfileBtn && editProfileModal && saveProfileBtn){
+
+    editProfileBtn.addEventListener("click", function(event){
+        event.preventDefault();
+
+        if(!currentUser){
+            alert("Please log in first.");
+            return;
+        }
+
+        // Pre-fill the form with the current values
+        document.getElementById("editFirstName").value = currentUser.firstName || "";
+        document.getElementById("editLastName").value = currentUser.lastName || "";
+        document.getElementById("editEmail").value = currentUser.email || "";
+
+        let editSkillSelect = document.getElementById("editSkill");
+        if(editSkillSelect && currentUser.skill){
+            editSkillSelect.value = currentUser.skill;
+        }
+
+        editProfileModal.classList.add("active");
+    });
+
+    if(closeEditProfile){
+        closeEditProfile.addEventListener("click", function(){
+            editProfileModal.classList.remove("active");
+        });
+    }
+
+    // Close if the person clicks the dark overlay outside the box
+    editProfileModal.addEventListener("click", function(event){
+        if(event.target === editProfileModal){
+            editProfileModal.classList.remove("active");
+        }
+    });
+
+    saveProfileBtn.addEventListener("click", function(){
+
+        let updatedFirstName = document.getElementById("editFirstName").value.trim();
+        let updatedLastName = document.getElementById("editLastName").value.trim();
+        let updatedEmail = document.getElementById("editEmail").value.trim();
+        let updatedSkill = document.getElementById("editSkill").value;
+
+        if(!updatedFirstName || !updatedLastName || !updatedEmail){
+            alert("Please fill in all fields.");
+            return;
+        }
+
+        let oldEmail = currentUser.email;
+
+        // Update currentUser
+        currentUser.firstName = updatedFirstName;
+        currentUser.lastName = updatedLastName;
+        currentUser.email = updatedEmail;
+        currentUser.skill = updatedSkill;
+
+        localStorage.setItem("currentUser", JSON.stringify(currentUser));
+
+        // Update this user inside hackittUsers
+        let users = JSON.parse(localStorage.getItem("hackittUsers")) || [];
+
+        for(let i = 0; i < users.length; i++){
+            if(users[i].email === oldEmail){
+                users[i].firstName = updatedFirstName;
+                users[i].lastName = updatedLastName;
+                users[i].email = updatedEmail;
+                users[i].skill = updatedSkill;
+                break;
+            }
+        }
+
+        localStorage.setItem("hackittUsers", JSON.stringify(users));
+
+        // Update this student inside hackitt_participants
+        // (this is what the team generator reads from)
+        let participants = JSON.parse(localStorage.getItem("hackitt_participants")) || [];
+
+        for(let i = 0; i < participants.length; i++){
+            if(participants[i].email === oldEmail){
+                participants[i].name = updatedFirstName + " " + updatedLastName;
+                participants[i].email = updatedEmail;
+                participants[i].skill = updatedSkill;
+                break;
+            }
+        }
+
+        localStorage.setItem("hackitt_participants", JSON.stringify(participants));
+
+        // Reflect the change immediately on the page
+        let profileStudentNameEl = document.getElementById("profileStudentName");
+        if(profileStudentNameEl){
+            profileStudentNameEl.innerText = updatedFirstName;
+        }
+
+        let profileStudentEmailEl = document.getElementById("profileStudentEmail");
+        if(profileStudentEmailEl){
+            profileStudentEmailEl.innerText = updatedEmail;
+            profileStudentEmailEl.href = "mailto:" + updatedEmail;
+        }
+
+        editProfileModal.classList.remove("active");
+
+        alert("Profile updated!");
+    });
+}
 
 /* ==========================================================
    LOG OUT (works on ANY page that has a #navLogoutBtn,
@@ -209,6 +323,7 @@ if(anyPageLogoutBtn){
         window.location.href = "index.html";
     });
 }
+let navLoginBtn = document.getElementById("navLoginBtn");
 let navSignupBtn = document.getElementById("navSignupBtn");
 let navProfileBtn = document.getElementById("navProfileBtn");
 let navLogoutBtn = document.getElementById("navLogoutBtn");
