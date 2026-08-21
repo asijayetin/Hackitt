@@ -568,7 +568,8 @@
     color: #dddddd;
 }
 
-.edit-form-group input {
+.edit-form-group input,
+.edit-form-group select {
     width: 100%;
 
     padding: 13px 15px;
@@ -585,10 +586,13 @@
 
     font-size: 14px;
 
+    font-family: inherit;
+
     transition: 0.3s ease;
 }
 
-.edit-form-group input:focus {
+.edit-form-group input:focus,
+.edit-form-group select:focus {
     border-color: #00e5ff;
 
     background: rgba(0, 229, 255, 0.04);
@@ -598,6 +602,12 @@
 
 .edit-form-group input::placeholder {
     color: #666666;
+}
+
+.edit-form-group select option {
+    background: #0b0b0b;
+
+    color: #ffffff;
 }
 
 
