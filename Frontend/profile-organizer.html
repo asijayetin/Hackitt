@@ -33,13 +33,8 @@
                 Profile
             </a>
 
-            <a
-                href="#"
-                id="navLogoutBtn"
-                class="nav-btn">
-
+            <a href="#" id="navLogoutBtn" class="nav-btn">
                 Log Out
-
             </a>
 
         </nav>
@@ -72,7 +67,6 @@
 
                     </h1>
 
-
                     <span
                         class="verified-badge"
                         title="Verified Organizer">
@@ -85,7 +79,7 @@
 
 
                 <p class="org-org-name">
-                    Hackitt Organizer
+                    Hackitt Hackathon Organizer
                 </p>
 
 
@@ -104,7 +98,8 @@
 
                 <a
                     href="#"
-                    class="profile-edit-btn">
+                    class="profile-edit-btn"
+                    id="editProfileBtn">
 
                     Edit Profile
 
@@ -250,7 +245,6 @@
                         Focus Areas
                     </h3>
 
-
                     <div class="skills-list">
 
                         <span class="skill-tag">
@@ -301,7 +295,6 @@
                         Events Hosted
                     </h3>
 
-
                     <div class="history-item">
 
                         <div class="history-info">
@@ -316,7 +309,6 @@
 
                         </div>
 
-
                         <span class="history-status upcoming">
                             Ongoing
                         </span>
@@ -330,6 +322,91 @@
         </div>
 
     </section>
+
+
+    <!-- ==============================
+         EDIT PROFILE MODAL
+    ============================== -->
+
+    <div
+        id="editProfileModal"
+        class="edit-profile-modal">
+
+        <div class="edit-profile-box">
+
+            <button
+                type="button"
+                id="closeEditProfile"
+                class="edit-close-btn">
+
+                &times;
+
+            </button>
+
+
+            <h2>
+                Edit Profile
+            </h2>
+
+            <p>
+                Update your organizer information.
+            </p>
+
+
+            <div class="form-group">
+
+                <label for="editFirstName">
+                    First Name
+                </label>
+
+                <input
+                    type="text"
+                    id="editFirstName"
+                    placeholder="First Name">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="editLastName">
+                    Last Name
+                </label>
+
+                <input
+                    type="text"
+                    id="editLastName"
+                    placeholder="Last Name">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="editEmail">
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="editEmail"
+                    placeholder="Email">
+
+            </div>
+
+
+            <button
+                type="button"
+                id="saveProfileBtn"
+                class="primary-btn">
+
+                Save Changes
+
+            </button>
+
+        </div>
+
+    </div>
 
 
     <footer>
