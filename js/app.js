@@ -1,506 +1,1441 @@
-// ==================== COMMON HELPERS ====================
+/* ==========================================================
+   SHOW/HIDE SKILL FIELD BASED ON ROLE
+========================================================== */
 
-const $ = id => document.getElementById(id);
-const USERS_KEY = "hackittUsers";
-const PARTICIPANTS_KEY = "hackitt_participants";
-const TEAMS_KEY = "hackitt_teams";
-
-const getUsers = () => JSON.parse(localStorage.getItem(USERS_KEY)) || [];
-const saveUsers = users => localStorage.setItem(USERS_KEY, JSON.stringify(users));
-const getParticipants = () => JSON.parse(localStorage.getItem(PARTICIPANTS_KEY)) || [];
-const saveParticipants = data => localStorage.setItem(PARTICIPANTS_KEY, JSON.stringify(data));
-const getTeams = () => JSON.parse(localStorage.getItem(TEAMS_KEY)) || [];
-const saveTeams = data => localStorage.setItem(TEAMS_KEY, JSON.stringify(data));
-
-const normalizeEmail = email => (email || "").trim().toLowerCase();
-
-const getCurrentUser = () =>
-    JSON.parse(sessionStorage.getItem("currentUser"));
-
-let currentUser = getCurrentUser();
-
-function findUserByEmail(users, email) {
-    email = normalizeEmail(email);
-    return users.find(user => normalizeEmail(user.email) === email);
-}
-
-function findTeamForUser(teams, email) {
-    email = normalizeEmail(email);
-
-    for (const team of teams) {
-        if (!team.members) team.members = [];
-
-        if (team.members.some(member => normalizeEmail(member.email) === email)) {
-            return team;
-        }
-    }
-
-    return null;
-}
-
-function setText(id, text) {
-    const element = $(id);
-    if (element) element.innerText = text;
-}
-
-function setProfileInfo(nameId, emailId, avatarId, user) {
-    if (!user) return;
-
-    const name = `${user.firstName} ${user.lastName}`;
-
-    setText(nameId, name);
-
-    const emailElement = $(emailId);
-    if (emailElement) {
-        emailElement.innerText = user.email;
-        emailElement.href = `mailto:${user.email}`;
-    }
-
-    const avatar = $(avatarId);
-    if (avatar) {
-        const first = user.firstName?.charAt(0) || "";
-        const last = user.lastName?.charAt(0) || "";
-        avatar.innerText = (first + last).toUpperCase();
-    }
-}
-
-// ==================== ROLE / SKILL FIELD ====================
-
-const roleStudent = $("roleStudent");
-const roleOrganizer = $("roleOrganizer");
-const skillField = $("skillField");
+let roleStudent = document.getElementById("roleStudent");
+let roleOrganizer = document.getElementById("roleOrganizer");
+let skillField = document.getElementById("skillField");
 
 function toggleSkillField() {
+
     if (!skillField) return;
-    skillField.style.display =
-        roleOrganizer?.checked ? "none" : "flex";
+
+    if (roleOrganizer && roleOrganizer.checked) {
+
+        skillField.style.display = "none";
+
+    } else {
+
+        skillField.style.display = "flex";
+    }
 }
 
 if (roleStudent && roleOrganizer) {
-    roleStudent.addEventListener("change", toggleSkillField);
-    roleOrganizer.addEventListener("change", toggleSkillField);
+
+    roleStudent.addEventListener(
+        "change",
+        toggleSkillField
+    );
+
+    roleOrganizer.addEventListener(
+        "change",
+        toggleSkillField
+    );
+
     toggleSkillField();
 }
 
-// ==================== SIGNUP ====================
 
-const signupForm = $("signupForm");
+/* ==========================================================
+   USERS
+========================================================== */
+
+const USERS_KEY = "hackittUsers";
+
+function getUsers() {
+
+    return JSON.parse(
+        localStorage.getItem(USERS_KEY)
+    ) || [];
+}
+
+function saveUsers(users) {
+
+    localStorage.setItem(
+        USERS_KEY,
+        JSON.stringify(users)
+    );
+}
+
+
+/* ==========================================================
+   SIGNUP
+========================================================== */
+
+let signupForm =
+    document.getElementById("signupForm");
 
 if (signupForm) {
-    signupForm.addEventListener("submit", event => {
-        event.preventDefault();
 
-        const firstName = $("firstName").value.trim();
-        const lastName = $("lastName").value.trim();
-        const email = normalizeEmail($("signupEmail").value);
-        const password = $("signupPassword").value;
-        const confirmPassword = $("confirmPassword").value;
-        const selectedRole = document.querySelector(
-            'input[name="role"]:checked'
-        );
+    signupForm.addEventListener(
+        "submit",
+        function(event) {
 
-        if (!selectedRole) {
-            alert("Please select a role!");
-            return;
-        }
+            event.preventDefault();
 
-        if (password !== confirmPassword) {
-            alert("Passwords do not match!");
-            return;
-        }
+            let firstName =
+                document.getElementById(
+                    "firstName"
+                ).value.trim();
 
-        const role = selectedRole.value;
-        const skillInput = $("skill");
-        const skill = skillInput ? skillInput.value : "General";
-        const users = getUsers();
+            let lastName =
+                document.getElementById(
+                    "lastName"
+                ).value.trim();
 
-        if (users.some(user => normalizeEmail(user.email) === email)) {
-            alert("Email already registered!");
-            return;
-        }
+            let email =
+                document.getElementById(
+                    "signupEmail"
+                ).value
+                    .trim()
+                    .toLowerCase();
 
-        const newUser = {
-            id: Date.now().toString(),
-            firstName,
-            lastName,
-            email,
-            password,
-            role,
-            skill: role === "student" ? skill : "General"
-        };
+            let password =
+                document.getElementById(
+                    "signupPassword"
+                ).value;
 
-        users.push(newUser);
-        saveUsers(users);
+            let confirmPassword =
+                document.getElementById(
+                    "confirmPassword"
+                ).value;
 
-        if (role === "student") {
-            const participants = getParticipants();
+            let selectedRole =
+                document.querySelector(
+                    'input[name="role"]:checked'
+                );
 
-            if (!participants.some(
-                participant => normalizeEmail(participant.email) === email
-            )) {
-                participants.push({
-                    name: `${firstName} ${lastName}`,
-                    email,
-                    skill: skill || "General"
-                });
+            if (!selectedRole) {
 
-                saveParticipants(participants);
+                alert(
+                    "Please select a role!"
+                );
+
+                return;
             }
-        }
 
-        alert("Account created successfully!");
-        window.location.href = "login.html";
-    });
+            let role =
+                selectedRole.value;
+
+            let skillInput =
+                document.getElementById("skill");
+
+            let skill =
+                skillInput
+                    ? skillInput.value
+                    : "General";
+
+
+            if (password !== confirmPassword) {
+
+                alert(
+                    "Passwords do not match!"
+                );
+
+                return;
+            }
+
+
+            /* Get ALL existing users */
+
+            let users =
+                getUsers();
+
+
+            /* Check duplicate email */
+
+            let alreadyExists =
+                users.some(
+                    function(user) {
+
+                        return (
+                            user.email &&
+                            user.email
+                                .toLowerCase() ===
+                            email
+                        );
+                    }
+                );
+
+
+            if (alreadyExists) {
+
+                alert(
+                    "Email already registered!"
+                );
+
+                return;
+            }
+
+
+            /* Create new user */
+
+            let newUser = {
+
+                id:
+                    Date.now().toString(),
+
+                firstName:
+                    firstName,
+
+                lastName:
+                    lastName,
+
+                email:
+                    email,
+
+                password:
+                    password,
+
+                role:
+                    role,
+
+                skill:
+                    role === "student"
+                        ? skill
+                        : "General"
+            };
+
+
+            /* Keep all previous users */
+
+            users.push(newUser);
+
+            saveUsers(users);
+
+
+            /* Add student to participants */
+
+            if (role === "student") {
+
+                let participants =
+                    JSON.parse(
+                        localStorage.getItem(
+                            "hackitt_participants"
+                        )
+                    ) || [];
+
+                let alreadyIn =
+                    participants.some(
+                        function(participant) {
+
+                            return (
+                                participant.email &&
+                                participant.email
+                                    .toLowerCase() ===
+                                email
+                            );
+                        }
+                    );
+
+
+                if (!alreadyIn) {
+
+                    participants.push({
+
+                        name:
+                            firstName +
+                            " " +
+                            lastName,
+
+                        email:
+                            email,
+
+                        skill:
+                            skill || "General"
+                    });
+
+
+                    localStorage.setItem(
+                        "hackitt_participants",
+                        JSON.stringify(
+                            participants
+                        )
+                    );
+                }
+            }
+
+
+            alert(
+                "Account created successfully!"
+            );
+
+
+            window.location.href =
+                "login.html";
+        }
+    );
 }
 
-// ==================== LOGIN ====================
 
-const loginForm = $("loginForm");
+/* ==========================================================
+   LOGIN
+========================================================== */
+
+let loginForm =
+    document.getElementById("loginForm");
 
 if (loginForm) {
-    loginForm.addEventListener("submit", event => {
-        event.preventDefault();
 
-        const email = normalizeEmail($("email").value);
-        const password = $("password").value;
+    loginForm.addEventListener(
+        "submit",
+        function(event) {
 
-        const foundUser = getUsers().find(user =>
-            normalizeEmail(user.email) === email &&
-            user.password === password
-        );
+            event.preventDefault();
 
-        if (!foundUser) {
-            alert("Invalid email or password!");
-            return;
+
+            let email =
+                document.getElementById(
+                    "email"
+                ).value
+                    .trim()
+                    .toLowerCase();
+
+
+            let password =
+                document.getElementById(
+                    "password"
+                ).value;
+
+
+            let users =
+                getUsers();
+
+
+            let foundUser =
+                users.find(
+                    function(user) {
+
+                        return (
+                            user.email &&
+                            user.email
+                                .toLowerCase() ===
+                            email &&
+                            user.password ===
+                            password
+                        );
+                    }
+                );
+
+
+            if (!foundUser) {
+
+                alert(
+                    "Invalid email or password!"
+                );
+
+                return;
+            }
+
+
+            /*
+             * IMPORTANT:
+             * Current user is stored ONLY
+             * in sessionStorage.
+             *
+             * All registered users remain
+             * inside localStorage.
+             */
+
+            sessionStorage.setItem(
+                "currentUser",
+                JSON.stringify(foundUser)
+            );
+
+
+            alert(
+                "Login successful!"
+            );
+
+
+            if (
+                foundUser.role ===
+                "student"
+            ) {
+
+                window.location.href =
+                    "profile-student.html";
+
+            } else {
+
+                window.location.href =
+                    "profile-organizer.html";
+            }
         }
-
-        sessionStorage.setItem(
-            "currentUser",
-            JSON.stringify(foundUser)
-        );
-
-        currentUser = foundUser;
-
-        alert("Login successful!");
-
-        window.location.href =
-            foundUser.role === "student"
-                ? "profile-student.html"
-                : "profile-organizer.html";
-    });
+    );
 }
 
-// ==================== DISPLAY CURRENT USER ====================
+
+/* ==========================================================
+   CURRENT USER
+========================================================== */
+
+let currentUser =
+    JSON.parse(
+        sessionStorage.getItem(
+            "currentUser"
+        )
+    );
+
+
+/* ==========================================================
+   DISPLAY CURRENT USER
+========================================================== */
 
 if (currentUser) {
-    setText("studentName", currentUser.firstName);
-    setText("organizerName", currentUser.firstName);
 
-    setProfileInfo(
-        "profileStudentName",
-        "profileStudentEmail",
-        "profileStudentAvatar",
-        currentUser
-    );
+    let studentName =
+        document.getElementById(
+            "studentName"
+        );
 
-    setProfileInfo(
-        "profileOrgName",
-        "profileOrgEmail",
-        "profileOrgAvatar",
-        currentUser
-    );
-}
+    if (studentName) {
 
-// ==================== NAVIGATION ====================
+        studentName.innerText =
+            currentUser.firstName;
+    }
 
-const navLoginBtn = $("navLoginBtn");
-const navSignupBtn = $("navSignupBtn");
-const navProfileBtn = $("navProfileBtn");
-const navLogoutBtn = $("navLogoutBtn");
 
-if (navLoginBtn && navSignupBtn && navProfileBtn && navLogoutBtn) {
-    const loggedIn = !!currentUser;
+    let profileStudentName =
+        document.getElementById(
+            "profileStudentName"
+        );
 
-    navLoginBtn.style.display = loggedIn ? "none" : "inline-block";
-    navSignupBtn.style.display = loggedIn ? "none" : "inline-block";
-    navProfileBtn.style.display = loggedIn ? "inline-block" : "none";
-    navLogoutBtn.style.display = loggedIn ? "inline-block" : "none";
+    if (profileStudentName) {
 
-    if (loggedIn) {
-        navProfileBtn.href =
-            currentUser.role === "student"
-                ? "profile-student.html"
-                : "profile-organizer.html";
+        profileStudentName.innerText =
+            currentUser.firstName +
+            " " +
+            currentUser.lastName;
+    }
+
+
+    let profileStudentAvatar =
+        document.getElementById(
+            "profileStudentAvatar"
+        );
+
+    if (profileStudentAvatar) {
+
+        let firstInitial =
+            currentUser.firstName
+                ? currentUser.firstName.charAt(0)
+                : "";
+
+        let lastInitial =
+            currentUser.lastName
+                ? currentUser.lastName.charAt(0)
+                : "";
+
+        profileStudentAvatar.innerText =
+            (
+                firstInitial +
+                lastInitial
+            ).toUpperCase();
+    }
+
+
+    let profileStudentEmail =
+        document.getElementById(
+            "profileStudentEmail"
+        );
+
+    if (profileStudentEmail) {
+
+        profileStudentEmail.innerText =
+            currentUser.email;
+
+        profileStudentEmail.href =
+            "mailto:" +
+            currentUser.email;
+    }
+
+
+    let organizerName =
+        document.getElementById(
+            "organizerName"
+        );
+
+    if (organizerName) {
+
+        organizerName.innerText =
+            currentUser.firstName;
+    }
+
+
+    let profileOrgName =
+        document.getElementById(
+            "profileOrgName"
+        );
+
+    if (profileOrgName) {
+
+        profileOrgName.innerText =
+            currentUser.firstName +
+            " " +
+            currentUser.lastName;
+    }
+
+
+    let profileOrgAvatar =
+        document.getElementById(
+            "profileOrgAvatar"
+        );
+
+    if (profileOrgAvatar) {
+
+        let firstInitial =
+            currentUser.firstName
+                ? currentUser.firstName.charAt(0)
+                : "";
+
+        let lastInitial =
+            currentUser.lastName
+                ? currentUser.lastName.charAt(0)
+                : "";
+
+        profileOrgAvatar.innerText =
+            (
+                firstInitial +
+                lastInitial
+            ).toUpperCase();
+    }
+
+
+    let profileOrgEmail =
+        document.getElementById(
+            "profileOrgEmail"
+        );
+
+    if (profileOrgEmail) {
+
+        profileOrgEmail.innerText =
+            currentUser.email;
+
+        profileOrgEmail.href =
+            "mailto:" +
+            currentUser.email;
     }
 }
 
-// ==================== LOGOUT ====================
+
+/* ==========================================================
+   NAVIGATION
+========================================================== */
+
+let navLoginBtn =
+    document.getElementById(
+        "navLoginBtn"
+    );
+
+let navSignupBtn =
+    document.getElementById(
+        "navSignupBtn"
+    );
+
+let navProfileBtn =
+    document.getElementById(
+        "navProfileBtn"
+    );
+
+let navLogoutBtn =
+    document.getElementById(
+        "navLogoutBtn"
+    );
+
+
+if (
+    navLoginBtn &&
+    navSignupBtn &&
+    navProfileBtn &&
+    navLogoutBtn
+) {
+
+    if (currentUser) {
+
+        navLoginBtn.style.display =
+            "none";
+
+        navSignupBtn.style.display =
+            "none";
+
+        navProfileBtn.style.display =
+            "inline-block";
+
+        navLogoutBtn.style.display =
+            "inline-block";
+
+
+        if (
+            currentUser.role ===
+            "student"
+        ) {
+
+            navProfileBtn.href =
+                "profile-student.html";
+
+        } else {
+
+            navProfileBtn.href =
+                "profile-organizer.html";
+        }
+
+    } else {
+
+        navLoginBtn.style.display =
+            "inline-block";
+
+        navSignupBtn.style.display =
+            "inline-block";
+
+        navProfileBtn.style.display =
+            "none";
+
+        navLogoutBtn.style.display =
+            "none";
+    }
+}
+
+
+/* ==========================================================
+   LOGOUT
+========================================================== */
 
 function logoutUser(event) {
+
     event.preventDefault();
 
-    sessionStorage.removeItem("currentUser");
-    localStorage.removeItem("currentUser");
 
-    window.location.href = "index.html";
+    /*
+     * Remove current login session.
+     *
+     * Do NOT remove hackittUsers,
+     * participants or teams.
+     */
+
+    sessionStorage.removeItem(
+        "currentUser"
+    );
+
+
+    /*
+     * Remove old currentUser created
+     * by previous versions of the project.
+     */
+
+    localStorage.removeItem(
+        "currentUser"
+    );
+
+
+    window.location.href =
+        "index.html";
 }
+
+
+/* Navbar logout */
 
 if (navLogoutBtn) {
-    navLogoutBtn.addEventListener("click", logoutUser);
+
+    navLogoutBtn.addEventListener(
+        "click",
+        logoutUser
+    );
 }
 
-const logoutBtn = $("logoutBtn");
+
+/* Other logout buttons */
+
+let logoutBtn =
+    document.getElementById(
+        "logoutBtn"
+    );
 
 if (logoutBtn) {
-    logoutBtn.addEventListener("click", logoutUser);
+
+    logoutBtn.addEventListener(
+        "click",
+        logoutUser
+    );
 }
 
-// ==================== EDIT PROFILE ====================
 
-const editProfileBtn = $("editProfileBtn");
-const editProfileModal = $("editProfileModal");
-const closeEditProfile = $("closeEditProfile");
-const saveProfileBtn = $("saveProfileBtn");
+/* ==========================================================
+   EDIT PROFILE
+========================================================== */
 
-if (editProfileBtn && editProfileModal && saveProfileBtn) {
+let editProfileBtn =
+    document.getElementById(
+        "editProfileBtn"
+    );
 
-    editProfileBtn.addEventListener("click", event => {
-        event.preventDefault();
+let editProfileModal =
+    document.getElementById(
+        "editProfileModal"
+    );
 
-        if (!currentUser) {
-            alert("Please log in first.");
-            return;
+let closeEditProfile =
+    document.getElementById(
+        "closeEditProfile"
+    );
+
+let saveProfileBtn =
+    document.getElementById(
+        "saveProfileBtn"
+    );
+
+
+if (
+    editProfileBtn &&
+    editProfileModal &&
+    saveProfileBtn
+) {
+
+    editProfileBtn.addEventListener(
+        "click",
+        function(event) {
+
+            event.preventDefault();
+
+
+            if (!currentUser) {
+
+                alert(
+                    "Please log in first."
+                );
+
+                return;
+            }
+
+
+            document.getElementById(
+                "editFirstName"
+            ).value =
+                currentUser.firstName || "";
+
+
+            document.getElementById(
+                "editLastName"
+            ).value =
+                currentUser.lastName || "";
+
+
+            document.getElementById(
+                "editEmail"
+            ).value =
+                currentUser.email || "";
+
+
+            let editSkillSelect =
+                document.getElementById(
+                    "editSkill"
+                );
+
+
+            if (
+                editSkillSelect &&
+                currentUser.skill
+            ) {
+
+                editSkillSelect.value =
+                    currentUser.skill;
+            }
+
+
+            editProfileModal.classList.add(
+                "active"
+            );
         }
+    );
 
-        $("editFirstName").value = currentUser.firstName || "";
-        $("editLastName").value = currentUser.lastName || "";
-        $("editEmail").value = currentUser.email || "";
-
-        const editSkill = $("editSkill");
-
-        if (editSkill && currentUser.skill) {
-            editSkill.value = currentUser.skill;
-        }
-
-        editProfileModal.classList.add("active");
-    });
 
     if (closeEditProfile) {
-        closeEditProfile.addEventListener("click", () => {
-            editProfileModal.classList.remove("active");
-        });
+
+        closeEditProfile.addEventListener(
+            "click",
+            function() {
+
+                editProfileModal.classList.remove(
+                    "active"
+                );
+            }
+        );
     }
 
-    editProfileModal.addEventListener("click", event => {
-        if (event.target === editProfileModal) {
-            editProfileModal.classList.remove("active");
+
+    editProfileModal.addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target ===
+                editProfileModal
+            ) {
+
+                editProfileModal.classList.remove(
+                    "active"
+                );
+            }
         }
-    });
+    );
 
-    saveProfileBtn.addEventListener("click", () => {
-        const updatedFirstName = $("editFirstName").value.trim();
-        const updatedLastName = $("editLastName").value.trim();
-        const updatedEmail = normalizeEmail($("editEmail").value);
 
-        const editSkill = $("editSkill");
-        const updatedSkill = editSkill
-            ? editSkill.value
-            : currentUser.skill;
+    saveProfileBtn.addEventListener(
+        "click",
+        function() {
 
-        if (!updatedFirstName || !updatedLastName || !updatedEmail) {
-            alert("Please fill in all fields.");
-            return;
-        }
+            let updatedFirstName =
+                document.getElementById(
+                    "editFirstName"
+                ).value.trim();
 
-        const oldEmail = normalizeEmail(currentUser.email);
-        const users = getUsers();
 
-        const duplicate = users.some(user =>
-            normalizeEmail(user.email) === updatedEmail &&
-            normalizeEmail(user.email) !== oldEmail
-        );
+            let updatedLastName =
+                document.getElementById(
+                    "editLastName"
+                ).value.trim();
 
-        if (duplicate) {
-            alert("Email already registered!");
-            return;
-        }
 
-        const user = findUserByEmail(users, oldEmail);
+            let updatedEmail =
+                document.getElementById(
+                    "editEmail"
+                ).value
+                    .trim()
+                    .toLowerCase();
 
-        if (!user) {
-            alert("User not found!");
-            return;
-        }
 
-        user.firstName = updatedFirstName;
-        user.lastName = updatedLastName;
-        user.email = updatedEmail;
-        user.skill = updatedSkill;
+            let editSkill =
+                document.getElementById(
+                    "editSkill"
+                );
 
-        currentUser = user;
 
-        saveUsers(users);
+            let updatedSkill =
+                editSkill
+                    ? editSkill.value
+                    : currentUser.skill;
 
-        sessionStorage.setItem(
-            "currentUser",
-            JSON.stringify(currentUser)
-        );
 
-        // Update participant
-        const participants = getParticipants();
-        const participant = participants.find(
-            p => normalizeEmail(p.email) === oldEmail
-        );
+            if (
+                !updatedFirstName ||
+                !updatedLastName ||
+                !updatedEmail
+            ) {
 
-        if (participant) {
-            participant.name =
-                `${updatedFirstName} ${updatedLastName}`;
-            participant.email = updatedEmail;
-            participant.skill = updatedSkill;
-        }
+                alert(
+                    "Please fill in all fields."
+                );
 
-        saveParticipants(participants);
+                return;
+            }
 
-        // Update team members
-        const teams = getTeams();
 
-        teams.forEach(team => {
-            if (!team.members) team.members = [];
+            let oldEmail =
+                currentUser.email
+                    .toLowerCase();
 
-            team.members.forEach(member => {
-                if (normalizeEmail(member.email) === oldEmail) {
-                    member.name =
-                        `${updatedFirstName} ${updatedLastName}`;
-                    member.email = updatedEmail;
-                    member.skill = updatedSkill;
+
+            let users =
+                getUsers();
+
+            let duplicate =
+                users.some(
+                    function(user) {
+
+                        return (
+                            user.email &&
+                            user.email
+                                .toLowerCase() ===
+                            updatedEmail &&
+                            user.email
+                                .toLowerCase() !==
+                            oldEmail
+                        );
+                    }
+                );
+
+
+            if (duplicate) {
+
+                alert(
+                    "Email already registered!"
+                );
+
+                return;
+            }
+
+
+            let user =
+                users.find(
+                    function(user) {
+
+                        return (
+                            user.email &&
+                            user.email
+                                .toLowerCase() ===
+                            oldEmail
+                        );
+                    }
+                );
+
+
+            if (!user) {
+
+                alert(
+                    "User not found!"
+                );
+
+                return;
+            }
+
+
+            user.firstName =
+                updatedFirstName;
+
+            user.lastName =
+                updatedLastName;
+
+            user.email =
+                updatedEmail;
+
+            user.skill =
+                updatedSkill;
+
+
+            currentUser =
+                user;
+
+
+            /*
+             * Save ALL users.
+             */
+
+            saveUsers(users);
+
+
+            /*
+             * Save current user ONLY
+             * in sessionStorage.
+             */
+
+            sessionStorage.setItem(
+                "currentUser",
+                JSON.stringify(
+                    currentUser
+                )
+            );
+
+
+            /*
+             * Update participants.
+             */
+
+            let participants =
+                JSON.parse(
+                    localStorage.getItem(
+                        "hackitt_participants"
+                    )
+                ) || [];
+
+
+            for (
+                let i = 0;
+                i < participants.length;
+                i++
+            ) {
+
+                if (
+                    participants[i].email &&
+                    participants[i].email
+                        .toLowerCase() ===
+                    oldEmail
+                ) {
+
+                    participants[i].name =
+                        updatedFirstName +
+                        " " +
+                        updatedLastName;
+
+                    participants[i].email =
+                        updatedEmail;
+
+                    participants[i].skill =
+                        updatedSkill;
+
+                    break;
                 }
-            });
-        });
+            }
 
-        saveTeams(teams);
 
-        // Update page immediately
-        setText(
-            "profileStudentName",
-            `${updatedFirstName} ${updatedLastName}`
-        );
+            localStorage.setItem(
+                "hackitt_participants",
+                JSON.stringify(
+                    participants
+                )
+            );
 
-        setText("studentName", updatedFirstName);
 
-        setText(
-            "profileOrgName",
-            `${updatedFirstName} ${updatedLastName}`
-        );
+            /*
+             * Update team members.
+             */
 
-        setText("organizerName", updatedFirstName);
+            let teams =
+                JSON.parse(
+                    localStorage.getItem(
+                        "hackitt_teams"
+                    )
+                ) || [];
 
-        const studentEmail = $("profileStudentEmail");
-        if (studentEmail) {
-            studentEmail.innerText = updatedEmail;
-            studentEmail.href = `mailto:${updatedEmail}`;
+
+            for (
+                let i = 0;
+                i < teams.length;
+                i++
+            ) {
+
+                if (!teams[i].members) {
+                    teams[i].members = [];
+                }
+
+
+                for (
+                    let j = 0;
+                    j < teams[i].members.length;
+                    j++
+                ) {
+
+                    let member =
+                        teams[i].members[j];
+
+
+                    if (
+                        member.email &&
+                        member.email
+                            .toLowerCase() ===
+                        oldEmail
+                    ) {
+
+                        member.name =
+                            updatedFirstName +
+                            " " +
+                            updatedLastName;
+
+                        member.email =
+                            updatedEmail;
+
+                        member.skill =
+                            updatedSkill;
+                    }
+                }
+            }
+
+
+            localStorage.setItem(
+                "hackitt_teams",
+                JSON.stringify(
+                    teams
+                )
+            );
+
+
+            /*
+             * Update page immediately.
+             */
+
+            let profileStudentNameEl =
+                document.getElementById(
+                    "profileStudentName"
+                );
+
+
+            if (profileStudentNameEl) {
+
+                profileStudentNameEl.innerText =
+                    updatedFirstName +
+                    " " +
+                    updatedLastName;
+            }
+
+
+            let profileStudentEmailEl =
+                document.getElementById(
+                    "profileStudentEmail"
+                );
+
+
+            if (profileStudentEmailEl) {
+
+                profileStudentEmailEl.innerText =
+                    updatedEmail;
+
+                profileStudentEmailEl.href =
+                    "mailto:" +
+                    updatedEmail;
+            }
+
+
+            let profileOrgNameEl =
+                document.getElementById(
+                    "profileOrgName"
+                );
+
+
+            if (profileOrgNameEl) {
+
+                profileOrgNameEl.innerText =
+                    updatedFirstName +
+                    " " +
+                    updatedLastName;
+            }
+
+
+            let profileOrgEmailEl =
+                document.getElementById(
+                    "profileOrgEmail"
+                );
+
+
+            if (profileOrgEmailEl) {
+
+                profileOrgEmailEl.innerText =
+                    updatedEmail;
+
+                profileOrgEmailEl.href =
+                    "mailto:" +
+                    updatedEmail;
+            }
+
+
+            let studentNameEl =
+                document.getElementById(
+                    "studentName"
+                );
+
+
+            if (studentNameEl) {
+
+                studentNameEl.innerText =
+                    updatedFirstName;
+            }
+
+
+            let organizerNameEl =
+                document.getElementById(
+                    "organizerName"
+                );
+
+
+            if (organizerNameEl) {
+
+                organizerNameEl.innerText =
+                    updatedFirstName;
+            }
+
+
+            editProfileModal.classList.remove(
+                "active"
+            );
+
+
+            alert(
+                "Profile updated!"
+            );
         }
-
-        const orgEmail = $("profileOrgEmail");
-        if (orgEmail) {
-            orgEmail.innerText = updatedEmail;
-            orgEmail.href = `mailto:${updatedEmail}`;
-        }
-
-        editProfileModal.classList.remove("active");
-
-        alert("Profile updated!");
-    });
+    );
 }
 
-// ==================== TEAM STATUS BANNER ====================
 
-const teamBannerTitle = $("teamBannerTitle");
-const teamBannerText = $("teamBannerText");
-const teamBannerBtn = $("teamBannerBtn");
+/* ==========================================================
+   STUDENT PROFILE: TEAM STATUS BANNER
+========================================================== */
 
-if (teamBannerTitle && teamBannerText && teamBannerBtn) {
-    const teams = getTeams();
+let teamBannerTitle =
+    document.getElementById(
+        "teamBannerTitle"
+    );
+
+let teamBannerText =
+    document.getElementById(
+        "teamBannerText"
+    );
+
+let teamBannerBtn =
+    document.getElementById(
+        "teamBannerBtn"
+    );
+
+
+if (
+    teamBannerTitle &&
+    teamBannerText &&
+    teamBannerBtn
+) {
+
+    let teams =
+        JSON.parse(
+            localStorage.getItem(
+                "hackitt_teams"
+            )
+        ) || [];
+
 
     if (teams.length === 0) {
+
         teamBannerTitle.innerText =
             "Hackitt Summer Jam 2026";
 
         teamBannerText.innerText =
             "Teams have not been generated yet. Check back soon!";
 
-        teamBannerBtn.innerText = "Check Team";
-        teamBannerBtn.href = "check.html";
+        teamBannerBtn.innerText =
+            "Check Team";
+
+        teamBannerBtn.href =
+            "check.html";
 
     } else {
-        const myTeam = currentUser
-            ? findTeamForUser(teams, currentUser.email)
-            : null;
+
+        let myTeam = null;
+
+
+        if (currentUser) {
+
+            let myBannerEmail =
+                (
+                    currentUser.email ||
+                    ""
+                )
+                    .trim()
+                    .toLowerCase();
+
+
+            for (
+                let team of teams
+            ) {
+
+                if (!team.members) {
+
+                    team.members = [];
+                }
+
+
+                let isMember =
+                    team.members.some(
+                        function(member) {
+
+                            return (
+                                (
+                                    member.email ||
+                                    ""
+                                )
+                                    .trim()
+                                    .toLowerCase() ===
+                                myBannerEmail
+                            );
+                        }
+                    );
+
+
+                if (isMember) {
+
+                    myTeam =
+                        team;
+
+                    break;
+                }
+            }
+        }
+
 
         if (myTeam) {
+
             teamBannerTitle.innerText =
-                `You're in ${myTeam.name}!`;
+                "You're in " +
+                myTeam.name +
+                "!";
 
             teamBannerText.innerText =
-                `${myTeam.members.length}/${myTeam.maxSize} members`;
+                myTeam.members.length +
+                "/" +
+                myTeam.maxSize +
+                " members";
 
-            teamBannerBtn.innerText = "View My Team";
-            teamBannerBtn.href = "check.html";
+            teamBannerBtn.innerText =
+                "View My Team";
+
+            teamBannerBtn.href =
+                "check.html";
 
         } else {
+
             teamBannerTitle.innerText =
                 "Teams are ready!";
 
             teamBannerText.innerText =
                 "Head over and pick your team.";
 
-            teamBannerBtn.innerText = "Check Team";
-            teamBannerBtn.href = "check.html";
+            teamBannerBtn.innerText =
+                "Check Team";
+
+            teamBannerBtn.href =
+                "check.html";
         }
     }
 }
 
-// ==================== STUDENT DASHBOARD ====================
 
-const myTeamStatus = $("myTeamStatus");
-const myTeamMessage = $("myTeamMessage");
-const myTeamName = $("myTeamName");
-const myTeamMembers = $("myTeamMembers");
+/* ==========================================================
+   STUDENT DASHBOARD: MY TEAM
+========================================================== */
 
-if (myTeamStatus && myTeamMessage) {
-    const dashboardTeams = getTeams();
+let myTeamStatus =
+    document.getElementById(
+        "myTeamStatus"
+    );
 
-    const myAssignedTeam = currentUser
-        ? findTeamForUser(dashboardTeams, currentUser.email)
-        : null;
+let myTeamMessage =
+    document.getElementById(
+        "myTeamMessage"
+    );
+
+let myTeamName =
+    document.getElementById(
+        "myTeamName"
+    );
+
+let myTeamMembers =
+    document.getElementById(
+        "myTeamMembers"
+    );
+
+
+if (
+    myTeamStatus &&
+    myTeamMessage
+) {
+
+    let dashboardTeams =
+        JSON.parse(
+            localStorage.getItem(
+                "hackitt_teams"
+            )
+        ) || [];
+
+
+    let myAssignedTeam =
+        null;
+
+
+    if (currentUser) {
+
+        let myEmail =
+            (
+                currentUser.email ||
+                ""
+            )
+                .trim()
+                .toLowerCase();
+
+
+        for (
+            let team of dashboardTeams
+        ) {
+
+            if (!team.members) {
+
+                team.members = [];
+            }
+
+
+            let isMember =
+                team.members.some(
+                    function(member) {
+                        return (
+                            (
+                                member.email ||
+                                ""
+                            )
+                                .trim()
+                                .toLowerCase() ===
+                            myEmail
+                        );
+                    }
+                );
+
+
+            if (isMember) {
+                myAssignedTeam =
+                    team;
+                break;
+            }
+        }
+    }
+
 
     if (myAssignedTeam) {
-        myTeamStatus.innerText = "Assigned";
-        myTeamStatus.style.color = "#00e5ff";
+
+        myTeamStatus.innerText =
+            "Assigned";
+
+
+        myTeamStatus.style.color =
+            "#00e5ff";
+
 
         if (myTeamName) {
-            myTeamName.innerText = myAssignedTeam.name;
+
+            myTeamName.innerText =
+                myAssignedTeam.name;
         }
 
+
         myTeamMessage.innerText =
-            `${myAssignedTeam.members.length}/${myAssignedTeam.maxSize} members`;
+            myAssignedTeam.members.length +
+            "/" +
+            myAssignedTeam.maxSize +
+            " members";
+
 
         if (myTeamMembers) {
+
             myTeamMembers.innerHTML =
                 myAssignedTeam.members
-                    .map(member =>
-                        `<p>${member.name} - ${member.skill || "General"}</p>`
+                    .map(
+                        function(member) {
+
+                            return (
+                                "<p>" +
+                                member.name +
+                                " - " +
+                                (
+                                    member.skill ||
+                                    "General"
+                                ) +
+                                "</p>"
+                            );
+                        }
                     )
                     .join("");
         }
 
-    } else if (dashboardTeams.length === 0) {
-        myTeamStatus.innerText = "Not Assigned";
+
+    } else if (
+        dashboardTeams.length === 0
+    ) {
+
+        myTeamStatus.innerText =
+            "Not Assigned";
+
 
         myTeamMessage.innerText =
             "Your team will appear here once the organizer generates the teams.";
 
+
     } else {
-        myTeamStatus.innerText = "Not Assigned";
+
+        myTeamStatus.innerText =
+            "Not Assigned";
+
 
         myTeamMessage.innerText =
             "Teams are ready! Go to Check Team to join one.";
