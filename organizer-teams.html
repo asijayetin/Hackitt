@@ -24,11 +24,11 @@
         <section class="dashboard-header">
             <p class="small-heading">TEAM MANAGEMENT</p>
             <h1>Saved Teams</h1>
-            <p>Teams currently stored in the Hackitt database.</p>
-            <p id="teamSummary">Loading teams...</p>
+            <p>Review team assignments and member skills saved in MongoDB.</p>
+            <div class="saved-team-summary" id="teamSummary" aria-live="polite">Loading teams...</div>
         </section>
 
-        <section id="savedTeams" class="teams-results visible"></section>
+        <section id="savedTeams" class="saved-teams-grid"></section>
     </main>
 
     <script src="js/api.js"></script>
