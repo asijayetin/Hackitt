@@ -1,5 +1,5 @@
 const teamList = document.getElementById("teamList");
-const currentUser = JSON.parse(sessionStorage.getItem("currentUser") || "null");
+const loggedInUser = JSON.parse(sessionStorage.getItem("currentUser") || "null");
 
 function showMessage(title, message, linkText, linkUrl) {
     teamList.innerHTML = "";
@@ -49,7 +49,7 @@ function showAssignedTeam(team) {
         const row = document.createElement("div");
         row.className = "student-team-member";
         const memberName = document.createElement("span");
-        memberName.textContent = member.name + (member.email.toLowerCase() === currentUser.email.toLowerCase() ? " (You)" : "");
+        memberName.textContent = member.name + (member.email.toLowerCase() === loggedInUser.email.toLowerCase() ? " (You)" : "");
         const skill = document.createElement("span");
         skill.className = "saved-team-skill";
         skill.textContent = member.skill || "General";
@@ -62,12 +62,12 @@ function showAssignedTeam(team) {
 }
 
 async function loadMyTeam() {
-    if (!currentUser || !currentUser.email) {
+    if (!loggedInUser || !loggedInUser.email) {
         showMessage("Please log in", "Log in with your student account to see your team.", "Go to Login", "login.html");
         return;
     }
 
-    if (currentUser.role !== "student") {
+    if (loggedInUser.role !== "student") {
         showMessage("Student account required", "Log in as a student to view an assigned team.", "Go to Login", "login.html");
         return;
     }
@@ -76,7 +76,7 @@ async function loadMyTeam() {
         const teams = await apiRequest("/teams");
         const myTeam = teams.find(function (team) {
             return team.members.some(function (member) {
-                return member.email.toLowerCase() === currentUser.email.toLowerCase();
+                return member.email.toLowerCase() === loggedInUser.email.toLowerCase();
             });
         });
 
