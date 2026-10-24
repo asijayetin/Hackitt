@@ -23,7 +23,7 @@ function showMessage(title, message, linkText, linkUrl) {
     teamList.appendChild(card);
 }
 
-function showAssignedTeam(team) {
+async function showAssignedTeam(team) {
     teamList.innerHTML = "";
 
     const card = document.createElement("div");
@@ -58,7 +58,80 @@ function showAssignedTeam(team) {
     });
 
     card.append(heading, count, list);
+    await showTeamChangeRequest(card);
     teamList.appendChild(card);
+}
+
+async function showTeamChangeRequest(card) {
+    const panel = document.createElement("div");
+    panel.className = "student-change-request";
+    const heading = document.createElement("h3");
+    heading.textContent = "Need a different team?";
+    panel.appendChild(heading);
+
+    try {
+        const request = await apiRequest("/team-change-requests/mine");
+        if (request) {
+            const status = document.createElement("p");
+            status.className = "student-request-status";
+            status.textContent = "Request " + request.status;
+            panel.appendChild(status);
+
+            const reason = document.createElement("p");
+            reason.textContent = "Your reason: " + request.reason;
+            panel.appendChild(reason);
+
+            if (request.newTeamName) {
+                const moved = document.createElement("p");
+                moved.textContent = "The organizer moved you to " + request.newTeamName + ". Your current team is shown above.";
+                panel.appendChild(moved);
+            }
+
+            if (request.status === "pending") {
+                card.appendChild(panel);
+                return;
+            }
+        }
+
+        const form = document.createElement("form");
+        const reasonInput = document.createElement("textarea");
+        const submit = document.createElement("button");
+        reasonInput.required = true;
+        reasonInput.minLength = 5;
+        reasonInput.maxLength = 300;
+        reasonInput.placeholder = "Tell the organizer why you need a team change";
+        reasonInput.setAttribute("aria-label", "Reason for team change");
+        submit.type = "submit";
+        submit.className = "primary-btn";
+        submit.textContent = "Send Request";
+        const note = document.createElement("p");
+        note.textContent = "The organizer can approve this if another team has an open spot.";
+        form.append(note, reasonInput, submit);
+
+        form.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            submit.disabled = true;
+            try {
+                const result = await apiRequest("/team-change-requests", {
+                    method: "POST",
+                    body: JSON.stringify({ reason: reasonInput.value.trim() })
+                });
+                alert(result.message);
+                await loadMyTeam();
+            } catch (error) {
+                alert(error.message);
+                submit.disabled = false;
+            }
+        });
+
+        panel.appendChild(form);
+        card.appendChild(panel);
+    } catch (error) {
+        const message = document.createElement("p");
+        message.textContent = "Could not load request status: " + error.message;
+        panel.appendChild(message);
+        card.appendChild(panel);
+    }
 }
 
 async function loadMyTeam() {
@@ -81,7 +154,7 @@ async function loadMyTeam() {
         });
 
         if (myTeam) {
-            showAssignedTeam(myTeam);
+            await showAssignedTeam(myTeam);
         } else if (teams.length === 0) {
             showMessage("Teams are not ready yet", "The organizer has not generated teams. Check back later.");
         } else {

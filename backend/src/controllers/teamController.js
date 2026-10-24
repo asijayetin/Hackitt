@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Team = require("../models/Team");
+const TeamChangeRequest = require("../models/TeamChangeRequest");
 
 async function getTeams(req, res) {
     try {
@@ -18,6 +19,8 @@ async function generateTeams(req, res) {
 
         const participants = await User.find({ role: "student" }).sort({ createdAt: 1 });
         if (participants.length === 0) return res.status(400).json({ message: "No students have signed up yet" });
+        const pendingRequest = await TeamChangeRequest.exists({ status: "pending" });
+        if (pendingRequest) return res.status(409).json({ message: "Review pending team change requests before generating teams again" });
 
         const skillGroups = {};
         participants.forEach(function (person) {

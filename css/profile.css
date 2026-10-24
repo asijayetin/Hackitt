@@ -577,6 +577,95 @@
     text-decoration: none;
 }
 
+.student-change-request {
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.student-change-request h3 {
+    margin: 0 0 12px;
+    color: #fff;
+}
+
+.student-change-request p {
+    color: #aaa;
+    line-height: 1.6;
+}
+
+.student-change-request textarea {
+    display: block;
+    width: 100%;
+    min-height: 95px;
+    margin: 14px 0;
+    padding: 13px;
+    resize: vertical;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 10px;
+    background: #0b1112;
+    color: #fff;
+    font: inherit;
+}
+
+.student-change-request textarea:focus {
+    outline: 1px solid #00e5ff;
+    border-color: #00e5ff;
+}
+
+.student-request-status {
+    color: #00e5ff !important;
+    text-transform: capitalize;
+}
+
+.team-request-section {
+    margin-top: 70px;
+}
+
+.team-request-section .dashboard-header {
+    margin-bottom: 24px;
+}
+
+.team-request-section .dashboard-header h2 {
+    margin: 8px 0;
+    color: #fff;
+    font-size: clamp(28px, 4vw, 42px);
+}
+
+.team-request-card {
+    padding: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.035);
+}
+
+.team-request-card h3 {
+    margin: 0 0 14px;
+    color: #fff;
+}
+
+.team-request-card p {
+    margin: 10px 0;
+    color: #aaa;
+    line-height: 1.5;
+}
+
+.team-request-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.team-request-actions button {
+    cursor: pointer;
+    font: inherit;
+}
+
+.team-request-actions button:disabled {
+    cursor: wait;
+    opacity: 0.6;
+}
+
 @media (max-width: 520px) {
     .saved-team-heading {
         align-items: flex-start;

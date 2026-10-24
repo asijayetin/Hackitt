@@ -24,5 +24,9 @@ Never commit `.env` or send its contents in chat. The example file has placehold
 | GET | `/api/teams` | Public | — |
 | POST | `/api/teams/generate` | Organizer token | `teamSize` (2–10) |
 | POST | `/api/teams/:id/join` | Student token | — |
+| POST | `/api/team-change-requests` | Student token | `reason` |
+| GET | `/api/team-change-requests/mine` | Student token | — |
+| GET | `/api/team-change-requests` | Organizer token | — |
+| PATCH | `/api/team-change-requests/:id` | Organizer token | `status`: `approved` or `rejected` |
 
 Send the login/signup token in the `Authorization` header as `Bearer <token>`.

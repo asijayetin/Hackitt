@@ -4,6 +4,7 @@ const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const teamRoutes = require("./routes/teamRoutes");
 const participantRoutes = require("./routes/participantRoutes");
+const teamChangeRequestRoutes = require("./routes/teamChangeRequestRoutes");
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.get("/api/health", function (req, res) {
 app.use("/api/auth", authRoutes);
 app.use("/api/participants", participantRoutes);
 app.use("/api/teams", teamRoutes);
+app.use("/api/team-change-requests", teamChangeRequestRoutes);
 
 app.use(function (err, req, res, next) {
     console.error(err.message);

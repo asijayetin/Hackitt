@@ -1,5 +1,6 @@
 const savedTeams = document.getElementById("savedTeams");
 const teamSummary = document.getElementById("teamSummary");
+const teamRequests = document.getElementById("teamRequests");
 
 function addText(parent, tag, text) {
     const element = document.createElement(tag);
@@ -7,12 +8,13 @@ function addText(parent, tag, text) {
     parent.appendChild(element);
 }
 
-apiRequest("/teams").then(function (teams) {
+function showTeams(teams) {
+    savedTeams.innerHTML = "";
     if (teams.length === 0) {
-        teamSummary.textContent = "No teams have been generated yet.";
+        teamSummary.textContent = "0 teams saved";
         const emptyMessage = document.createElement("p");
         emptyMessage.className = "saved-teams-empty";
-        emptyMessage.textContent = "Generate teams from the organizer dashboard to see them here.";
+        emptyMessage.textContent = "No teams have been generated yet.";
         savedTeams.appendChild(emptyMessage);
         return;
     }
@@ -25,6 +27,7 @@ apiRequest("/teams").then(function (teams) {
     teams.forEach(function (team) {
         const card = document.createElement("div");
         const heading = document.createElement("div");
+        const title = document.createElement("h2");
         const memberList = document.createElement("ul");
         const progress = document.createElement("div");
         const progressBar = document.createElement("span");
@@ -35,8 +38,8 @@ apiRequest("/teams").then(function (teams) {
         memberList.className = "saved-team-members";
         progress.className = "saved-team-progress";
         progressBar.style.width = Math.min(team.members.length / capacity * 100, 100) + "%";
-        heading.appendChild(document.createElement("h2"));
-        heading.firstChild.textContent = team.name;
+        title.textContent = team.name;
+        heading.appendChild(title);
 
         const memberCountText = document.createElement("span");
         memberCountText.className = "saved-team-capacity";
@@ -61,9 +64,86 @@ apiRequest("/teams").then(function (teams) {
             });
             card.appendChild(memberList);
         }
-
         savedTeams.appendChild(card);
     });
-}).catch(function (error) {
-    teamSummary.textContent = "Could not load saved teams: " + error.message;
-});
+}
+
+async function reviewRequest(requestId, status, button) {
+    button.disabled = true;
+    try {
+        const result = await apiRequest("/team-change-requests/" + requestId, {
+            method: "PATCH",
+            body: JSON.stringify({ status })
+        });
+        alert(result.message);
+        loadOrganizerTeams();
+    } catch (error) {
+        alert(error.message);
+        button.disabled = false;
+    }
+}
+
+function showRequests(requests) {
+    teamRequests.innerHTML = "";
+    if (requests.length === 0) {
+        const emptyMessage = document.createElement("p");
+        emptyMessage.className = "saved-teams-empty";
+        emptyMessage.textContent = "No team change requests yet.";
+        teamRequests.appendChild(emptyMessage);
+        return;
+    }
+
+    requests.forEach(function (request) {
+        const card = document.createElement("div");
+        card.className = "team-request-card";
+        addText(card, "h3", request.studentName);
+        addText(card, "p", "Email: " + request.studentEmail);
+        addText(card, "p", "Current team: " + request.currentTeamName);
+        addText(card, "p", "Reason: " + request.reason);
+
+        const status = document.createElement("span");
+        status.className = "saved-team-capacity";
+        status.textContent = request.status;
+        card.appendChild(status);
+        if (request.newTeamName) addText(card, "p", "Moved to: " + request.newTeamName);
+
+        if (request.status === "pending") {
+            const actions = document.createElement("div");
+            actions.className = "team-request-actions";
+            const approve = document.createElement("button");
+            approve.className = "primary-btn";
+            approve.textContent = "Approve and move";
+            approve.addEventListener("click", function () {
+                reviewRequest(request._id, "approved", approve);
+            });
+
+            const reject = document.createElement("button");
+            reject.className = "secondary-btn";
+            reject.textContent = "Reject";
+            reject.addEventListener("click", function () {
+                reviewRequest(request._id, "rejected", reject);
+            });
+            actions.append(approve, reject);
+            card.appendChild(actions);
+        }
+        teamRequests.appendChild(card);
+    });
+}
+
+async function loadOrganizerTeams() {
+    try {
+        const teams = await apiRequest("/teams");
+        showTeams(teams);
+    } catch (error) {
+        teamSummary.textContent = "Could not load teams: " + error.message;
+    }
+
+    try {
+        const requests = await apiRequest("/team-change-requests");
+        showRequests(requests);
+    } catch (error) {
+        teamRequests.textContent = "Could not load requests: " + error.message;
+    }
+}
+
+loadOrganizerTeams();
