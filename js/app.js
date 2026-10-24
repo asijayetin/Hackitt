@@ -137,11 +137,17 @@ if (signupForm) {
 
 
             try {
-                await apiRequest("/auth/signup", {
+                const signupResult = await apiRequest("/auth/signup", {
                     method: "POST",
                     body: JSON.stringify({ firstName, lastName, email, password, role, skill })
                 });
-                alert("Account created successfully!");
+                if (role === "student") {
+                    alert(signupResult.teamName
+                        ? "Account created and assigned to " + signupResult.teamName
+                        : "Account created. You are waiting for the organizer to add a team.");
+                } else {
+                    alert("Organizer account created successfully!");
+                }
                 window.location.href = "login.html";
             } catch (error) {
                 alert(error.message);
@@ -1137,7 +1143,7 @@ if (
                 "Teams are ready!";
 
             teamBannerText.innerText =
-                "Head over and pick your team.";
+            "You are waiting for the organizer to add a team.";
 
             teamBannerBtn.innerText =
                 "Check Team";
@@ -1303,7 +1309,7 @@ if (
 
 
         myTeamMessage.innerText =
-            "Teams are ready! Go to Check Team to join one.";
+            "You are waiting for the organizer to add a team.";
     }
 }
 
@@ -1332,7 +1338,7 @@ if (typeof apiRequest === "function") {
 
         if (bannerTitle && bannerText && bannerButton) {
             bannerTitle.innerText = myTeam ? "You're in " + myTeam.name + "!" : (teams.length ? "Teams are ready!" : "Hackitt Summer Jam 2026");
-            bannerText.innerText = myTeam ? myTeam.members.length + "/" + myTeam.maxSize + " members" : (teams.length ? "Head over and pick your team." : "Teams have not been generated yet. Check back soon!");
+            bannerText.innerText = myTeam ? myTeam.members.length + "/" + myTeam.maxSize + " members" : (teams.length ? "You are waiting for the organizer to add a team." : "Teams have not been generated yet. Check back soon!");
             bannerButton.innerText = myTeam ? "View My Team" : "Check Team";
             bannerButton.href = "check.html";
         }

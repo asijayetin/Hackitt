@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const Team = require("../models/Team");
+const { assignNewStudent } = require("../services/teamAssignment");
 
 function makeToken(user) {
     return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -21,7 +22,16 @@ async function signup(req, res) {
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await User.create({ firstName, lastName, email, password: hashedPassword, role, skill: role === "student" ? (skill || "General") : "General" });
-        res.status(201).json({ message: "Account created", token: makeToken(user), user: { id: user._id, firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role, skill: user.skill } });
+        let teamName = null;
+        if (user.role === "student") {
+            try {
+                const team = await assignNewStudent(user);
+                teamName = team ? team.name : null;
+            } catch (error) {
+                console.error("Could not assign new student to a team:", error.message);
+            }
+        }
+        res.status(201).json({ message: "Account created", teamName, token: makeToken(user), user: { id: user._id, firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role, skill: user.skill } });
     } catch (error) {
         res.status(500).json({ message: "Could not create account" });
     }

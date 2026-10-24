@@ -49,14 +49,9 @@
                         class="section-description"
                         style="margin-bottom: 25px;"
                     >
-                        <span id="participant-count">
-                            0
-                        </span>
-                        participants registered.
-
-                        Choose a team size and generate
-                        balanced teams based on participant
-                        skills.
+                        <span id="participant-count">0</span> participants registered ·
+                        <span id="pending-count">0</span> waiting for a team.
+                        Choose the maximum team size and how many new teams to add.
                     </p>
 
 
@@ -65,7 +60,7 @@
                         <div class="form-group">
 
                             <label for="team-size">
-                                Team size
+                                Size for new teams
                             </label>
 
                             <input
@@ -78,12 +73,28 @@
 
                         </div>
 
+                        <div class="form-group">
+
+                            <label for="team-count">
+                                New teams to add
+                            </label>
+
+                            <input
+                                type="number"
+                                id="team-count"
+                                value="3"
+                                min="1"
+                                max="20"
+                            >
+
+                        </div>
+
 
                         <button
                             id="generate-btn"
                             class="primary-btn"
                         >
-                            Generate Teams
+                            Add Teams & Assign Students
                         </button>
 
 
@@ -100,9 +111,8 @@
 
                     <p class="participant-count-note">
 
-                        Teams are balanced automatically
-                        so each one gets a mix of skills,
-                        not just people from one category.
+                        Pending students are assigned to the least-filled team first. Skill matches help balance the teams.
+                        Existing teams stay as they are.
 
                     </p>
 

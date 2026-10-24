@@ -1,10 +1,11 @@
 const User = require("../models/User");
 const Team = require("../models/Team");
 const TeamChangeRequest = require("../models/TeamChangeRequest");
+const mongoose = require("mongoose");
 
 async function createRequest(req, res) {
     try {
-        const reason = (req.body.reason || "").trim();
+        const reason = String((req.body || {}).reason || "").trim();
         if (reason.length < 5) return res.status(400).json({ message: "Please explain your reason in at least 5 characters" });
 
         const pendingRequest = await TeamChangeRequest.findOne({ studentId: req.user.id, status: "pending" });
@@ -48,7 +49,10 @@ async function getRequests(req, res) {
 
 async function updateRequest(req, res) {
     try {
-        const status = req.body.status;
+        if (!mongoose.isValidObjectId(req.params.id)) {
+            return res.status(400).json({ message: "Invalid request ID" });
+        }
+        const status = (req.body || {}).status;
         if (!["approved", "rejected"].includes(status)) {
             return res.status(400).json({ message: "Choose approved or rejected" });
         }
@@ -74,7 +78,9 @@ async function updateRequest(req, res) {
         const newTeam = otherTeams.find(function (team) {
             return team.members.length < team.maxSize;
         });
-        if (!newTeam) return res.status(400).json({ message: "No other team has an available space" });
+        if (!newTeam) {
+            return res.status(409).json({ message: "No other team has a free spot. Add a team, then approve this request." });
+        }
 
         newTeam.members.push({ userId: member.userId, name: member.name, email: member.email, skill: member.skill });
         currentTeam.members = currentTeam.members.filter(function (person) {

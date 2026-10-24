@@ -22,7 +22,8 @@ Never commit `.env` or send its contents in chat. The example file has placehold
 | POST | `/api/auth/login` | Public | `email`, `password` |
 | GET | `/api/participants` | Organizer token | — |
 | GET | `/api/teams` | Public | — |
-| POST | `/api/teams/generate` | Organizer token | `teamSize` (2–10) |
+| POST | `/api/teams/generate` | Organizer token | `teamSize` (2–10), `teamCount` (1–20) |
+| GET | `/api/teams/pending` | Organizer token | — |
 | POST | `/api/teams/:id/join` | Student token | — |
 | POST | `/api/team-change-requests` | Student token | `reason` |
 | GET | `/api/team-change-requests/mine` | Student token | — |

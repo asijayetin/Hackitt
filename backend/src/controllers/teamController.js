@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const Team = require("../models/Team");
-const TeamChangeRequest = require("../models/TeamChangeRequest");
+const { assignPendingStudents } = require("../services/teamAssignment");
 
 async function getTeams(req, res) {
     try {
@@ -10,40 +10,65 @@ async function getTeams(req, res) {
     }
 }
 
-async function generateTeams(req, res) {
+async function getPendingStudents(req, res) {
     try {
-        const teamSize = Number(req.body.teamSize);
-        if (!Number.isInteger(teamSize) || teamSize < 2 || teamSize > 10) {
-            return res.status(400).json({ message: "Team size must be between 2 and 10" });
-        }
-
-        const participants = await User.find({ role: "student" }).sort({ createdAt: 1 });
-        if (participants.length === 0) return res.status(400).json({ message: "No students have signed up yet" });
-        const pendingRequest = await TeamChangeRequest.exists({ status: "pending" });
-        if (pendingRequest) return res.status(409).json({ message: "Review pending team change requests before generating teams again" });
-
-        const skillGroups = {};
-        participants.forEach(function (person) {
-            const skill = person.skill || "General";
-            if (!skillGroups[skill]) skillGroups[skill] = [];
-            skillGroups[skill].push(person);
-        });
-
-        const numberOfTeams = Math.ceil(participants.length / teamSize);
-        const groups = Array.from({ length: numberOfTeams }, function () { return []; });
-        let teamIndex = 0;
-        Object.values(skillGroups).forEach(function (group) {
-            group.forEach(function (person) {
-                groups[teamIndex].push({ userId: person._id, name: person.firstName + " " + person.lastName, email: person.email, skill: person.skill || "General" });
-                teamIndex = (teamIndex + 1) % numberOfTeams;
+        const teams = await Team.find();
+        const assignedIds = new Set();
+        const assignedEmails = new Set();
+        teams.forEach(function (team) {
+            team.members.forEach(function (member) {
+                if (member.userId) assignedIds.add(String(member.userId));
+                if (member.email) assignedEmails.add(member.email.trim().toLowerCase());
             });
         });
 
-        await Team.deleteMany({});
-        const teams = await Team.insertMany(groups.map(function (members, index) {
-            return { name: "Team " + (index + 1), maxSize: teamSize, members };
-        }));
-        res.status(201).json({ message: "Teams generated", teams });
+        const students = await User.find({ role: "student" }).sort({ createdAt: 1 });
+        const pendingStudents = students.filter(function (student) {
+            return !assignedIds.has(String(student._id)) && !assignedEmails.has(student.email.trim().toLowerCase());
+        }).map(function (student) {
+            return {
+                id: student._id,
+                name: student.firstName + " " + student.lastName,
+                email: student.email,
+                skill: student.skill || "General"
+            };
+        });
+        res.json(pendingStudents);
+    } catch (error) {
+        res.status(500).json({ message: "Could not get pending students" });
+    }
+}
+
+async function generateTeams(req, res) {
+    try {
+        const teamSize = Number((req.body || {}).teamSize);
+        const teamCount = Number((req.body || {}).teamCount);
+        if (!Number.isInteger(teamSize) || teamSize < 2 || teamSize > 10) {
+            return res.status(400).json({ message: "Team size must be between 2 and 10" });
+        }
+        if (!Number.isInteger(teamCount) || teamCount < 1 || teamCount > 20) {
+            return res.status(400).json({ message: "Number of teams to add must be between 1 and 20" });
+        }
+
+        const existingTeams = await Team.find().sort({ createdAt: 1 });
+        const newTeams = [];
+        for (let index = 0; index < teamCount; index += 1) {
+            newTeams.push({
+                name: "Team " + (existingTeams.length + index + 1),
+                maxSize: teamSize,
+                members: []
+            });
+        }
+        await Team.insertMany(newTeams);
+
+        const assignment = await assignPendingStudents();
+        const teams = await Team.find().sort({ createdAt: 1 });
+        res.status(201).json({
+            message: teamCount + " new team(s) added. " + assignment.assignedCount + " pending student(s) assigned; " + assignment.pendingCount + " still waiting.",
+            teams,
+            assignedCount: assignment.assignedCount,
+            pendingCount: assignment.pendingCount
+        });
     } catch (error) {
         res.status(500).json({ message: "Could not generate teams" });
     }
@@ -69,4 +94,4 @@ async function joinTeam(req, res) {
     }
 }
 
-module.exports = { getTeams, generateTeams, joinTeam };
+module.exports = { getTeams, getPendingStudents, generateTeams, joinTeam };

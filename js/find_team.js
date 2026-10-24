@@ -158,7 +158,7 @@ async function loadMyTeam() {
         } else if (teams.length === 0) {
             showMessage("Teams are not ready yet", "The organizer has not generated teams. Check back later.");
         } else {
-            showMessage("Team assignment pending", "The organizer has not assigned you to a team yet. Please check back later.");
+            showMessage("You are waiting for a team", "The organizer will add teams when needed. The system will assign you based on your skill and available space.");
         }
     } catch (error) {
         showMessage("Could not load your team", error.message);

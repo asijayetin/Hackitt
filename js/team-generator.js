@@ -7,10 +7,25 @@ function showGeneratedTeams(teams) {
     teams.forEach(function (team) {
         const card = document.createElement("div");
         card.className = "team-card";
-        const names = team.members.map(function (member) {
-            return "<li>" + member.name + " <span class=\"team-member-skill\">" + (member.skill || "General") + "</span></li>";
-        }).join("");
-        card.innerHTML = "<h4>" + team.name + "</h4><p>Team members:</p><ul class=\"team-member-list\">" + names + "</ul><p>Team size: " + team.members.length + " / " + team.maxSize + "</p>";
+        const title = document.createElement("h4");
+        title.textContent = team.name;
+        const size = document.createElement("p");
+        size.textContent = "Team size: " + team.members.length + " / " + team.maxSize;
+        const list = document.createElement("ul");
+        list.className = "team-member-list";
+
+        team.members.forEach(function (member) {
+            const item = document.createElement("li");
+            const name = document.createElement("span");
+            const skill = document.createElement("span");
+            name.textContent = member.name;
+            skill.className = "team-member-skill";
+            skill.textContent = member.skill || "General";
+            item.append(name, skill);
+            list.appendChild(item);
+        });
+
+        card.append(title, size, list);
         results.appendChild(card);
     });
 
@@ -34,31 +49,41 @@ function downloadTeamsAsCSV(teams) {
     URL.revokeObjectURL(link.href);
 }
 
+async function loadCounts() {
+    try {
+        const participants = await apiRequest("/participants");
+        document.getElementById("participant-count").textContent = participants.length;
+        const pending = await apiRequest("/teams/pending");
+        document.getElementById("pending-count").textContent = pending.length;
+    } catch (error) {
+        document.getElementById("pending-count").textContent = "Login as organizer to view";
+    }
+}
+
 document.addEventListener("DOMContentLoaded", async function () {
     const generateButton = document.getElementById("generate-btn");
     const downloadButton = document.getElementById("download-btn");
-    const count = document.getElementById("participant-count");
-
-    try {
-        const participants = await apiRequest("/participants");
-        count.textContent = participants.length;
-    } catch (error) {
-        count.textContent = "Login as organizer to load";
-    }
+    await loadCounts();
 
     generateButton.addEventListener("click", async function () {
         const teamSize = Number(document.getElementById("team-size").value);
+        const teamCount = Number(document.getElementById("team-count").value);
+        generateButton.disabled = true;
+
         try {
             const result = await apiRequest("/teams/generate", {
                 method: "POST",
-                body: JSON.stringify({ teamSize })
+                body: JSON.stringify({ teamSize, teamCount })
             });
             lastGeneratedTeams = result.teams;
             showGeneratedTeams(lastGeneratedTeams);
             downloadButton.style.display = "inline-block";
             alert(result.message);
+            await loadCounts();
         } catch (error) {
             alert(error.message);
+        } finally {
+            generateButton.disabled = false;
         }
     });
 

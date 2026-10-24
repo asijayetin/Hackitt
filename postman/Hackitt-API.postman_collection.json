@@ -55,10 +55,22 @@
       "name": "Get participants",
       "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{organizerToken}}" }], "url": "{{baseUrl}}/participants" }
     },
-    {
-      "name": "Generate teams",
-      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{organizerToken}}" }], "body": { "mode": "raw", "raw": "{\n  \"teamSize\": 4\n}" }, "url": "{{baseUrl}}/teams/generate" }
-    },
+      {
+        "name": "Generate teams",
+        "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{organizerToken}}" }], "body": { "mode": "raw", "raw": "{\n  \"teamSize\": 4,\n  \"teamCount\": 3\n}" }, "url": "{{baseUrl}}/teams/generate" }
+      },
+      {
+        "name": "Get waiting students",
+        "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{organizerToken}}" }], "url": "{{baseUrl}}/teams/pending" }
+      },
+      {
+        "name": "Send team change request",
+        "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{studentToken}}" }], "body": { "mode": "raw", "raw": "{\n  \"reason\": \"My skills match another team better\"\n}" }, "url": "{{baseUrl}}/team-change-requests" }
+      },
+      {
+        "name": "Review team change requests",
+        "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{organizerToken}}" }], "url": "{{baseUrl}}/team-change-requests" }
+      },
     {
       "name": "Get teams (copy a team's _id to teamId)",
       "request": { "method": "GET", "url": "{{baseUrl}}/teams" }
