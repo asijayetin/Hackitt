@@ -3,7 +3,8 @@ const {
     listHackathons,
     createHackathon,
     joinHackathon,
-    updateHackathonStatus
+    updateHackathonStatus,
+    saveHackathonResults
 } = require("../controllers/hackathonController");
 const { protect, organizerOnly, studentOnly } = require("../middleware/auth");
 const router = express.Router();
@@ -12,5 +13,6 @@ router.get("/", protect, listHackathons);
 router.post("/", protect, organizerOnly, createHackathon);
 router.post("/:id/join", protect, studentOnly, joinHackathon);
 router.patch("/:id/status", protect, organizerOnly, updateHackathonStatus);
+router.patch("/:id/results", protect, organizerOnly, saveHackathonResults);
 
 module.exports = router;

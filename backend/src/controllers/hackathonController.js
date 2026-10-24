@@ -39,6 +39,8 @@ async function listHackathons(req, res) {
                 minTeamSize: hackathon.minTeamSize,
                 maxTeamSize: hackathon.maxTeamSize,
                 requiredSkills: hackathon.requiredSkills,
+                prizePool: hackathon.prizePool,
+                results: hackathon.results,
                 eligible: !hackathon.requiredSkills.length || hackathon.requiredSkills.some(function (skill) {
                     return skill.trim().toLowerCase() === studentSkill;
                 }),
@@ -53,6 +55,7 @@ async function listHackathons(req, res) {
                 teamMembers: req.user.role === "organizer"
                     ? eventTeams.map(function (team) {
                         return {
+                            id: team._id,
                             name: team.name,
                             maxSize: team.maxSize,
                             members: team.members.map(function (member) {
@@ -82,6 +85,11 @@ async function createHackathon(req, res) {
         const requiredSkills = Array.isArray(body.requiredSkills)
             ? body.requiredSkills.map(function (skill) { return String(skill).trim(); }).filter(Boolean)
             : [];
+        const prizePool = {
+            first: body.prizePool && body.prizePool.first !== undefined ? Math.max(0, Number(body.prizePool.first) || 0) : 10000,
+            second: body.prizePool && body.prizePool.second !== undefined ? Math.max(0, Number(body.prizePool.second) || 0) : 5000,
+            third: body.prizePool && body.prizePool.third !== undefined ? Math.max(0, Number(body.prizePool.third) || 0) : 3000
+        };
 
         if (!name || !description) {
             return res.status(400).json({ message: "Enter a hackathon name and description" });
@@ -96,7 +104,8 @@ async function createHackathon(req, res) {
             description,
             minTeamSize,
             maxTeamSize,
-            requiredSkills
+            requiredSkills,
+            prizePool
         });
         res.status(201).json({ message: "Hackathon created", hackathon });
     } catch (error) {
@@ -162,4 +171,45 @@ async function updateHackathonStatus(req, res) {
     }
 }
 
-module.exports = { listHackathons, createHackathon, joinHackathon, updateHackathonStatus };
+async function saveHackathonResults(req, res) {
+    try {
+        if (!mongoose.isValidObjectId(req.params.id)) return res.status(400).json({ message: "Invalid hackathon ID" });
+        const hackathon = await Hackathon.findOne({ _id: req.params.id, organizerId: req.user.id });
+        if (!hackathon) return res.status(404).json({ message: "Hackathon not found" });
+        if (hackathon.status === "open") return res.status(409).json({ message: "Close registration before declaring winners" });
+
+        const selections = Array.isArray((req.body || {}).winners) ? req.body.winners : [];
+        if (!selections[0] || !selections[0].teamId) {
+            return res.status(400).json({ message: "Select a first place team" });
+        }
+        const teams = await Team.find({ hackathonId: hackathon._id });
+        const results = [];
+        const usedTeams = new Set();
+        for (let rank = 1; rank <= 3; rank += 1) {
+            const selectedId = selections[rank - 1] && selections[rank - 1].teamId;
+            if (!selectedId) continue;
+            if (!mongoose.isValidObjectId(selectedId) || usedTeams.has(String(selectedId))) {
+                return res.status(400).json({ message: "Choose a different valid team for each prize place" });
+            }
+            const team = teams.find(function (item) { return String(item._id) === String(selectedId); });
+            if (!team) return res.status(400).json({ message: "Selected team does not belong to this hackathon" });
+            usedTeams.add(String(selectedId));
+            results.push({
+                rank,
+                teamId: team._id,
+                teamName: team.name,
+                prizeAmount: hackathon.prizePool[["first", "second", "third"][rank - 1]],
+                members: team.members.map(function (member) { return { name: member.name, skill: member.skill || "General" }; })
+            });
+        }
+        if (!results.length) return res.status(400).json({ message: "Select at least one winning team" });
+        hackathon.results = results;
+        hackathon.status = "completed";
+        await hackathon.save();
+        res.json({ message: "Winners saved and hackathon completed", results: hackathon.results });
+    } catch (error) {
+        res.status(500).json({ message: "Could not save hackathon results" });
+    }
+}
+
+module.exports = { listHackathons, createHackathon, joinHackathon, updateHackathonStatus, saveHackathonResults };

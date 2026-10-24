@@ -7,7 +7,19 @@ const hackathonSchema = new mongoose.Schema({
     minTeamSize: { type: Number, required: true },
     maxTeamSize: { type: Number, required: true },
     requiredSkills: [{ type: String, trim: true }],
-    status: { type: String, enum: ["open", "closed"], default: "open" },
+    prizePool: {
+        first: { type: Number, default: 10000 },
+        second: { type: Number, default: 5000 },
+        third: { type: Number, default: 3000 }
+    },
+    status: { type: String, enum: ["open", "closed", "completed"], default: "open" },
+    results: [{
+        rank: Number,
+        teamId: { type: mongoose.Schema.Types.ObjectId, ref: "Team" },
+        teamName: String,
+        prizeAmount: Number,
+        members: [{ name: String, skill: String }]
+    }],
     participants: [{
         userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
         name: String,

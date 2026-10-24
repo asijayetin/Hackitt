@@ -269,6 +269,11 @@
 .history-info p {
     font-size: 13px;
     color: #888888;
+    line-height: 1.6;
+}
+
+.hackathon-history-list {
+    margin-top: 12px;
 }
 
 .history-status {
@@ -562,6 +567,23 @@
     gap: 18px;
 }
 
+.hackathon-prize-fields {
+    padding: 18px;
+    border: 1px solid rgba(0, 229, 255, 0.14);
+    border-radius: 12px;
+    background: rgba(0, 229, 255, 0.025);
+}
+
+.hackathon-prize-fields .hackathon-size-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.form-section-label {
+    margin-bottom: 12px;
+    color: #fff;
+    font-weight: 700;
+}
+
 .hackathon-skills {
     margin: 0;
     padding: 18px;
@@ -684,6 +706,38 @@
     font-size: 13px;
 }
 
+.hackathon-results-form {
+    display: grid;
+    width: 100%;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid rgba(0, 229, 255, 0.18);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.18);
+}
+
+.hackathon-results-form h4 {
+    margin: 0;
+    color: #fff;
+}
+
+.hackathon-results-form label {
+    display: grid;
+    gap: 6px;
+    color: #aaa;
+    font-size: 13px;
+}
+
+.hackathon-results-form select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 8px;
+    color: #fff;
+    background: #101819;
+    font: inherit;
+}
+
 @media (max-width: 520px) {
     .hackathon-form-card,
     .hackathon-card {
@@ -691,6 +745,10 @@
     }
 
     .hackathon-size-row {
+        grid-template-columns: 1fr;
+    }
+
+    .hackathon-prize-fields .hackathon-size-row {
         grid-template-columns: 1fr;
     }
 }

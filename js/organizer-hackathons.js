@@ -28,6 +28,8 @@ function renderOrganizerHackathons(hackathons) {
         card.appendChild(heading);
         addText(card, "p", hackathon.description);
         addText(card, "p", "Team size: " + hackathon.minTeamSize + "–" + hackathon.maxTeamSize);
+        const pool = hackathon.prizePool || { first: 10000, second: 5000, third: 3000 };
+        addText(card, "p", "Prize pool: 1st ₹" + pool.first + " · 2nd ₹" + pool.second + " · 3rd ₹" + pool.third);
         addText(card, "p", hackathon.participantCount + " students · " + hackathon.teamCount + " teams · " + hackathon.waitingCount + " waiting for a team");
         if (hackathon.requiredSkills.length) {
             addText(card, "p", "Skills: " + hackathon.requiredSkills.join(", "));
@@ -41,6 +43,18 @@ function renderOrganizerHackathons(hackathons) {
             }).join(" · "));
             card.appendChild(teamBox);
         });
+
+        if (hackathon.status === "completed") {
+            (hackathon.results || []).forEach(function (winner) {
+                const resultBox = document.createElement("div");
+                resultBox.className = "hackathon-team-summary";
+                addText(resultBox, "strong", winner.rank + (winner.rank === 1 ? "st" : winner.rank === 2 ? "nd" : "rd") + " place · " + winner.teamName + " · ₹" + winner.prizeAmount);
+                addText(resultBox, "p", (winner.members || []).map(function (member) { return member.name + " (" + member.skill + ")"; }).join(" · "));
+                card.appendChild(resultBox);
+            });
+            organizerHackathonList.appendChild(card);
+            return;
+        }
 
         const toggle = document.createElement("button");
         toggle.type = "button";
@@ -60,6 +74,58 @@ function renderOrganizerHackathons(hackathons) {
             }
         });
         card.appendChild(toggle);
+
+        if (hackathon.status === "closed" && hackathon.teamMembers.length) {
+            const resultsForm = document.createElement("form");
+            resultsForm.className = "hackathon-results-form";
+            addText(resultsForm, "h4", "Finish event and choose winners");
+            ["1st", "2nd", "3rd"].forEach(function (place, index) {
+                const label = document.createElement("label");
+                label.textContent = place + " place team";
+                const select = document.createElement("select");
+                select.name = "winner" + (index + 1);
+                const empty = document.createElement("option");
+                empty.value = "";
+                empty.textContent = index === 0 ? "Choose a team" : "No prize for this place";
+                select.appendChild(empty);
+                hackathon.teamMembers.forEach(function (team) {
+                    const option = document.createElement("option");
+                    option.value = team.id;
+                    option.textContent = team.name;
+                    select.appendChild(option);
+                });
+                label.appendChild(select);
+                resultsForm.appendChild(label);
+            });
+            const finish = document.createElement("button");
+            finish.type = "submit";
+            finish.className = "primary-btn";
+            finish.textContent = "Save winners";
+            resultsForm.appendChild(finish);
+            resultsForm.addEventListener("submit", async function (event) {
+                event.preventDefault();
+                const winners = [1, 2, 3].map(function (rank) {
+                    return { teamId: resultsForm.elements["winner" + rank].value };
+                });
+                if (!winners[0].teamId) return alert("Choose the first place team before finishing.");
+                if (winners.filter(function (winner) { return winner.teamId; }).some(function (winner, position, list) {
+                    return list.findIndex(function (item) { return item.teamId === winner.teamId; }) !== position;
+                })) return alert("Each prize place needs a different team.");
+                finish.disabled = true;
+                try {
+                    const result = await apiRequest("/hackathons/" + hackathon.id + "/results", {
+                        method: "PATCH",
+                        body: JSON.stringify({ winners })
+                    });
+                    alert(result.message);
+                    await loadOrganizerHackathons();
+                } catch (error) {
+                    alert(error.message);
+                    finish.disabled = false;
+                }
+            });
+            card.appendChild(resultsForm);
+        }
         organizerHackathonList.appendChild(card);
     });
 }
@@ -88,7 +154,12 @@ createHackathonForm.addEventListener("submit", async function (event) {
         description: document.getElementById("hackathonDescription").value.trim(),
         minTeamSize,
         maxTeamSize,
-        requiredSkills
+        requiredSkills,
+        prizePool: {
+            first: Number(document.getElementById("firstPrize").value),
+            second: Number(document.getElementById("secondPrize").value),
+            third: Number(document.getElementById("thirdPrize").value)
+        }
     };
 
     createHackathonBtn.disabled = true;

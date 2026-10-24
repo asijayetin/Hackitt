@@ -21,11 +21,13 @@ function renderStudentHackathons(hackathons) {
         addText(heading, "h3", hackathon.name);
         const status = document.createElement("span");
         status.className = "hackathon-status " + (hackathon.joined ? "joined" : hackathon.status);
-        status.textContent = hackathon.joined ? "Joined" : "Registration open";
+        status.textContent = hackathon.status === "completed" ? "Completed" : hackathon.joined ? "Joined" : "Registration open";
         heading.appendChild(status);
         card.appendChild(heading);
         addText(card, "p", hackathon.description);
         addText(card, "p", "Team size: " + hackathon.minTeamSize + "–" + hackathon.maxTeamSize + " · " + hackathon.participantCount + " joined");
+        const pool = hackathon.prizePool || { first: 10000, second: 5000, third: 3000 };
+        addText(card, "p", "Prize pool: 1st ₹" + pool.first + " · 2nd ₹" + pool.second + " · 3rd ₹" + pool.third);
         if (hackathon.requiredSkills.length) {
             addText(card, "p", "Skills wanted: " + hackathon.requiredSkills.join(", "));
         }
@@ -43,6 +45,12 @@ function renderStudentHackathons(hackathons) {
                 }).join(" · "));
                 card.appendChild(members);
             }
+            (hackathon.results || []).forEach(function (winner) {
+                const resultBox = document.createElement("div");
+                resultBox.className = "hackathon-team-summary";
+                addText(resultBox, "strong", winner.rank + (winner.rank === 1 ? "st" : winner.rank === 2 ? "nd" : "rd") + " place · " + winner.teamName + " · ₹" + winner.prizeAmount);
+                card.appendChild(resultBox);
+            });
         } else if (!hackathon.eligible) {
             addText(card, "p", "Your profile skill does not match this hackathon's skill needs.");
             const unavailable = document.createElement("button");
