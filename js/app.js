@@ -199,8 +199,8 @@ if (loginForm) {
                 saveLogin(data);
                 alert("Login successful!");
                 window.location.href = data.user.role === "student"
-                    ? "profile-student.html"
-                    : "profile-organizer.html";
+                    ? "student.html"
+                    : "organizer.html";
             } catch (error) {
                 alert(error.message);
             }
