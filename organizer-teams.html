@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Teams | Hackitt</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profile.css">
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">Hackitt</div>
+        <nav class="nav-links">
+            <a href="organizer.html">Dashboard</a>
+            <a href="participants.html">Participants</a>
+            <a href="profile-organizer.html">Profile</a>
+            <a href="#" id="logoutBtn" class="nav-btn">Log Out</a>
+        </nav>
+    </header>
+
+    <main class="organizer-dashboard">
+        <section class="dashboard-header">
+            <p class="small-heading">TEAM MANAGEMENT</p>
+            <h1>Saved Teams</h1>
+            <p>Teams currently stored in the Hackitt database.</p>
+            <p id="teamSummary">Loading teams...</p>
+        </section>
+
+        <section id="savedTeams" class="teams-results visible"></section>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/organizer-teams.js"></script>
+</body>
+
+</html>
