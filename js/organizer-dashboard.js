@@ -1,16 +1,21 @@
-const participantTotal = document.getElementById("participantTotal");
+const eventRegistrationTotal = document.getElementById("eventRegistrationTotal");
 const teamTotal = document.getElementById("teamTotal");
+const activeHackathonTotal = document.getElementById("activeHackathonTotal");
 
-apiRequest("/participants").then(function (participants) {
-    participantTotal.textContent = participants.length;
+apiRequest("/hackathons").then(function (hackathons) {
+    eventRegistrationTotal.textContent = hackathons.reduce(function (total, hackathon) {
+        return total + hackathon.participantCount;
+    }, 0);
+    teamTotal.textContent = hackathons.reduce(function (total, hackathon) {
+        return total + hackathon.teamCount;
+    }, 0);
+    activeHackathonTotal.textContent = hackathons.filter(function (hackathon) {
+        return hackathon.status === "open";
+    }).length;
 }).catch(function () {
-    participantTotal.textContent = "Login required";
-});
-
-apiRequest("/teams").then(function (teams) {
-    teamTotal.textContent = teams.length;
-}).catch(function () {
-    teamTotal.textContent = "Unavailable";
+    eventRegistrationTotal.textContent = "—";
+    teamTotal.textContent = "—";
+    activeHackathonTotal.textContent = "—";
 });
 
 const pendingRequestTotal = document.getElementById("pendingRequestTotal");

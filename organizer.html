@@ -60,39 +60,28 @@
 
     <main class="organizer-dashboard">
 
-        <section class="dashboard-header">
-
-            <p class="small-heading">
-                ORGANIZER DASHBOARD
-            </p>
-
-
-            <h1>
-
-                Welcome,
-
-                <span id="organizerName">
-                    Organizer
-                </span>!
-
-            </h1>
-
-
-            <p>
-                Manage your hackathons, participants and teams.
-            </p>
-
+        <section class="dashboard-header organizer-welcome">
+            <div>
+                <p class="small-heading">ORGANIZER WORKSPACE</p>
+                <h1>Welcome back, <span id="organizerName">Organizer</span></h1>
+                <p>Manage events, participants and team formation from one place.</p>
+            </div>
+            <a href="hackathons.html" class="primary-btn">＋ Create Hackathon</a>
         </section>
 
 
         <section class="dashboard-grid organizer-stats" aria-label="Hackathon summary">
             <div class="dashboard-card">
-                <p class="small-heading">REGISTERED PARTICIPANTS</p>
-                <h2 class="dashboard-stat-number" id="participantTotal">...</h2>
+                <p class="small-heading">EVENT REGISTRATIONS</p>
+                <h2 class="dashboard-stat-number" id="eventRegistrationTotal">...</h2>
             </div>
             <div class="dashboard-card">
                 <p class="small-heading">GENERATED TEAMS</p>
                 <h2 class="dashboard-stat-number" id="teamTotal">...</h2>
+            </div>
+            <div class="dashboard-card">
+                <p class="small-heading">OPEN HACKATHONS</p>
+                <h2 class="dashboard-stat-number" id="activeHackathonTotal">...</h2>
             </div>
         </section>
 
@@ -101,102 +90,47 @@
              DASHBOARD CARDS
         ============================== -->
 
-        <section class="dashboard-grid">
-
-
-            <!-- MY PROFILE -->
-
-            <div class="dashboard-card">
-
-                <h2>
-                    My Profile
-                </h2>
-
-
-                <p>
-                    View and manage your organizer profile.
-                </p>
-
-
-                <a
-                    href="profile-organizer.html"
-                    class="primary-btn">
-
-                    View Profile
-
-                </a>
-
+        <section class="organizer-tools-section">
+            <div class="organizer-section-heading">
+                <div>
+                    <p class="small-heading">QUICK ACCESS</p>
+                    <h2>Manage your workspace</h2>
+                </div>
+                <p>Choose an area to continue.</p>
             </div>
 
-
-            <!-- PARTICIPANTS -->
-
-            <div class="dashboard-card">
-
-                <h2>
-                    Participants
-                </h2>
-
-
-                <p>
-                    View students registered for your hackathon.
-                </p>
-
-
-                <a
-                    href="participants.html"
-                    class="primary-btn">
-
-                    View Participants
-
-                </a>
-
+            <div class="dashboard-grid organizer-tools">
+                <div class="dashboard-card organizer-tool-card organizer-tool-featured">
+                    <p class="dashboard-card-kicker">EVENTS</p>
+                    <h2>Hackathons</h2>
+                    <p>Create events, set prizes and team rules, and manage registration.</p>
+                    <a href="hackathons.html" class="primary-btn">Manage Hackathons <span aria-hidden="true">→</span></a>
+                </div>
+                <div class="dashboard-card organizer-tool-card">
+                    <p class="dashboard-card-kicker">PEOPLE</p>
+                    <h2>Participants</h2>
+                    <p>Browse student registrations and their skills.</p>
+                    <a href="participants.html" class="dashboard-card-link">View participants <span aria-hidden="true">→</span></a>
+                </div>
+                <div class="dashboard-card organizer-tool-card">
+                    <p class="dashboard-card-kicker">TEAMS</p>
+                    <h2>Saved teams</h2>
+                    <p>Review teams and their current members.</p>
+                    <a href="organizer-teams.html" class="dashboard-card-link">View teams <span aria-hidden="true">→</span></a>
+                </div>
+                <div class="dashboard-card organizer-tool-card">
+                    <p class="dashboard-card-kicker">REVIEW</p>
+                    <h2>Change requests</h2>
+                    <p><span id="pendingRequestTotal">Loading requests...</span></p>
+                    <a href="organizer-teams.html#requests" class="dashboard-card-link">Review requests <span aria-hidden="true">→</span></a>
+                </div>
+                <div class="dashboard-card organizer-tool-card">
+                    <p class="dashboard-card-kicker">ACCOUNT</p>
+                    <h2>My profile</h2>
+                    <p>Update your organizer details and profile.</p>
+                    <a href="profile-organizer.html" class="dashboard-card-link">View profile <span aria-hidden="true">→</span></a>
+                </div>
             </div>
-
-
-            <div class="dashboard-card">
-                <h2>Saved Teams</h2>
-                <p>View teams and members currently stored in MongoDB.</p>
-                <a href="organizer-teams.html" class="primary-btn">View Teams</a>
-            </div>
-
-            <div class="dashboard-card">
-                <h2>Team Change Requests</h2>
-                <p><span id="pendingRequestTotal">Loading requests...</span></p>
-                <a href="organizer-teams.html#requests" class="primary-btn">Review Requests</a>
-            </div>
-
-            <div class="dashboard-card">
-                <h2>Hackathons</h2>
-                <p>Create events, set team sizes and choose the skills you need.</p>
-                <a href="hackathons.html" class="primary-btn">Create &amp; Manage</a>
-            </div>
-
-
-            <!-- MY HACKATHON -->
-
-            <div class="dashboard-card">
-
-                <h2>
-                    Manage Hackathons
-                </h2>
-
-
-                <p>
-                    Create events, set team rules and manage registration.
-                </p>
-
-
-                <a
-                    href="hackathons.html"
-                    class="primary-btn">
-
-                    Create &amp; Manage
-
-                </a>
-
-            </div>
-
         </section>
 
 
@@ -204,31 +138,13 @@
              TEAM MANAGEMENT
         ============================== -->
 
-        <section class="generate-section">
-
-            <p class="small-heading">
-                TEAM MANAGEMENT
-            </p>
-
-
-            <h2>
-                Automatic Team Formation
-            </h2>
-
-
-            <p>
-                Teams form for each hackathon once its minimum team size is reached. New students are placed into available teams by skill and space.
-            </p>
-
-
-            <a
-                href="hackathons.html"
-                class="primary-btn">
-
-                Manage Hackathons
-
-            </a>
-
+        <section class="organizer-workflow-note">
+            <div class="workflow-note-mark" aria-hidden="true">✓</div>
+            <div>
+                <p class="small-heading">AUTOMATIC TEAM FORMATION</p>
+                <h2>Teams form as students join</h2>
+                <p>Once enough students register, Hackitt creates teams and balances them by skill and available space.</p>
+            </div>
         </section>
 
     </main>

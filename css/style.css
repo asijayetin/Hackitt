@@ -1094,6 +1094,170 @@ footer {
         0 0 14px;
 }
 
+.organizer-dashboard .organizer-welcome {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 28px;
+    margin-bottom: 34px;
+}
+
+.organizer-dashboard .organizer-welcome .primary-btn {
+    flex: 0 0 auto;
+    margin-bottom: 2px;
+}
+
+.organizer-dashboard .organizer-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 0 0 52px;
+}
+
+.organizer-dashboard .organizer-stats .dashboard-card {
+    min-height: 0;
+    padding: 22px 25px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(0, 229, 255, 0.055), rgba(255, 255, 255, 0.025));
+}
+
+.organizer-dashboard .organizer-stats .small-heading {
+    margin: 0;
+    font-size: 11px;
+    letter-spacing: 1.2px;
+}
+
+.organizer-dashboard .organizer-stats .dashboard-stat-number {
+    margin: 10px 0 0;
+    color: #00e5ff;
+    font-size: 36px;
+    line-height: 1;
+}
+
+.organizer-tools-section {
+    margin-bottom: 34px;
+}
+
+.organizer-section-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 18px;
+}
+
+.organizer-section-heading .small-heading {
+    margin-bottom: 7px;
+}
+
+.organizer-section-heading h2 {
+    font-size: clamp(23px, 3vw, 30px);
+    letter-spacing: -0.5px;
+}
+
+.organizer-section-heading > p {
+    color: #888;
+    font-size: 14px;
+}
+
+.organizer-dashboard .organizer-tools {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.organizer-dashboard .organizer-tool-card {
+    display: flex;
+    min-height: 218px;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 25px;
+    border-radius: 13px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.018));
+}
+
+.organizer-dashboard .organizer-tool-featured {
+    border-color: rgba(0, 229, 255, 0.35);
+    background: linear-gradient(145deg, rgba(0, 229, 255, 0.10), rgba(255, 255, 255, 0.025) 72%);
+}
+
+.organizer-dashboard .dashboard-card-kicker {
+    margin: 0 0 13px;
+    color: #00e5ff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.25px;
+}
+
+.organizer-dashboard .organizer-tool-card h2 {
+    margin: 0 0 9px;
+    font-size: 20px;
+}
+
+.organizer-dashboard .organizer-tool-card > p:not(.dashboard-card-kicker) {
+    margin: 0 0 20px;
+    font-size: 14px;
+}
+
+.organizer-dashboard .organizer-tool-card .primary-btn,
+.organizer-dashboard .organizer-tool-card .dashboard-card-link {
+    margin-top: auto;
+}
+
+.organizer-dashboard .organizer-tool-card .dashboard-card-link {
+    color: #00e5ff;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.organizer-dashboard .organizer-tool-card .dashboard-card-link span,
+.organizer-dashboard .organizer-tool-card .primary-btn span {
+    display: inline-block;
+    margin-left: 5px;
+    transition: transform 0.2s ease;
+}
+
+.organizer-dashboard .organizer-tool-card .dashboard-card-link:hover span,
+.organizer-dashboard .organizer-tool-card .primary-btn:hover span {
+    transform: translateX(3px);
+}
+
+.organizer-workflow-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 22px 25px;
+    border: 1px solid rgba(0, 229, 255, 0.16);
+    border-radius: 13px;
+    background: rgba(0, 229, 255, 0.035);
+}
+
+.workflow-note-mark {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    place-items: center;
+    border: 1px solid rgba(0, 229, 255, 0.35);
+    border-radius: 50%;
+    color: #00e5ff;
+    font-weight: 700;
+}
+
+.organizer-workflow-note .small-heading {
+    margin-bottom: 5px;
+}
+
+.organizer-workflow-note h2 {
+    margin-bottom: 5px;
+    font-size: 18px;
+}
+
+.organizer-workflow-note p:last-child {
+    color: #999;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
 .organizer-dashboard
 .dashboard-card
 .generate-btn {
@@ -1419,6 +1583,22 @@ button.secondary-btn:hover {
     .dashboard-header h1 {
         font-size:
             42px;
+    }
+
+    .organizer-dashboard .organizer-welcome {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .organizer-dashboard .organizer-welcome .primary-btn {
+        width: fit-content;
+    }
+
+    .organizer-section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 5px;
     }
 }
 
