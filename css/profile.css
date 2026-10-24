@@ -506,6 +506,77 @@
     color: #aaa;
 }
 
+.student-team-results {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.student-team-card,
+.student-team-message {
+    padding: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.035);
+}
+
+.student-team-card {
+    border-color: rgba(0, 229, 255, 0.35);
+    box-shadow: 0 16px 50px rgba(0, 229, 255, 0.06);
+}
+
+.student-team-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.student-team-heading h2,
+.student-team-message h2 {
+    margin: 0;
+    color: #fff;
+    font-size: 25px;
+}
+
+.student-team-status {
+    padding: 7px 13px;
+    border: 1px solid rgba(0, 229, 255, 0.35);
+    border-radius: 30px;
+    background: rgba(0, 229, 255, 0.08);
+    color: #00e5ff;
+    font-size: 13px;
+}
+
+.student-team-count,
+.student-team-message p {
+    margin: 14px 0 22px;
+    color: #999;
+}
+
+.student-team-members {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.student-team-member {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: #eee;
+}
+
+.student-team-member:last-child {
+    border-bottom: 0;
+}
+
+.student-team-message .primary-btn {
+    display: inline-block;
+    text-decoration: none;
+}
+
 @media (max-width: 520px) {
     .saved-team-heading {
         align-items: flex-start;
