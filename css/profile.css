@@ -349,6 +349,32 @@
    GENERATE TEAMS PAGE
 ============================== */
 
+.participant-tools {
+    max-width: 520px;
+    margin: 0 0 24px;
+}
+
+.participant-tools label {
+    display: block;
+    margin-bottom: 8px;
+    color: #b8b8b8;
+}
+
+.participant-tools input {
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid #333;
+    border-radius: 10px;
+    background: #111;
+    color: #fff;
+    font: inherit;
+}
+
+.participant-tools p {
+    margin: 10px 0 0;
+    color: #888;
+}
+
 .generate-controls {
     display: flex;
     align-items: flex-end;

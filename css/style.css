@@ -781,6 +781,20 @@ footer {
     margin-bottom: 25px;
 }
 
+.organizer-stats {
+    margin: 25px 0;
+}
+
+.organizer-stats .dashboard-card {
+    min-height: 0;
+}
+
+.organizer-stats .dashboard-stat-number {
+    margin: 12px 0 0;
+    color: #00e5ff;
+    font-size: 42px;
+}
+
 .dashboard-card a {
     color: #00e5ff;
 
