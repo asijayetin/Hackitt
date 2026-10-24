@@ -27,7 +27,7 @@ function renderOrganizerHackathons(hackathons) {
         heading.appendChild(status);
         card.appendChild(heading);
         addText(card, "p", hackathon.description);
-        addText(card, "p", "Team size: " + hackathon.minTeamSize + "–" + hackathon.maxTeamSize);
+        addText(card, "p", "Team size: " + hackathon.minTeamSize + "–" + hackathon.maxTeamSize + " · Starter teams: " + (hackathon.initialTeamCount || 3));
         const pool = hackathon.prizePool || { first: 10000, second: 5000, third: 3000 };
         addText(card, "p", "Prize pool: 1st ₹" + pool.first + " · 2nd ₹" + pool.second + " · 3rd ₹" + pool.third);
         addText(card, "p", hackathon.participantCount + " students · " + hackathon.teamCount + " teams · " + hackathon.waitingCount + " waiting for a team");
@@ -154,6 +154,7 @@ createHackathonForm.addEventListener("submit", async function (event) {
         description: document.getElementById("hackathonDescription").value.trim(),
         minTeamSize,
         maxTeamSize,
+        initialTeamCount: Number(document.getElementById("initialTeamCount").value),
         requiredSkills,
         prizePool: {
             first: Number(document.getElementById("firstPrize").value),

@@ -14,6 +14,11 @@ async function listHackathons(req, res) {
         }
 
         const hackathons = await Hackathon.find(query).sort({ createdAt: -1 });
+        for (const hackathon of hackathons) {
+            if (hackathon.status !== "completed" && hackathon.participants.length) {
+                await updateHackathonTeams(hackathon);
+            }
+        }
         const currentUser = await User.findById(req.user.id).select("skill");
         const studentSkill = (currentUser && currentUser.skill || "General").trim().toLowerCase();
         const hackathonIds = hackathons.map(function (hackathon) { return hackathon._id; });
@@ -38,6 +43,7 @@ async function listHackathons(req, res) {
                 description: hackathon.description,
                 minTeamSize: hackathon.minTeamSize,
                 maxTeamSize: hackathon.maxTeamSize,
+                initialTeamCount: hackathon.initialTeamCount || hackathon.minTeamSize || 3,
                 requiredSkills: hackathon.requiredSkills,
                 prizePool: hackathon.prizePool,
                 results: hackathon.results,
@@ -82,6 +88,7 @@ async function createHackathon(req, res) {
         const description = String(body.description || "").trim();
         const minTeamSize = Number(body.minTeamSize);
         const maxTeamSize = Number(body.maxTeamSize);
+        const initialTeamCount = Number(body.initialTeamCount || 3);
         const requiredSkills = Array.isArray(body.requiredSkills)
             ? body.requiredSkills.map(function (skill) { return String(skill).trim(); }).filter(Boolean)
             : [];
@@ -97,6 +104,9 @@ async function createHackathon(req, res) {
         if (!Number.isInteger(minTeamSize) || !Number.isInteger(maxTeamSize) || minTeamSize < 2 || maxTeamSize > 10 || maxTeamSize < minTeamSize) {
             return res.status(400).json({ message: "Team sizes must be between 2 and 10, and maximum must be at least minimum" });
         }
+        if (!Number.isInteger(initialTeamCount) || initialTeamCount < 1 || initialTeamCount > 20) {
+            return res.status(400).json({ message: "Starter teams must be between 1 and 20" });
+        }
 
         const hackathon = await Hackathon.create({
             organizerId: req.user.id,
@@ -104,6 +114,7 @@ async function createHackathon(req, res) {
             description,
             minTeamSize,
             maxTeamSize,
+            initialTeamCount,
             requiredSkills,
             prizePool
         });
@@ -145,7 +156,7 @@ async function joinHackathon(req, res) {
         const assignment = await updateHackathonTeams(hackathon);
         const team = await Team.findOne({ hackathonId: hackathon._id, "members.userId": user._id });
         res.status(201).json({
-            message: team ? "You joined and were assigned to " + team.name : "You joined. A team will form when enough students sign up.",
+            message: team ? "You joined and were assigned to " + team.name : "You joined. Your team is being prepared.",
             teamName: team ? team.name : null,
             participantCount: hackathon.participants.length,
             ...assignment

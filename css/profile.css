@@ -543,6 +543,13 @@
     resize: vertical;
 }
 
+.starter-team-setting p {
+    margin-top: 6px;
+    color: #999;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
 .hackathon-form input:not([type="checkbox"]),
 .hackathon-form textarea {
     width: 100%;

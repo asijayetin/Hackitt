@@ -37,13 +37,18 @@
                 </div>
                 <div class="hackathon-size-row">
                     <div class="form-group">
-                        <label for="minTeamSize">Minimum team size</label>
+                        <label for="minTeamSize">Target team size</label>
                         <input id="minTeamSize" name="minTeamSize" type="number" min="2" max="10" value="3" required>
                     </div>
                     <div class="form-group">
                         <label for="maxTeamSize">Maximum team size</label>
                         <input id="maxTeamSize" name="maxTeamSize" type="number" min="2" max="10" value="4" required>
                     </div>
+                </div>
+                <div class="form-group starter-team-setting">
+                    <label for="initialTeamCount">Starter teams</label>
+                    <input id="initialTeamCount" name="initialTeamCount" type="number" min="1" max="20" value="3" required>
+                    <p>Each of the first students starts a team. After these teams exist, new students join an available team based on skill and space.</p>
                 </div>
                 <div class="hackathon-prize-fields">
                     <p class="form-section-label">Prize pool (₹)</p>
@@ -64,7 +69,7 @@
                         <label><input type="checkbox" name="requiredSkills" value="Mobile"> Mobile</label>
                     </div>
                 </fieldset>
-                <p class="hackathon-form-note">Teams form automatically after enough students join. Students below the minimum wait for more members.</p>
+                <p class="hackathon-form-note">Starter teams begin with one student each. Later students join an available team by skill and space; if all teams are full, Hackitt creates another team.</p>
                 <button type="submit" class="primary-btn" id="createHackathonBtn">Create Hackathon</button>
             </form>
         </section>

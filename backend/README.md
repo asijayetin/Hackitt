@@ -21,7 +21,7 @@ Never commit `.env` or send its contents in chat. The example file has placehold
 | POST | `/api/auth/signup` | Public | `firstName`, `lastName`, `email`, `password`, `role`, optional `skill` |
 | POST | `/api/auth/login` | Public | `email`, `password` |
 | GET | `/api/hackathons` | Student or organizer token | — |
-| POST | `/api/hackathons` | Organizer token | `name`, `description`, `minTeamSize`, `maxTeamSize`, optional `requiredSkills`, optional `prizePool` (`first`, `second`, `third`) |
+| POST | `/api/hackathons` | Organizer token | `name`, `description`, `minTeamSize`, `maxTeamSize`, optional `initialTeamCount`, optional `requiredSkills`, optional `prizePool` (`first`, `second`, `third`) |
 | POST | `/api/hackathons/:id/join` | Student token | — |
 | PATCH | `/api/hackathons/:id/status` | Organizer token | `status`: `open` or `closed` |
 | PATCH | `/api/hackathons/:id/results` | Organizer token | `winners`: team IDs in 1st, 2nd, 3rd place order (close registration first) |
@@ -37,4 +37,4 @@ Never commit `.env` or send its contents in chat. The example file has placehold
 
 Send the login/signup token in the `Authorization` header as `Bearer <token>`.
 
-For a new event, the organizer creates a hackathon, chooses its minimum and maximum team size, and sets the three prize amounts. Students join it from their dashboard. Teams form when enough unassigned students are available; anyone left over waits until another minimum-size group can be formed. Registration can be closed or reopened by the organizer. After closing registration, the organizer selects winning teams; the event and a snapshot of the winning team members are saved as completed history.
+For a new event, the organizer creates a hackathon, chooses team sizes, starter team count, and the three prize amounts. The first students each start a team; later students are assigned to teams with room, balancing repeated skills where possible. If all teams are full, a new one is created automatically. Registration can be closed or reopened by the organizer. After closing registration, the organizer selects winning teams; the event and a snapshot of the winning team members are saved as completed history.

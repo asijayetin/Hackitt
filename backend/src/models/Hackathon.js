@@ -6,6 +6,7 @@ const hackathonSchema = new mongoose.Schema({
     description: { type: String, required: true, trim: true },
     minTeamSize: { type: Number, required: true },
     maxTeamSize: { type: Number, required: true },
+    initialTeamCount: { type: Number, default: 3 },
     requiredSkills: [{ type: String, trim: true }],
     prizePool: {
         first: { type: Number, default: 10000 },

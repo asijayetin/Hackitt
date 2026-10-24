@@ -6,10 +6,22 @@ function addText(parent, tag, text) {
     parent.appendChild(element);
 }
 
+function addPrize(prizes, place, amount) {
+    const item = document.createElement("div");
+    item.className = "hackathon-prize-item";
+    addText(item, "span", place);
+    addText(item, "strong", "₹" + amount);
+    prizes.appendChild(item);
+}
+
 function renderStudentHackathons(hackathons) {
     studentHackathonList.innerHTML = "";
+    studentHackathonList.classList.remove("hackathon-load-error");
     if (!hackathons.length) {
-        addText(studentHackathonList, "p", "No open hackathons right now. Check back later.");
+        const empty = document.createElement("p");
+        empty.className = "hackathon-empty-state";
+        empty.textContent = "No open hackathons right now. Check back later.";
+        studentHackathonList.appendChild(empty);
         return;
     }
 
@@ -24,18 +36,52 @@ function renderStudentHackathons(hackathons) {
         status.textContent = hackathon.status === "completed" ? "Completed" : hackathon.joined ? "Joined" : "Registration open";
         heading.appendChild(status);
         card.appendChild(heading);
-        addText(card, "p", hackathon.description);
-        addText(card, "p", "Team size: " + hackathon.minTeamSize + "–" + hackathon.maxTeamSize + " · " + hackathon.participantCount + " joined");
+        const description = document.createElement("p");
+        description.className = "hackathon-description";
+        description.textContent = hackathon.description;
+        card.appendChild(description);
+
+        const details = document.createElement("div");
+        details.className = "hackathon-info-grid";
+        [["TEAM SIZE", hackathon.minTeamSize + "–" + hackathon.maxTeamSize], ["REGISTERED", String(hackathon.participantCount) + " students"]].forEach(function (detail) {
+            const item = document.createElement("div");
+            item.className = "hackathon-info-item";
+            addText(item, "span", detail[0]);
+            addText(item, "strong", detail[1]);
+            details.appendChild(item);
+        });
+        card.appendChild(details);
+
         const pool = hackathon.prizePool || { first: 10000, second: 5000, third: 3000 };
-        addText(card, "p", "Prize pool: 1st ₹" + pool.first + " · 2nd ₹" + pool.second + " · 3rd ₹" + pool.third);
+        const prizePanel = document.createElement("div");
+        prizePanel.className = "hackathon-prize-panel";
+        addText(prizePanel, "p", "PRIZE POOL");
+        const prizes = document.createElement("div");
+        prizes.className = "hackathon-prize-list";
+        addPrize(prizes, "1st place", pool.first);
+        addPrize(prizes, "2nd place", pool.second);
+        addPrize(prizes, "3rd place", pool.third);
+        prizePanel.appendChild(prizes);
+        card.appendChild(prizePanel);
         if (hackathon.requiredSkills.length) {
-            addText(card, "p", "Skills wanted: " + hackathon.requiredSkills.join(", "));
+            const skills = document.createElement("div");
+            skills.className = "hackathon-required-skills";
+            addText(skills, "span", "LOOKING FOR");
+            const chips = document.createElement("div");
+            chips.className = "hackathon-skill-chips";
+            hackathon.requiredSkills.forEach(function (skill) {
+                const chip = document.createElement("span");
+                chip.textContent = skill;
+                chips.appendChild(chip);
+            });
+            skills.appendChild(chips);
+            card.appendChild(skills);
         }
 
         if (hackathon.joined) {
             addText(card, "p", hackathon.teamName
                 ? "You are in " + hackathon.teamName + "."
-                : "You joined and are waiting. Your team will form when enough students sign up.");
+                : "You are registered. Your team assignment is being prepared.");
             if (hackathon.teamMembers.length) {
                 const members = document.createElement("div");
                 members.className = "hackathon-team-summary";
@@ -85,6 +131,7 @@ async function loadStudentHackathons() {
     try {
         renderStudentHackathons(await apiRequest("/hackathons"));
     } catch (error) {
+        studentHackathonList.classList.add("hackathon-load-error");
         studentHackathonList.textContent = "Log in as a student to browse hackathons. " + error.message;
     }
 }

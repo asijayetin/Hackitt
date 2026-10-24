@@ -32,57 +32,53 @@ async function updateHackathonTeams(hackathon) {
         });
     });
 
-    let pending = hackathon.participants.filter(function (participant) {
+    const pending = hackathon.participants.filter(function (participant) {
         return !assignedIds.has(String(participant.userId));
     });
+    const starterTeamCount = hackathon.initialTeamCount || hackathon.minTeamSize || 3;
 
     while (pending.length) {
-        const person = pending[0];
-        const team = chooseTeam(teams, person.skill);
-        if (!team) break;
-        pending.shift();
+        const person = pending.shift();
+        let team = null;
+
+        // Start each of the first few teams with one student.
+        if (teams.length < starterTeamCount) {
+            team = new Team({
+                hackathonId: hackathon._id,
+                name: "Team " + (teams.length + 1),
+                maxSize: hackathon.maxTeamSize,
+                members: []
+            });
+            teams.push(team);
+        } else {
+            team = chooseTeam(teams, person.skill);
+        }
+
+        // If every team is full, make a new team so no one has to wait.
+        if (!team) {
+            team = new Team({
+                hackathonId: hackathon._id,
+                name: "Team " + (teams.length + 1),
+                maxSize: hackathon.maxTeamSize,
+                members: []
+            });
+            teams.push(team);
+        }
+
         team.members.push({
             userId: person.userId,
             name: person.name,
             email: person.email,
             skill: person.skill
         });
+        await team.save();
         assignedIds.add(String(person.userId));
     }
-    for (const team of teams) await team.save();
-
-    const numberOfNewTeams = Math.floor(pending.length / hackathon.minTeamSize);
-    const newTeams = [];
-    for (let index = 0; index < numberOfNewTeams; index += 1) {
-        newTeams.push(new Team({
-            hackathonId: hackathon._id,
-            name: "Team " + (teams.length + index + 1),
-            maxSize: hackathon.maxTeamSize,
-            members: []
-        }));
-    }
-
-    let assignedToNewTeams = 0;
-    while (pending.length) {
-        const person = pending[0];
-        const team = chooseTeam(newTeams, person.skill);
-        if (!team) break;
-        pending.shift();
-        team.members.push({
-            userId: person.userId,
-            name: person.name,
-            email: person.email,
-            skill: person.skill
-        });
-        assignedToNewTeams += 1;
-    }
-
-    if (newTeams.length) await Team.insertMany(newTeams);
 
     return {
-        teamCount: teams.length + newTeams.length,
-        assignedCount: assignedIds.size + assignedToNewTeams,
-        waitingCount: pending.length
+        teamCount: teams.length,
+        assignedCount: assignedIds.size,
+        waitingCount: 0
     };
 }
 
