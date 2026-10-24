@@ -330,21 +330,25 @@
 
     <div
         id="editProfileModal"
-        class="edit-profile-modal">
+        class="edit-profile-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="editProfileTitle">
 
         <div class="edit-profile-box">
 
             <button
                 type="button"
                 id="closeEditProfile"
-                class="edit-close-btn">
+                class="close-edit"
+                aria-label="Close edit profile">
 
                 &times;
 
             </button>
 
 
-            <h2>
+            <h2 id="editProfileTitle">
                 Edit Profile
             </h2>
 
@@ -353,7 +357,7 @@
             </p>
 
 
-            <div class="form-group">
+            <div class="edit-form-group">
 
                 <label for="editFirstName">
                     First Name
@@ -367,7 +371,7 @@
             </div>
 
 
-            <div class="form-group">
+            <div class="edit-form-group">
 
                 <label for="editLastName">
                     Last Name
@@ -381,7 +385,7 @@
             </div>
 
 
-            <div class="form-group">
+            <div class="edit-form-group">
 
                 <label for="editEmail">
                     Email Address

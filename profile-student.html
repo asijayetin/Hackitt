@@ -347,18 +347,20 @@
 
     <!-- Edit Profile Modal -->
 
-    <div id="editProfileModal" class="edit-profile-modal">
+    <div id="editProfileModal" class="edit-profile-modal" role="dialog" aria-modal="true" aria-labelledby="editProfileTitle">
 
         <div class="edit-profile-box">
 
-            <button id="closeEditProfile" class="close-edit">
+            <button type="button" id="closeEditProfile" class="close-edit" aria-label="Close edit profile">
                 &times;
             </button>
 
 
-            <h2>
+            <h2 id="editProfileTitle">
                 Edit Profile
             </h2>
+
+            <p class="edit-profile-description">Update the details shown on your Hackitt profile.</p>
 
 
             <div class="edit-form-group">
