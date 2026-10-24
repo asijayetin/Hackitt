@@ -69,7 +69,7 @@ if (signupForm) {
 
     signupForm.addEventListener(
         "submit",
-        function(event) {
+        async function(event) {
 
             event.preventDefault();
 
@@ -136,133 +136,16 @@ if (signupForm) {
             }
 
 
-            /* Get ALL existing users */
-
-            let users =
-                getUsers();
-
-
-            /* Check duplicate email */
-
-            let alreadyExists =
-                users.some(
-                    function(user) {
-
-                        return (
-                            user.email &&
-                            user.email
-                                .toLowerCase() ===
-                            email
-                        );
-                    }
-                );
-
-
-            if (alreadyExists) {
-
-                alert(
-                    "Email already registered!"
-                );
-
-                return;
+            try {
+                await apiRequest("/auth/signup", {
+                    method: "POST",
+                    body: JSON.stringify({ firstName, lastName, email, password, role, skill })
+                });
+                alert("Account created successfully!");
+                window.location.href = "login.html";
+            } catch (error) {
+                alert(error.message);
             }
-
-
-            /* Create new user */
-
-            let newUser = {
-
-                id:
-                    Date.now().toString(),
-
-                firstName:
-                    firstName,
-
-                lastName:
-                    lastName,
-
-                email:
-                    email,
-
-                password:
-                    password,
-
-                role:
-                    role,
-
-                skill:
-                    role === "student"
-                        ? skill
-                        : "General"
-            };
-
-
-            /* Keep all previous users */
-
-            users.push(newUser);
-
-            saveUsers(users);
-
-
-            /* Add student to participants */
-
-            if (role === "student") {
-
-                let participants =
-                    JSON.parse(
-                        localStorage.getItem(
-                            "hackitt_participants"
-                        )
-                    ) || [];
-
-                let alreadyIn =
-                    participants.some(
-                        function(participant) {
-
-                            return (
-                                participant.email &&
-                                participant.email
-                                    .toLowerCase() ===
-                                email
-                            );
-                        }
-                    );
-
-
-                if (!alreadyIn) {
-
-                    participants.push({
-
-                        name:
-                            firstName +
-                            " " +
-                            lastName,
-
-                        email:
-                            email,
-
-                        skill:
-                            skill || "General"
-                    });
-
-
-                    localStorage.setItem(
-                        "hackitt_participants",
-                        JSON.stringify(
-                            participants
-                        )
-                    );
-                }
-            }
-
-
-            alert(
-                "Account created successfully!"
-            );
-
-
-            window.location.href =
-                "login.html";
         }
     );
 }
@@ -279,7 +162,7 @@ if (loginForm) {
 
     loginForm.addEventListener(
         "submit",
-        function(event) {
+        async function(event) {
 
             event.preventDefault();
 
@@ -298,68 +181,18 @@ if (loginForm) {
                 ).value;
 
 
-            let users =
-                getUsers();
-
-
-            let foundUser =
-                users.find(
-                    function(user) {
-
-                        return (
-                            user.email &&
-                            user.email
-                                .toLowerCase() ===
-                            email &&
-                            user.password ===
-                            password
-                        );
-                    }
-                );
-
-
-            if (!foundUser) {
-
-                alert(
-                    "Invalid email or password!"
-                );
-
-                return;
-            }
-
-
-            /*
-             * IMPORTANT:
-             * Current user is stored ONLY
-             * in sessionStorage.
-             *
-             * All registered users remain
-             * inside localStorage.
-             */
-
-            sessionStorage.setItem(
-                "currentUser",
-                JSON.stringify(foundUser)
-            );
-
-
-            alert(
-                "Login successful!"
-            );
-
-
-            if (
-                foundUser.role ===
-                "student"
-            ) {
-
-                window.location.href =
-                    "profile-student.html";
-
-            } else {
-
-                window.location.href =
-                    "profile-organizer.html";
+            try {
+                const data = await apiRequest("/auth/login", {
+                    method: "POST",
+                    body: JSON.stringify({ email, password })
+                });
+                saveLogin(data);
+                alert("Login successful!");
+                window.location.href = data.user.role === "student"
+                    ? "profile-student.html"
+                    : "profile-organizer.html";
+            } catch (error) {
+                alert(error.message);
             }
         }
     );
@@ -617,6 +450,10 @@ function logoutUser(event) {
         "currentUser"
     );
 
+    sessionStorage.removeItem(
+        "hackittToken"
+    );
+
 
     /*
      * Remove old currentUser created
@@ -782,7 +619,7 @@ if (
 
     saveProfileBtn.addEventListener(
         "click",
-        function() {
+        async function() {
 
             let updatedFirstName =
                 document.getElementById(
@@ -826,6 +663,34 @@ if (
                     "Please fill in all fields."
                 );
 
+                return;
+            }
+
+            try {
+                const result = await apiRequest("/auth/profile", {
+                    method: "PUT",
+                    body: JSON.stringify({ firstName: updatedFirstName, lastName: updatedLastName, email: updatedEmail, skill: updatedSkill })
+                });
+                currentUser = result.user;
+                sessionStorage.setItem("currentUser", JSON.stringify(currentUser));
+
+                ["profileStudentName", "profileOrgName"].forEach(function (id) {
+                    const element = document.getElementById(id);
+                    if (element) element.innerText = updatedFirstName + " " + updatedLastName;
+                });
+                ["profileStudentEmail", "profileOrgEmail"].forEach(function (id) {
+                    const element = document.getElementById(id);
+                    if (element) { element.innerText = updatedEmail; element.href = "mailto:" + updatedEmail; }
+                });
+                const studentName = document.getElementById("studentName");
+                if (studentName) studentName.innerText = updatedFirstName;
+                const organizerName = document.getElementById("organizerName");
+                if (organizerName) organizerName.innerText = updatedFirstName;
+                editProfileModal.classList.remove("active");
+                alert(result.message);
+                return;
+            } catch (error) {
+                alert(error.message);
                 return;
             }
 
@@ -1440,4 +1305,45 @@ if (
         myTeamMessage.innerText =
             "Teams are ready! Go to Check Team to join one.";
     }
+}
+
+
+/* ==========================================================
+   LOAD TEAM STATUS FROM THE BACKEND
+========================================================== */
+
+if (typeof apiRequest === "function") {
+    apiRequest("/teams").then(function (teams) {
+        const bannerTitle = document.getElementById("teamBannerTitle");
+        const bannerText = document.getElementById("teamBannerText");
+        const bannerButton = document.getElementById("teamBannerBtn");
+        const status = document.getElementById("myTeamStatus");
+        const message = document.getElementById("myTeamMessage");
+        const name = document.getElementById("myTeamName");
+        const members = document.getElementById("myTeamMembers");
+
+        if (!currentUser || currentUser.role !== "student") return;
+
+        const myTeam = teams.find(function (team) {
+            return team.members.some(function (member) {
+                return member.email.toLowerCase() === currentUser.email.toLowerCase();
+            });
+        });
+
+        if (bannerTitle && bannerText && bannerButton) {
+            bannerTitle.innerText = myTeam ? "You're in " + myTeam.name + "!" : (teams.length ? "Teams are ready!" : "Hackitt Summer Jam 2026");
+            bannerText.innerText = myTeam ? myTeam.members.length + "/" + myTeam.maxSize + " members" : (teams.length ? "Head over and pick your team." : "Teams have not been generated yet. Check back soon!");
+            bannerButton.innerText = myTeam ? "View My Team" : "Check Team";
+            bannerButton.href = "check.html";
+        }
+
+        if (status && message) {
+            status.innerText = myTeam ? "Assigned" : "Not Assigned";
+            message.innerText = myTeam ? myTeam.members.length + "/" + myTeam.maxSize + " members" : (teams.length ? "Teams are ready! Go to Check Team to join one." : "Your team will appear here once the organizer generates teams.");
+            if (name) name.innerText = myTeam ? myTeam.name : "";
+            if (members) members.innerHTML = myTeam ? myTeam.members.map(function (member) { return "<p>" + member.name + " - " + (member.skill || "General") + "</p>"; }).join("") : "";
+        }
+    }).catch(function () {
+        // The regular page message remains visible if the API is offline.
+    });
 }

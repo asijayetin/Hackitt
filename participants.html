@@ -84,92 +84,27 @@
     </footer>
 
 
+    <script src="../js/api.js"></script>
     <script src="../js/app.js"></script>
 
 
     <script>
 
-        let participants =
-            JSON.parse(
-                localStorage.getItem(
-                    "hackitt_participants"
-                )
-            ) || [];
-
-
-        let participantsList =
-            document.getElementById(
-                "participantsList"
-            );
-
-
-        if (
-            participants.length === 0
-        ) {
-
-            participantsList.innerHTML = `
-
-                <div class="dashboard-card">
-
-                    <h2>
-                        No Participants Yet
-                    </h2>
-
-                    <p>
-                        No students have registered
-                        for the hackathon yet.
-                    </p>
-
-                </div>
-
-            `;
-
-        } else {
-
-            for (
-                let i = 0;
-                i < participants.length;
-                i++
-            ) {
-
-                let participant =
-                    participants[i];
-
-
-                let card =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                card.className =
-                    "dashboard-card";
-
-
-                card.innerHTML = `
-
-                    <h2>
-                        ${participant.name}
-                    </h2>
-
-                    <p>
-                        <strong>Email:</strong>
-                        ${participant.email}
-                    </p>
-
-                    <p>
-                        <strong>Skill:</strong>
-                        ${participant.skill || "General"}
-                    </p>
-
-                `;
-
-
-                participantsList.appendChild(
-                    card
-                );
+        const participantsList = document.getElementById("participantsList");
+        apiRequest("/participants").then(function (participants) {
+            if (participants.length === 0) {
+                participantsList.innerHTML = "<div class=\"dashboard-card\"><h2>No Participants Yet</h2><p>No students have registered yet.</p></div>";
+                return;
             }
-        }
+            participants.forEach(function (participant) {
+                const card = document.createElement("div");
+                card.className = "dashboard-card";
+                card.innerHTML = "<h2>" + participant.name + "</h2><p><strong>Email:</strong> " + participant.email + "</p><p><strong>Skill:</strong> " + (participant.skill || "General") + "</p>";
+                participantsList.appendChild(card);
+            });
+        }).catch(function (error) {
+            participantsList.innerHTML = "<div class=\"dashboard-card\"><h2>Could not load participants</h2><p>" + error.message + "</p></div>";
+        });
 
     </script>
 
