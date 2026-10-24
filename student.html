@@ -106,69 +106,42 @@
             </div>
 
 
-            <!-- MY HACKATHON -->
+            <!-- JOINED HACKATHONS -->
 
             <div class="dashboard-card">
 
                 <h2>
-                    My Hackathon
+                    My Hackathons
                 </h2>
 
                 <p>
-                    View the hackathon you have joined.
+                    Browse open events and see which ones you joined.
                 </p>
 
-                <a href="check.html">
-                    View Hackathon
+                <a href="#openHackathons">
+                    Browse Hackathons
                 </a>
 
             </div>
 
         </section>
 
-
-        <!-- TEAM SECTION: filled in dynamically by app.js
-             based on hackitt_teams + currentUser -->
-
-        <section class="team-section">
-
-            <div class="team-header">
-
-                <div>
-
-                    <p class="small-heading">
-                        TEAM
-                    </p>
-
-                    <h2 id="myTeamName">
-                        My Team
-                    </h2>
-
-                </div>
-
-
-                <span class="team-status" id="myTeamStatus">
-                    Not Assigned
-                </span>
-
+        <section class="student-hackathons-section" id="openHackathons">
+            <div class="dashboard-header">
+                <p class="small-heading">FIND YOUR NEXT EVENT</p>
+                <h2>Open Hackathons</h2>
+                <p>Join an event. Your team forms automatically when enough participants sign up.</p>
             </div>
-
-
-            <p class="team-message" id="myTeamMessage">
-                Your team will appear here once the organizer
-                generates the teams.
-            </p>
-
-
-            <div id="myTeamMembers"></div>
-
+            <div id="studentHackathonList" class="hackathon-list" aria-live="polite">Loading hackathons...</div>
         </section>
+
 
     </main>
 
 
     <script src="../js/api.js"></script>
     <script src="../js/app.js"></script>
+    <script src="../js/student-hackathons.js"></script>
 
 </body>
 

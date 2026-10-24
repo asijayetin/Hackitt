@@ -5,6 +5,7 @@ const authRoutes = require("./routes/authRoutes");
 const teamRoutes = require("./routes/teamRoutes");
 const participantRoutes = require("./routes/participantRoutes");
 const teamChangeRequestRoutes = require("./routes/teamChangeRequestRoutes");
+const hackathonRoutes = require("./routes/hackathonRoutes");
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/participants", participantRoutes);
 app.use("/api/teams", teamRoutes);
 app.use("/api/team-change-requests", teamChangeRequestRoutes);
+app.use("/api/hackathons", hackathonRoutes);
 
 app.use(function (err, req, res, next) {
     console.error(err.message);

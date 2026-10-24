@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Team = require("../models/Team");
+const Hackathon = require("../models/Hackathon");
 
 function chooseTeam(teams, skill) {
     const skillName = (skill || "General").trim().toLowerCase();
@@ -39,8 +40,15 @@ async function assignStudent(student, teams) {
 }
 
 async function assignPendingStudents() {
-    const teams = await Team.find().sort({ createdAt: 1 });
+    const teams = await Team.find({ hackathonId: null }).sort({ createdAt: 1 });
     const students = await User.find({ role: "student" }).sort({ createdAt: 1 });
+    const events = await Hackathon.find({}, "participants.userId");
+    const eventParticipantIds = new Set();
+    events.forEach(function (event) {
+        event.participants.forEach(function (participant) {
+            eventParticipantIds.add(String(participant.userId));
+        });
+    });
     const assignedIds = new Set();
     const assignedEmails = new Set();
 
@@ -53,7 +61,7 @@ async function assignPendingStudents() {
 
     let assignedCount = 0;
     for (const student of students) {
-        if (assignedIds.has(String(student._id)) || assignedEmails.has(student.email.trim().toLowerCase())) continue;
+        if (assignedIds.has(String(student._id)) || assignedEmails.has(student.email.trim().toLowerCase()) || eventParticipantIds.has(String(student._id))) continue;
         const team = await assignStudent(student, teams);
         if (!team) break;
         assignedIds.add(String(student._id));
@@ -62,13 +70,13 @@ async function assignPendingStudents() {
     }
 
     const pendingCount = students.filter(function (student) {
-        return !assignedIds.has(String(student._id)) && !assignedEmails.has(student.email.trim().toLowerCase());
+        return !assignedIds.has(String(student._id)) && !assignedEmails.has(student.email.trim().toLowerCase()) && !eventParticipantIds.has(String(student._id));
     }).length;
     return { assignedCount, pendingCount };
 }
 
 async function assignNewStudent(student) {
-    const teams = await Team.find().sort({ createdAt: 1 });
+    const teams = await Team.find({ hackathonId: null }).sort({ createdAt: 1 });
     const alreadyAssigned = teams.some(function (team) {
         return team.members.some(function (member) {
             return (member.userId && String(member.userId) === String(student._id)) ||

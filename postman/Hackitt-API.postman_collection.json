@@ -8,7 +8,8 @@
     { "key": "baseUrl", "value": "http://localhost:5000/api" },
     { "key": "organizerToken", "value": "" },
     { "key": "studentToken", "value": "" },
-    { "key": "teamId", "value": "" }
+    { "key": "teamId", "value": "" },
+    { "key": "hackathonId", "value": "" }
   ],
   "item": [
     {
@@ -54,6 +55,22 @@
     {
       "name": "Get participants",
       "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{organizerToken}}" }], "url": "{{baseUrl}}/participants" }
+    },
+    {
+      "name": "Create hackathon",
+      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{organizerToken}}" }], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Hackitt Summer Jam\",\n  \"description\": \"Build a useful student project\",\n  \"minTeamSize\": 3,\n  \"maxTeamSize\": 4,\n  \"requiredSkills\": [\"Frontend\", \"Backend\", \"Design\"]\n}" }, "url": "{{baseUrl}}/hackathons" }
+    },
+    {
+      "name": "List my hackathons",
+      "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{organizerToken}}" }], "url": "{{baseUrl}}/hackathons" }
+    },
+    {
+      "name": "Student sees open hackathons",
+      "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{studentToken}}" }], "url": "{{baseUrl}}/hackathons" }
+    },
+    {
+      "name": "Join a hackathon (set hackathonId from list response)",
+      "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{studentToken}}" }], "url": "{{baseUrl}}/hackathons/{{hackathonId}}/join" }
     },
       {
         "name": "Generate teams",

@@ -74,7 +74,10 @@ async function updateRequest(req, res) {
         });
         if (!member) return res.status(404).json({ message: "Student is no longer in the requested team" });
 
-        const otherTeams = await Team.find({ _id: { $ne: currentTeam._id } }).sort({ createdAt: 1 });
+        const otherTeams = await Team.find({
+            _id: { $ne: currentTeam._id },
+            hackathonId: currentTeam.hackathonId || null
+        }).sort({ createdAt: 1 });
         const newTeam = otherTeams.find(function (team) {
             return team.members.length < team.maxSize;
         });

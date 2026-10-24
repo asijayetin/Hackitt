@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Hackathons | Hackitt</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profile.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">Hackitt</div>
+        <nav class="nav-links">
+            <a href="organizer.html">Dashboard</a>
+            <a href="organizer-teams.html">Teams &amp; requests</a>
+            <a href="profile-organizer.html">Profile</a>
+            <a href="#" id="logoutBtn" class="nav-btn">Log Out</a>
+        </nav>
+    </header>
+
+    <main class="organizer-dashboard">
+        <section class="dashboard-header">
+            <p class="small-heading">EVENT MANAGEMENT</p>
+            <h1>Create a Hackathon</h1>
+            <p>Set the team size and skills you need. Students can join from their dashboard.</p>
+        </section>
+
+        <section class="hackathon-form-card">
+            <form id="createHackathonForm" class="hackathon-form">
+                <div class="form-group">
+                    <label for="hackathonName">Hackathon name</label>
+                    <input id="hackathonName" name="name" type="text" maxlength="80" placeholder="e.g. Hackitt Summer Jam" required>
+                </div>
+                <div class="form-group">
+                    <label for="hackathonDescription">Description</label>
+                    <textarea id="hackathonDescription" name="description" maxlength="500" placeholder="What will students build or learn?" required></textarea>
+                </div>
+                <div class="hackathon-size-row">
+                    <div class="form-group">
+                        <label for="minTeamSize">Minimum team size</label>
+                        <input id="minTeamSize" name="minTeamSize" type="number" min="2" max="10" value="3" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="maxTeamSize">Maximum team size</label>
+                        <input id="maxTeamSize" name="maxTeamSize" type="number" min="2" max="10" value="4" required>
+                    </div>
+                </div>
+                <fieldset class="hackathon-skills">
+                    <legend>Skills needed (optional)</legend>
+                    <p>Students can join when their profile skill matches one of these. Leave empty to allow all skills.</p>
+                    <div class="skill-choice-list">
+                        <label><input type="checkbox" name="requiredSkills" value="Frontend"> Frontend</label>
+                        <label><input type="checkbox" name="requiredSkills" value="Backend"> Backend</label>
+                        <label><input type="checkbox" name="requiredSkills" value="Design"> Design</label>
+                        <label><input type="checkbox" name="requiredSkills" value="ML/Data"> ML / Data</label>
+                        <label><input type="checkbox" name="requiredSkills" value="Mobile"> Mobile</label>
+                    </div>
+                </fieldset>
+                <p class="hackathon-form-note">Teams form automatically after enough students join. Students below the minimum wait for more members.</p>
+                <button type="submit" class="primary-btn" id="createHackathonBtn">Create Hackathon</button>
+            </form>
+        </section>
+
+        <section class="hackathon-list-section">
+            <div class="dashboard-header">
+                <p class="small-heading">YOUR EVENTS</p>
+                <h2>Created Hackathons</h2>
+            </div>
+            <div id="organizerHackathonList" class="hackathon-list" aria-live="polite">Loading hackathons...</div>
+        </section>
+    </main>
+
+    <footer><p>© 2026 Hackitt. Built for Hackathons.</p></footer>
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/organizer-hackathons.js"></script>
+</body>
+</html>

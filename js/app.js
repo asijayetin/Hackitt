@@ -141,14 +141,12 @@ if (signupForm) {
 
 
             try {
-                const signupResult = await apiRequest("/auth/signup", {
+                await apiRequest("/auth/signup", {
                     method: "POST",
                     body: JSON.stringify({ firstName, lastName, email, password, role, skill })
                 });
                 if (role === "student") {
-                    alert(signupResult.teamName
-                        ? "Account created and assigned to " + signupResult.teamName
-                        : "Account created. You are waiting for the organizer to add a team.");
+                    alert("Account created. Log in to browse and join open hackathons.");
                 } else {
                     alert("Organizer account created successfully!");
                 }
@@ -1319,39 +1317,27 @@ if (
 
 
 /* ==========================================================
-   LOAD TEAM STATUS FROM THE BACKEND
+   LOAD JOINED HACKATHON FROM THE BACKEND
 ========================================================== */
 
 if (typeof apiRequest === "function") {
-    apiRequest("/teams").then(function (teams) {
+    apiRequest("/hackathons").then(function (hackathons) {
         const bannerTitle = document.getElementById("teamBannerTitle");
         const bannerText = document.getElementById("teamBannerText");
         const bannerButton = document.getElementById("teamBannerBtn");
-        const status = document.getElementById("myTeamStatus");
-        const message = document.getElementById("myTeamMessage");
-        const name = document.getElementById("myTeamName");
-        const members = document.getElementById("myTeamMembers");
-
         if (!currentUser || currentUser.role !== "student") return;
 
-        const myTeam = teams.find(function (team) {
-            return team.members.some(function (member) {
-                return member.email.toLowerCase() === currentUser.email.toLowerCase();
-            });
+        const myHackathon = hackathons.find(function (hackathon) {
+            return hackathon.joined;
         });
 
         if (bannerTitle && bannerText && bannerButton) {
-            bannerTitle.innerText = myTeam ? "You're in " + myTeam.name + "!" : (teams.length ? "Teams are ready!" : "Hackitt Summer Jam 2026");
-            bannerText.innerText = myTeam ? myTeam.members.length + "/" + myTeam.maxSize + " members" : (teams.length ? "You are waiting for the organizer to add a team." : "Teams have not been generated yet. Check back soon!");
-            bannerButton.innerText = myTeam ? "View My Team" : "Check Team";
-            bannerButton.href = "check.html";
-        }
-
-        if (status && message) {
-            status.innerText = myTeam ? "Assigned" : "Not Assigned";
-            message.innerText = myTeam ? myTeam.members.length + "/" + myTeam.maxSize + " members" : (teams.length ? "Teams are ready! Go to Check Team to join one." : "Your team will appear here once the organizer generates teams.");
-            if (name) name.innerText = myTeam ? myTeam.name : "";
-            if (members) members.innerHTML = myTeam ? myTeam.members.map(function (member) { return "<p>" + member.name + " - " + (member.skill || "General") + "</p>"; }).join("") : "";
+            bannerTitle.innerText = myHackathon ? myHackathon.name : "Find an open hackathon";
+            bannerText.innerText = myHackathon
+                ? (myHackathon.teamName ? "You're in " + myHackathon.teamName + "." : "You joined. Your team will form when enough students sign up.")
+                : "Browse events and join one from your dashboard.";
+            bannerButton.innerText = "Browse Hackathons";
+            bannerButton.href = "student.html#openHackathons";
         }
     }).catch(function () {
         // The regular page message remains visible if the API is offline.

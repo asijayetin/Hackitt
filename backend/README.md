@@ -20,6 +20,10 @@ Never commit `.env` or send its contents in chat. The example file has placehold
 | GET | `/api/health` | Public | — |
 | POST | `/api/auth/signup` | Public | `firstName`, `lastName`, `email`, `password`, `role`, optional `skill` |
 | POST | `/api/auth/login` | Public | `email`, `password` |
+| GET | `/api/hackathons` | Student or organizer token | — |
+| POST | `/api/hackathons` | Organizer token | `name`, `description`, `minTeamSize`, `maxTeamSize`, optional `requiredSkills` |
+| POST | `/api/hackathons/:id/join` | Student token | — |
+| PATCH | `/api/hackathons/:id/status` | Organizer token | `status`: `open` or `closed` |
 | GET | `/api/participants` | Organizer token | — |
 | GET | `/api/teams` | Public | — |
 | POST | `/api/teams/generate` | Organizer token | `teamSize` (2–10), `teamCount` (1–20) |
@@ -31,3 +35,5 @@ Never commit `.env` or send its contents in chat. The example file has placehold
 | PATCH | `/api/team-change-requests/:id` | Organizer token | `status`: `approved` or `rejected` |
 
 Send the login/signup token in the `Authorization` header as `Bearer <token>`.
+
+For a new event, the organizer creates a hackathon and chooses its minimum and maximum team size. Students join it from their dashboard. Teams form when enough unassigned students are available; anyone left over waits until another minimum-size group can be formed. Registration can be closed or reopened by the organizer.

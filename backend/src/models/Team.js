@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const teamSchema = new mongoose.Schema({
+    hackathonId: { type: mongoose.Schema.Types.ObjectId, ref: "Hackathon", default: null },
     name: { type: String, required: true },
     maxSize: { type: Number, required: true },
     members: [{
