@@ -30,11 +30,12 @@
 
         <section id="savedTeams" class="saved-teams-grid"></section>
 
-        <section class="team-request-section">
+        <section class="team-request-section" id="requests">
             <div class="dashboard-header">
                 <p class="small-heading">STUDENT SUPPORT</p>
                 <h2>Team Change Requests</h2>
-                <p>Review student requests and move approved students to an available team.</p>
+                <p id="requestSummary" aria-live="polite">Loading requests...</p>
+                <button type="button" class="secondary-btn" id="refreshRequests">Refresh requests</button>
             </div>
             <div id="teamRequests" class="saved-teams-grid" aria-live="polite"></div>
         </section>

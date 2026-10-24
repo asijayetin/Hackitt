@@ -481,6 +481,36 @@ footer {
     transition: 0.3s ease;
 }
 
+.form-group select {
+    width: 100%;
+    padding: 14px 15px;
+    background: #101819;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    outline: none;
+    color: white;
+    font: inherit;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.form-group select:focus {
+    border-color: #00e5ff;
+    box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.08);
+}
+
+.form-group select option {
+    background: #101819;
+    color: white;
+}
+
+.field-hint {
+    margin: -3px 0 2px;
+    color: #888888;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
 .form-group input::placeholder {
     color: #666666;
 }

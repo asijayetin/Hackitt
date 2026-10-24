@@ -10,13 +10,17 @@ function toggleSkillField() {
 
     if (!skillField) return;
 
+    let skillInput = document.getElementById("skill");
+
     if (roleOrganizer && roleOrganizer.checked) {
 
         skillField.style.display = "none";
+        if (skillInput) skillInput.required = false;
 
     } else {
 
         skillField.style.display = "flex";
+        if (skillInput) skillInput.required = true;
     }
 }
 

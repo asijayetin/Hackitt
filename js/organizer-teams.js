@@ -1,6 +1,7 @@
 const savedTeams = document.getElementById("savedTeams");
 const teamSummary = document.getElementById("teamSummary");
 const teamRequests = document.getElementById("teamRequests");
+const requestSummary = document.getElementById("requestSummary");
 
 function addText(parent, tag, text) {
     const element = document.createElement(tag);
@@ -76,7 +77,7 @@ async function reviewRequest(requestId, status, button) {
             body: JSON.stringify({ status })
         });
         alert(result.message);
-        loadOrganizerTeams();
+        await loadOrganizerTeams();
     } catch (error) {
         alert(error.message);
         button.disabled = false;
@@ -85,6 +86,13 @@ async function reviewRequest(requestId, status, button) {
 
 function showRequests(requests) {
     teamRequests.innerHTML = "";
+    const pendingCount = requests.filter(function (request) {
+        return request.status === "pending";
+    }).length;
+    requestSummary.textContent = pendingCount === 1
+        ? "1 request is waiting for your review."
+        : pendingCount + " requests are waiting for your review.";
+
     if (requests.length === 0) {
         const emptyMessage = document.createElement("p");
         emptyMessage.className = "saved-teams-empty";
@@ -93,7 +101,11 @@ function showRequests(requests) {
         return;
     }
 
-    requests.forEach(function (request) {
+    requests.sort(function (first, second) {
+        if (first.status === "pending" && second.status !== "pending") return -1;
+        if (first.status !== "pending" && second.status === "pending") return 1;
+        return new Date(second.createdAt) - new Date(first.createdAt);
+    }).forEach(function (request) {
         const card = document.createElement("div");
         card.className = "team-request-card";
         addText(card, "h3", request.studentName);
@@ -142,8 +154,11 @@ async function loadOrganizerTeams() {
         const requests = await apiRequest("/team-change-requests");
         showRequests(requests);
     } catch (error) {
-        teamRequests.textContent = "Could not load requests: " + error.message;
+        requestSummary.textContent = "Could not load requests: " + error.message;
+        teamRequests.textContent = "Log in with the organizer account, then refresh this page.";
     }
 }
 
+document.getElementById("refreshRequests").addEventListener("click", loadOrganizerTeams);
 loadOrganizerTeams();
+window.setInterval(loadOrganizerTeams, 15000);
