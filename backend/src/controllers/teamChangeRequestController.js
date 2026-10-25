@@ -102,4 +102,32 @@ async function updateRequest(req, res) {
     }
 }
 
-module.exports = { createRequest, getMyRequest, getRequests, updateRequest };
+async function getRequest(req, res) {
+    try {
+        if (!mongoose.isValidObjectId(req.params.id)) return res.status(400).json({ message: "Invalid request ID" });
+        const query = req.user.role === "organizer"
+            ? { _id: req.params.id }
+            : { _id: req.params.id, studentId: req.user.id };
+        const request = await TeamChangeRequest.findOne(query);
+        if (!request) return res.status(404).json({ message: "Request not found" });
+        res.json(request);
+    } catch (error) {
+        res.status(500).json({ message: "Could not get team change request" });
+    }
+}
+
+async function deleteRequest(req, res) {
+    try {
+        if (!mongoose.isValidObjectId(req.params.id)) return res.status(400).json({ message: "Invalid request ID" });
+        const query = req.user.role === "organizer"
+            ? { _id: req.params.id }
+            : { _id: req.params.id, studentId: req.user.id, status: "pending" };
+        const request = await TeamChangeRequest.findOneAndDelete(query);
+        if (!request) return res.status(404).json({ message: "Pending request not found" });
+        res.json({ message: "Team change request deleted" });
+    } catch (error) {
+        res.status(500).json({ message: "Could not delete team change request" });
+    }
+}
+
+module.exports = { createRequest, getMyRequest, getRequests, getRequest, updateRequest, deleteRequest };

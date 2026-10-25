@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "name": "Hackitt Local",
+  "dateExported": "2026-10-25T09:24:47.4Z",
+  "client": "Thunder Client",
+  "data": [
+    {
+      "name": "baseUrl",
+      "value": "http://localhost:5000/api"
+    },
+    {
+      "name": "organizerToken",
+      "value": "",
+      "isSecret": true
+    },
+    {
+      "name": "studentToken",
+      "value": "",
+      "isSecret": true
+    },
+    {
+      "name": "teamId",
+      "value": ""
+    },
+    {
+      "name": "hackathonId",
+      "value": ""
+    },
+    {
+      "name": "participantId",
+      "value": ""
+    },
+    {
+      "name": "requestId",
+      "value": ""
+    }
+  ]
+}

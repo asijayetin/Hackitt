@@ -1,0 +1,672 @@
+{
+  "version": "1.2",
+  "name": "Hackitt API",
+  "description": "Hackitt backend API requests for Thunder Client.",
+  "dateExported": "2026-10-25T09:50:55.977Z",
+  "client": "Thunder Client",
+  "folders": [],
+  "requests": [
+    {
+      "_id": "38b8b6b0-dfed-42b6-96c8-b2ecc90d10d0",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Health check",
+      "url": "{{baseUrl}}/health",
+      "method": "GET",
+      "sortNum": 10000,
+      "created": "2026-10-25T09:24:47.4Z",
+      "modified": "2026-10-25T09:24:47.4Z",
+      "headers": [],
+      "params": []
+    },
+    {
+      "_id": "fe45f784-03af-478f-9bd0-0cc356f26c5b",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Organizer signup (run once with a unique email)",
+      "url": "{{baseUrl}}/auth/signup",
+      "method": "POST",
+      "sortNum": 20000,
+      "created": "2026-10-25T09:24:47.4Z",
+      "modified": "2026-10-25T09:24:47.4Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "params": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"firstName\": \"Hackitt\",\n  \"lastName\": \"Organizer\",\n  \"email\": \"organizer@example.com\",\n  \"password\": \"pass123\",\n  \"role\": \"organizer\"\n}"
+      }
+    },
+    {
+      "_id": "43e66b1d-2775-4af1-95cd-5dad1ee7988d",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Student signup (run once with a unique email)",
+      "url": "{{baseUrl}}/auth/signup",
+      "method": "POST",
+      "sortNum": 30000,
+      "created": "2026-10-25T09:24:47.4Z",
+      "modified": "2026-10-25T09:24:47.4Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "params": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"firstName\": \"Aditi\",\n  \"lastName\": \"Sharma\",\n  \"email\": \"student@example.com\",\n  \"password\": \"pass123\",\n  \"role\": \"student\",\n  \"skill\": \"Frontend\"\n}"
+      }
+    },
+    {
+      "_id": "ca0b3697-d6a5-4fbe-bb4e-0ab40e212af4",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Organizer login (copy token from response to organizerToken)",
+      "url": "{{baseUrl}}/auth/login",
+      "method": "POST",
+      "sortNum": 40000,
+      "created": "2026-10-25T09:24:47.4Z",
+      "modified": "2026-10-25T09:24:47.4Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "params": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"email\": \"organizer@example.com\",\n  \"password\": \"pass123\"\n}"
+      }
+    },
+    {
+      "_id": "06944cf2-aeb4-4e54-9944-df5e013d2151",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Student login (copy token from response to studentToken)",
+      "url": "{{baseUrl}}/auth/login",
+      "method": "POST",
+      "sortNum": 50000,
+      "created": "2026-10-25T09:24:47.4Z",
+      "modified": "2026-10-25T09:24:47.4Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "params": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"email\": \"student@example.com\",\n  \"password\": \"pass123\"\n}"
+      }
+    },
+    {
+      "_id": "cd3f8a24-701b-4f45-95f2-f252d3ed6d94",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Get participants",
+      "url": "{{baseUrl}}/participants",
+      "method": "GET",
+      "sortNum": 60000,
+      "created": "2026-10-25T09:24:47.4Z",
+      "modified": "2026-10-25T09:24:47.4Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": []
+    },
+    {
+      "_id": "a24b9a49-e9be-4bd8-a3d7-e6735b53dd49",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Create hackathon",
+      "url": "{{baseUrl}}/hackathons",
+      "method": "POST",
+      "sortNum": 70000,
+      "created": "2026-10-25T09:24:47.4Z",
+      "modified": "2026-10-25T09:24:47.4Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Hackitt Summer Jam\",\n  \"description\": \"Build a useful student project\",\n  \"minTeamSize\": 3,\n  \"maxTeamSize\": 4,\n  \"initialTeamCount\": 3,\n  \"requiredSkills\": [\"Frontend\", \"Backend\", \"Design\"],\n  \"prizePool\": { \"first\": 10000, \"second\": 5000, \"third\": 3000 }\n}"
+      }
+    },
+    {
+      "_id": "5b1dba70-a3f0-411d-a867-de7bbe6db107",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "List my hackathons",
+      "url": "{{baseUrl}}/hackathons",
+      "method": "GET",
+      "sortNum": 80000,
+      "created": "2026-10-25T09:24:47.4Z",
+      "modified": "2026-10-25T09:24:47.4Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": []
+    },
+    {
+      "_id": "db8dee47-2151-4712-91ab-c31f6729e4a4",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Student sees open hackathons",
+      "url": "{{baseUrl}}/hackathons",
+      "method": "GET",
+      "sortNum": 90000,
+      "created": "2026-10-25T09:24:47.4Z",
+      "modified": "2026-10-25T09:24:47.4Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{studentToken}}"
+        }
+      ],
+      "params": []
+    },
+    {
+      "_id": "9a8d5c12-e77a-4802-a79a-066e0721bd6c",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Join a hackathon (set hackathonId from list response)",
+      "url": "{{baseUrl}}/hackathons/{{hackathonId}}/join",
+      "method": "POST",
+      "sortNum": 100000,
+      "created": "2026-10-25T09:24:47.4Z",
+      "modified": "2026-10-25T09:24:47.4Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{studentToken}}"
+        }
+      ],
+      "params": []
+    },
+    {
+      "_id": "07c907d9-9297-4483-adb8-dde97cc632b1",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Save winners (close registration and choose team IDs first)",
+      "url": "{{baseUrl}}/hackathons/{{hackathonId}}/results",
+      "method": "PATCH",
+      "sortNum": 110000,
+      "created": "2026-10-25T09:24:47.4Z",
+      "modified": "2026-10-25T09:24:47.4Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"winners\": [\n    { \"teamId\": \"FIRST_PLACE_TEAM_ID\" },\n    { \"teamId\": \"SECOND_PLACE_TEAM_ID\" },\n    { \"teamId\": \"THIRD_PLACE_TEAM_ID\" }\n  ]\n}"
+      }
+    },
+    {
+      "_id": "09a4c703-84ae-4fe5-b256-6bd2c7d6fd39",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Generate teams",
+      "url": "{{baseUrl}}/teams/generate",
+      "method": "POST",
+      "sortNum": 120000,
+      "created": "2026-10-25T09:24:47.4Z",
+      "modified": "2026-10-25T09:24:47.4Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"teamSize\": 4,\n  \"teamCount\": 3\n}"
+      }
+    },
+    {
+      "_id": "e28d10b4-7ed1-4803-9f91-aa195e27b54a",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Get waiting students",
+      "url": "{{baseUrl}}/teams/pending",
+      "method": "GET",
+      "sortNum": 130000,
+      "created": "2026-10-25T09:24:47.4Z",
+      "modified": "2026-10-25T09:24:47.4Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": []
+    },
+    {
+      "_id": "f34cb2ca-d335-4d82-b670-f5529c04c341",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Send team change request",
+      "url": "{{baseUrl}}/team-change-requests",
+      "method": "POST",
+      "sortNum": 140000,
+      "created": "2026-10-25T09:24:47.4Z",
+      "modified": "2026-10-25T09:24:47.4Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{studentToken}}"
+        }
+      ],
+      "params": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"reason\": \"My skills match another team better\"\n}"
+      }
+    },
+    {
+      "_id": "ddb65e54-bae9-49ab-b408-9f178a5be646",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Review team change requests",
+      "url": "{{baseUrl}}/team-change-requests",
+      "method": "GET",
+      "sortNum": 150000,
+      "created": "2026-10-25T09:24:47.4Z",
+      "modified": "2026-10-25T09:24:47.4Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": []
+    },
+    {
+      "_id": "8388d6a2-6b1d-4a08-9a9f-0c2484e5d3aa",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Get teams (copy a team's _id to teamId)",
+      "url": "{{baseUrl}}/teams",
+      "method": "GET",
+      "sortNum": 160000,
+      "created": "2026-10-25T09:24:47.4Z",
+      "modified": "2026-10-25T09:24:47.4Z",
+      "headers": [],
+      "params": []
+    },
+    {
+      "_id": "b70498ab-d2f3-4388-a659-7306eac8320a",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Join team",
+      "url": "{{baseUrl}}/teams/{{teamId}}/join",
+      "method": "POST",
+      "sortNum": 170000,
+      "created": "2026-10-25T09:24:47.4Z",
+      "modified": "2026-10-25T09:24:47.4Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{studentToken}}"
+        }
+      ],
+      "params": [],
+      "body": {
+        "type": "text",
+        "raw": "{}"
+      }
+    },
+    {
+      "_id": "d45b518f-a5a1-4c9d-8c0e-d0f59c848b02",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Update hackathon (organizer token; only before students join)",
+      "url": "{{baseUrl}}/hackathons/{{hackathonId}}",
+      "method": "PUT",
+      "sortNum": 180000.0,
+      "created": "2026-10-25T09:47:07.607Z",
+      "modified": "2026-10-25T09:47:07.607Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "params": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Updated Demo Hackathon\",\n  \"description\": \"Updated details\",\n  \"minTeamSize\": 2,\n  \"maxTeamSize\": 4\n}"
+      }
+    },
+    {
+      "_id": "6f51de01-169d-4456-acc6-de71bc6d5cdb",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Delete hackathon (organizer token; also deletes its teams)",
+      "url": "{{baseUrl}}/hackathons/{{hackathonId}}",
+      "method": "DELETE",
+      "sortNum": 190000.0,
+      "created": "2026-10-25T09:47:07.607Z",
+      "modified": "2026-10-25T09:47:07.607Z",
+      "headers": [],
+      "params": []
+    },
+    {
+      "_id": "6eee6da4-1fec-4614-9bd8-fdce8c6f3d3c",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Get one hackathon (use organizer or eligible student token)",
+      "url": "{{baseUrl}}/hackathons/{{hackathonId}}",
+      "method": "GET",
+      "sortNum": 200000.0,
+      "created": "2026-10-25T09:50:55.977Z",
+      "modified": "2026-10-25T09:50:55.977Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": []
+    },
+    {
+      "_id": "669cb91a-096e-443c-94b6-b787076d7f7c",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Get my profile",
+      "url": "{{baseUrl}}/auth/profile",
+      "method": "GET",
+      "sortNum": 210000.0,
+      "created": "2026-10-25T09:50:55.977Z",
+      "modified": "2026-10-25T09:50:55.977Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": []
+    },
+    {
+      "_id": "971b61ae-1da8-4dc1-847b-fc23bff9f0ea",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Update my profile (replace sample values first)",
+      "url": "{{baseUrl}}/auth/profile",
+      "method": "PUT",
+      "sortNum": 220000.0,
+      "created": "2026-10-25T09:50:55.977Z",
+      "modified": "2026-10-25T09:50:55.977Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"firstName\": \"Hackitt\",\n  \"lastName\": \"Organizer\",\n  \"email\": \"organizer@example.com\",\n  \"skill\": \"General\"\n}"
+      }
+    },
+    {
+      "_id": "f3799a9a-d5dc-4e24-9ecb-31b1601fec8d",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Delete my account (permanent)",
+      "url": "{{baseUrl}}/auth/profile",
+      "method": "DELETE",
+      "sortNum": 230000.0,
+      "created": "2026-10-25T09:50:55.977Z",
+      "modified": "2026-10-25T09:50:55.977Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": []
+    },
+    {
+      "_id": "fc6a89ec-ae99-4465-a1c4-0d0829080102",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Create participant (organizer only)",
+      "url": "{{baseUrl}}/participants",
+      "method": "POST",
+      "sortNum": 240000.0,
+      "created": "2026-10-25T09:50:55.977Z",
+      "modified": "2026-10-25T09:50:55.977Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"firstName\": \"New\",\n  \"lastName\": \"Participant\",\n  \"email\": \"participant-demo@example.com\",\n  \"password\": \"pass123\",\n  \"skill\": \"Frontend\"\n}"
+      }
+    },
+    {
+      "_id": "c187f713-4beb-4418-bfe6-cdb8f26a9d4d",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Get one participant (set participantId)",
+      "url": "{{baseUrl}}/participants/{{participantId}}",
+      "method": "GET",
+      "sortNum": 250000.0,
+      "created": "2026-10-25T09:50:55.977Z",
+      "modified": "2026-10-25T09:50:55.977Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": []
+    },
+    {
+      "_id": "90f4f4e0-ed3b-4fe7-997a-e3b3516acd9f",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Update participant (set participantId)",
+      "url": "{{baseUrl}}/participants/{{participantId}}",
+      "method": "PUT",
+      "sortNum": 260000.0,
+      "created": "2026-10-25T09:50:55.977Z",
+      "modified": "2026-10-25T09:50:55.977Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"firstName\": \"New\",\n  \"lastName\": \"Participant\",\n  \"email\": \"participant-demo@example.com\",\n  \"skill\": \"Backend\"\n}"
+      }
+    },
+    {
+      "_id": "344efdeb-27f3-4545-87d0-c21d995ab67c",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Delete participant and related records (set participantId)",
+      "url": "{{baseUrl}}/participants/{{participantId}}",
+      "method": "DELETE",
+      "sortNum": 270000.0,
+      "created": "2026-10-25T09:50:55.977Z",
+      "modified": "2026-10-25T09:50:55.977Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": []
+    },
+    {
+      "_id": "69068c51-83b2-45ab-869e-f9511d9bfb23",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Create one team (organizer only)",
+      "url": "{{baseUrl}}/teams",
+      "method": "POST",
+      "sortNum": 280000.0,
+      "created": "2026-10-25T09:50:55.977Z",
+      "modified": "2026-10-25T09:50:55.977Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Demo Team\",\n  \"maxSize\": 4\n}"
+      }
+    },
+    {
+      "_id": "84e5414c-2735-40e4-b8e9-8e010009079b",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Get one team (set teamId)",
+      "url": "{{baseUrl}}/teams/{{teamId}}",
+      "method": "GET",
+      "sortNum": 290000.0,
+      "created": "2026-10-25T09:50:55.977Z",
+      "modified": "2026-10-25T09:50:55.977Z",
+      "headers": [],
+      "params": []
+    },
+    {
+      "_id": "c9b08b13-7734-402f-87b6-7e0a606fd76b",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Update team (set teamId)",
+      "url": "{{baseUrl}}/teams/{{teamId}}",
+      "method": "PUT",
+      "sortNum": 300000.0,
+      "created": "2026-10-25T09:50:55.977Z",
+      "modified": "2026-10-25T09:50:55.977Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Demo Team\",\n  \"maxSize\": 4\n}"
+      }
+    },
+    {
+      "_id": "0196bb0b-5ccf-4aa8-9079-a2f356bd9f18",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Delete team (set teamId)",
+      "url": "{{baseUrl}}/teams/{{teamId}}",
+      "method": "DELETE",
+      "sortNum": 310000.0,
+      "created": "2026-10-25T09:50:55.977Z",
+      "modified": "2026-10-25T09:50:55.977Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": []
+    },
+    {
+      "_id": "ec83961b-b7cc-4167-8cbd-c6da1f649f8f",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Get one team change request (set requestId)",
+      "url": "{{baseUrl}}/team-change-requests/{{requestId}}",
+      "method": "GET",
+      "sortNum": 320000.0,
+      "created": "2026-10-25T09:50:55.977Z",
+      "modified": "2026-10-25T09:50:55.977Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": []
+    },
+    {
+      "_id": "c4d73509-18c1-4ed5-9351-1c9bfdd82fc4",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Review team change request (set requestId)",
+      "url": "{{baseUrl}}/team-change-requests/{{requestId}}",
+      "method": "PUT",
+      "sortNum": 330000.0,
+      "created": "2026-10-25T09:50:55.977Z",
+      "modified": "2026-10-25T09:50:55.977Z",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"status\": \"rejected\"\n}"
+      }
+    },
+    {
+      "_id": "dcb6bf88-f974-4fc4-895c-70a905e76e13",
+      "colId": "bea20fb1-1459-4d7b-b442-551fb680aff9",
+      "name": "Delete team change request (set requestId)",
+      "url": "{{baseUrl}}/team-change-requests/{{requestId}}",
+      "method": "DELETE",
+      "sortNum": 340000.0,
+      "created": "2026-10-25T09:50:55.977Z",
+      "modified": "2026-10-25T09:50:55.977Z",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{organizerToken}}"
+        }
+      ],
+      "params": []
+    }
+  ]
+}

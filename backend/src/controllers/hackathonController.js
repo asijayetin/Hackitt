@@ -1,5 +1,6 @@
 const Hackathon = require("../models/Hackathon");
 const Team = require("../models/Team");
+const TeamChangeRequest = require("../models/TeamChangeRequest");
 const User = require("../models/User");
 const mongoose = require("mongoose");
 const { updateHackathonTeams } = require("../services/hackathonTeams");
@@ -81,6 +82,53 @@ async function listHackathons(req, res) {
     }
 }
 
+async function getHackathon(req, res) {
+    try {
+        if (!mongoose.isValidObjectId(req.params.id)) return res.status(400).json({ message: "Invalid hackathon ID" });
+        const hackathon = await Hackathon.findById(req.params.id);
+        if (!hackathon) return res.status(404).json({ message: "Hackathon not found" });
+
+        const isOrganizerOwner = req.user.role === "organizer" && String(hackathon.organizerId) === req.user.id;
+        const isParticipant = hackathon.participants.some(function (person) { return String(person.userId) === req.user.id; });
+        if ((req.user.role === "organizer" && !isOrganizerOwner) || (req.user.role === "student" && hackathon.status !== "open" && !isParticipant)) {
+            return res.status(404).json({ message: "Hackathon not found" });
+        }
+
+        if (hackathon.status !== "completed" && hackathon.participants.length) await updateHackathonTeams(hackathon);
+        const teams = await Team.find({ hackathonId: hackathon._id });
+        const myTeam = teams.find(function (team) {
+            return team.members.some(function (member) { return String(member.userId) === req.user.id; });
+        });
+        const currentUser = req.user.role === "student" ? await User.findById(req.user.id).select("skill") : null;
+        const studentSkill = (currentUser && currentUser.skill || "General").trim().toLowerCase();
+        res.json({
+            id: hackathon._id,
+            name: hackathon.name,
+            description: hackathon.description,
+            minTeamSize: hackathon.minTeamSize,
+            maxTeamSize: hackathon.maxTeamSize,
+            initialTeamCount: hackathon.initialTeamCount || hackathon.minTeamSize || 3,
+            requiredSkills: hackathon.requiredSkills,
+            prizePool: hackathon.prizePool,
+            results: hackathon.results,
+            eligible: !hackathon.requiredSkills.length || hackathon.requiredSkills.some(function (skill) { return skill.trim().toLowerCase() === studentSkill; }),
+            status: hackathon.status,
+            participantCount: hackathon.participants.length,
+            teamCount: teams.length,
+            waitingCount: Math.max(hackathon.participants.length - teams.reduce(function (count, team) { return count + team.members.length; }, 0), 0),
+            joined: isParticipant,
+            teamName: myTeam ? myTeam.name : null,
+            teamMembers: isOrganizerOwner
+                ? teams.map(function (team) {
+                    return { id: team._id, name: team.name, maxSize: team.maxSize, members: team.members.map(function (member) { return { name: member.name, skill: member.skill || "General" }; }) };
+                })
+                : myTeam ? myTeam.members.map(function (member) { return { name: member.name, skill: member.skill || "General" }; }) : []
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Could not get hackathon" });
+    }
+}
+
 async function createHackathon(req, res) {
     try {
         const body = req.body || {};
@@ -121,6 +169,98 @@ async function createHackathon(req, res) {
         res.status(201).json({ message: "Hackathon created", hackathon });
     } catch (error) {
         res.status(500).json({ message: "Could not create hackathon" });
+    }
+}
+
+async function updateHackathon(req, res) {
+    try {
+        if (!mongoose.isValidObjectId(req.params.id)) {
+            return res.status(400).json({ message: "Invalid hackathon ID" });
+        }
+
+        const hackathon = await Hackathon.findOne({ _id: req.params.id, organizerId: req.user.id });
+        if (!hackathon) return res.status(404).json({ message: "Hackathon not found" });
+        if (hackathon.status !== "open" || hackathon.participants.length) {
+            return res.status(409).json({ message: "A hackathon can only be edited before students join and while registration is open" });
+        }
+
+        const body = req.body || {};
+        const name = body.name === undefined ? hackathon.name : String(body.name).trim();
+        const description = body.description === undefined ? hackathon.description : String(body.description).trim();
+        const minTeamSize = body.minTeamSize === undefined ? hackathon.minTeamSize : Number(body.minTeamSize);
+        const maxTeamSize = body.maxTeamSize === undefined ? hackathon.maxTeamSize : Number(body.maxTeamSize);
+        const initialTeamCount = body.initialTeamCount === undefined ? hackathon.initialTeamCount : Number(body.initialTeamCount);
+
+        if (!name || !description) {
+            return res.status(400).json({ message: "Enter a hackathon name and description" });
+        }
+        if (!Number.isInteger(minTeamSize) || !Number.isInteger(maxTeamSize) || minTeamSize < 2 || maxTeamSize > 10 || maxTeamSize < minTeamSize) {
+            return res.status(400).json({ message: "Team sizes must be between 2 and 10, and maximum must be at least minimum" });
+        }
+        if (!Number.isInteger(initialTeamCount) || initialTeamCount < 1 || initialTeamCount > 20) {
+            return res.status(400).json({ message: "Starter teams must be between 1 and 20" });
+        }
+        if (body.requiredSkills !== undefined && !Array.isArray(body.requiredSkills)) {
+            return res.status(400).json({ message: "Required skills must be an array" });
+        }
+
+        const prizePool = { ...hackathon.prizePool.toObject() };
+        if (body.prizePool !== undefined) {
+            if (!body.prizePool || typeof body.prizePool !== "object" || Array.isArray(body.prizePool)) {
+                return res.status(400).json({ message: "Prize pool must be an object" });
+            }
+            for (const place of ["first", "second", "third"]) {
+                if (body.prizePool[place] !== undefined) {
+                    const amount = Number(body.prizePool[place]);
+                    if (!Number.isFinite(amount) || amount < 0) {
+                        return res.status(400).json({ message: "Prize amounts must be non-negative numbers" });
+                    }
+                    prizePool[place] = amount;
+                }
+            }
+        }
+
+        hackathon.name = name;
+        hackathon.description = description;
+        hackathon.minTeamSize = minTeamSize;
+        hackathon.maxTeamSize = maxTeamSize;
+        hackathon.initialTeamCount = initialTeamCount;
+        if (body.requiredSkills !== undefined) {
+            hackathon.requiredSkills = body.requiredSkills.map(function (skill) { return String(skill).trim(); }).filter(Boolean);
+        }
+        hackathon.prizePool = prizePool;
+        await hackathon.save();
+        res.json({ message: "Hackathon updated", hackathon });
+    } catch (error) {
+        res.status(500).json({ message: "Could not update hackathon" });
+    }
+}
+
+async function deleteHackathon(req, res) {
+    try {
+        if (!mongoose.isValidObjectId(req.params.id)) {
+            return res.status(400).json({ message: "Invalid hackathon ID" });
+        }
+
+        const hackathon = await Hackathon.findOne({ _id: req.params.id, organizerId: req.user.id });
+        if (!hackathon) return res.status(404).json({ message: "Hackathon not found" });
+
+        const teams = await Team.find({ hackathonId: hackathon._id }).select("_id");
+        const teamIds = teams.map(function (team) { return team._id; });
+        if (teamIds.length) {
+            await TeamChangeRequest.deleteMany({
+                $or: [
+                    { currentTeamId: { $in: teamIds } },
+                    { newTeamId: { $in: teamIds } }
+                ]
+            });
+            await Team.deleteMany({ hackathonId: hackathon._id });
+        }
+
+        await hackathon.deleteOne();
+        res.json({ message: "Hackathon and its teams deleted" });
+    } catch (error) {
+        res.status(500).json({ message: "Could not delete hackathon" });
     }
 }
 
@@ -223,4 +363,4 @@ async function saveHackathonResults(req, res) {
     }
 }
 
-module.exports = { listHackathons, createHackathon, joinHackathon, updateHackathonStatus, saveHackathonResults };
+module.exports = { listHackathons, getHackathon, createHackathon, updateHackathon, deleteHackathon, joinHackathon, updateHackathonStatus, saveHackathonResults };

@@ -1,6 +1,9 @@
 const User = require("../models/User");
 const Team = require("../models/Team");
 const Hackathon = require("../models/Hackathon");
+const TeamChangeRequest = require("../models/TeamChangeRequest");
+const mongoose = require("mongoose");
+const { updateHackathonTeams } = require("../services/hackathonTeams");
 const { assignPendingStudents } = require("../services/teamAssignment");
 
 async function getTeams(req, res) {
@@ -8,6 +11,100 @@ async function getTeams(req, res) {
         res.json(await Team.find({ hackathonId: null }).sort({ createdAt: 1 }));
     } catch (error) {
         res.status(500).json({ message: "Could not get teams" });
+    }
+}
+
+async function getTeam(req, res) {
+    try {
+        if (!mongoose.isValidObjectId(req.params.id)) return res.status(400).json({ message: "Invalid team ID" });
+        const team = await Team.findById(req.params.id);
+        if (!team) return res.status(404).json({ message: "Team not found" });
+        res.json(team);
+    } catch (error) {
+        res.status(500).json({ message: "Could not get team" });
+    }
+}
+
+async function createTeam(req, res) {
+    try {
+        const body = req.body || {};
+        const name = String(body.name || "").trim();
+        const maxSize = Number(body.maxSize);
+        if (!name) return res.status(400).json({ message: "Team name is required" });
+        if (!Number.isInteger(maxSize) || maxSize < 2 || maxSize > 10) {
+            return res.status(400).json({ message: "Team size must be between 2 and 10" });
+        }
+
+        let hackathon = null;
+        if (body.hackathonId) {
+            if (!mongoose.isValidObjectId(body.hackathonId)) return res.status(400).json({ message: "Invalid hackathon ID" });
+            hackathon = await Hackathon.findOne({ _id: body.hackathonId, organizerId: req.user.id });
+            if (!hackathon) return res.status(404).json({ message: "Hackathon not found" });
+            if (hackathon.status !== "open") return res.status(409).json({ message: "Teams can only be added while registration is open" });
+            if (maxSize > hackathon.maxTeamSize) return res.status(400).json({ message: "Team size cannot exceed the hackathon maximum" });
+        }
+
+        const team = await Team.create({ name, maxSize, hackathonId: hackathon ? hackathon._id : null, members: [] });
+        if (hackathon && hackathon.participants.length) await updateHackathonTeams(hackathon);
+        res.status(201).json({ message: "Team created", team });
+    } catch (error) {
+        res.status(500).json({ message: "Could not create team" });
+    }
+}
+
+async function updateTeam(req, res) {
+    try {
+        if (!mongoose.isValidObjectId(req.params.id)) return res.status(400).json({ message: "Invalid team ID" });
+        const team = await Team.findById(req.params.id);
+        if (!team) return res.status(404).json({ message: "Team not found" });
+
+        let hackathon = null;
+        if (team.hackathonId) {
+            hackathon = await Hackathon.findOne({ _id: team.hackathonId, organizerId: req.user.id });
+            if (!hackathon) return res.status(404).json({ message: "Team not found" });
+            if (hackathon.status === "completed") return res.status(409).json({ message: "Completed hackathon teams cannot be edited" });
+        }
+
+        const body = req.body || {};
+        if (body.name !== undefined) {
+            const name = String(body.name).trim();
+            if (!name) return res.status(400).json({ message: "Team name cannot be empty" });
+            team.name = name;
+        }
+        if (body.maxSize !== undefined) {
+            const maxSize = Number(body.maxSize);
+            if (!Number.isInteger(maxSize) || maxSize < 2 || maxSize > 10 || maxSize < team.members.length) {
+                return res.status(400).json({ message: "Team size must be 2–10 and cannot be smaller than its current membership" });
+            }
+            if (hackathon && maxSize > hackathon.maxTeamSize) return res.status(400).json({ message: "Team size cannot exceed the hackathon maximum" });
+            team.maxSize = maxSize;
+        }
+        await team.save();
+        res.json({ message: "Team updated", team });
+    } catch (error) {
+        res.status(500).json({ message: "Could not update team" });
+    }
+}
+
+async function deleteTeam(req, res) {
+    try {
+        if (!mongoose.isValidObjectId(req.params.id)) return res.status(400).json({ message: "Invalid team ID" });
+        const team = await Team.findById(req.params.id);
+        if (!team) return res.status(404).json({ message: "Team not found" });
+
+        let hackathon = null;
+        if (team.hackathonId) {
+            hackathon = await Hackathon.findOne({ _id: team.hackathonId, organizerId: req.user.id });
+            if (!hackathon) return res.status(404).json({ message: "Team not found" });
+            if (hackathon.status === "completed") return res.status(409).json({ message: "Completed hackathon teams cannot be deleted" });
+        }
+
+        await TeamChangeRequest.deleteMany({ $or: [{ currentTeamId: team._id }, { newTeamId: team._id }] });
+        await team.deleteOne();
+        if (hackathon) await updateHackathonTeams(hackathon);
+        res.json({ message: "Team deleted" });
+    } catch (error) {
+        res.status(500).json({ message: "Could not delete team" });
     }
 }
 
@@ -103,4 +200,4 @@ async function joinTeam(req, res) {
     }
 }
 
-module.exports = { getTeams, getPendingStudents, generateTeams, joinTeam };
+module.exports = { getTeams, getTeam, createTeam, updateTeam, deleteTeam, getPendingStudents, generateTeams, joinTeam };
