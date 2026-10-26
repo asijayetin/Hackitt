@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const authRoutes = require("./routes/authRoutes");
 const teamRoutes = require("./routes/teamRoutes");
@@ -21,6 +22,12 @@ app.use("/api/participants", participantRoutes);
 app.use("/api/teams", teamRoutes);
 app.use("/api/team-change-requests", teamChangeRequestRoutes);
 app.use("/api/hackathons", hackathonRoutes);
+
+const projectRoot = path.resolve(__dirname, "../..");
+app.use("/css", express.static(path.join(projectRoot, "css")));
+app.use("/js", express.static(path.join(projectRoot, "js")));
+app.use("/assets", express.static(path.join(projectRoot, "assets")));
+app.use(express.static(path.join(projectRoot, "Frontend")));
 
 app.use(function (err, req, res, next) {
     console.error(err.message);

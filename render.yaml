@@ -3,9 +3,8 @@ services:
     name: hackitt-api
     runtime: node
     plan: free
-    rootDir: backend
-    buildCommand: npm ci
-    startCommand: npm start
+    buildCommand: cd backend && npm ci
+    startCommand: cd backend && npm start
     healthCheckPath: /api/health
     envVars:
       - key: MONGO_URI
