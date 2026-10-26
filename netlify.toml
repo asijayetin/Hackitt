@@ -10,3 +10,8 @@
   from = "/favicon.svg"
   to = "/Frontend/favicon.svg"
   status = 200
+
+[[redirects]]
+  from = "/hackitt-icon-v4.svg"
+  to = "/Frontend/hackitt-icon-v4.svg"
+  status = 200
