@@ -1,299 +1,301 @@
 # Hackitt
 
-Hackitt is a hackathon management and team formation platform designed to connect students and organizers.
+Hackitt is a hackathon management platform for students and organizers. It provides role-based accounts, profiles, hackathon registration, participant management, team assignment, and team-change requests.
 
-The platform allows students to register, create profiles, view hackathons, find teams and join suitable teams. Organizers can manage participants, view hackathon details and generate balanced team suggestions based on participant skills.
+## Contents
 
----
+- [Features](#features)
+- [Application workflow and screenshots](#application-workflow)
+- [Project structure](#project-structure)
+- [Run the project locally](#run-the-project-locally)
+- [API and authentication](#api-and-authentication)
+- [Thunder Client testing](#thunder-client-testing)
+- [MongoDB and Render deployment](#mongodb-and-render-deployment)
 
 ## Features
 
-### Student
+### Students
 
-- Student Signup
-- Student Login
-- Student Profile
-- View Hackathons
-- Find Available Teams
-- Join a Team
-- View Team Status
-- View Hackathon History
+- Sign up and log in as a student.
+- Create and update a profile, including skill information.
+- Browse open hackathons and join eligible events.
+- See assigned team and teammates.
+- View hackathon history and results.
+- Request a team change.
 
-### Organizer
+### Organizers
 
-- Organizer Signup
-- Organizer Login
-- Organizer Profile
-- Organizer Dashboard
-- View Registered Participants
-- View Hackathon
-- Generate Balanced Teams
-- Manage Team Formation
+- Sign up and log in as an organizer.
+- Create, view, update, and delete owned hackathons.
+- View registered participants and teams.
+- Generate and manage teams.
+- Open or close hackathon registration.
+- Review team-change requests and save hackathon results.
 
----
+### Backend
 
-# Project Workflow
+- Express.js REST API with MongoDB/Mongoose persistence.
+- JWT authentication and role-based authorization.
+- Password hashing before storage.
+- CRUD routes for profiles, participants, hackathons, teams, and team-change requests.
+- MongoDB cleanup for related records when a participant, team, or hackathon is deleted.
 
-## 1. Signup
+## Application workflow
 
-The user first creates an account using the Signup page.
+The application has two connected roles. Organizers set up hackathons and monitor participants; students register, join eligible hackathons, and see their assigned teams.
 
-The user provides:
+### 1. Sign up and log in
 
-- First Name
-- Last Name
-- Email
-- Password
-- Confirm Password
-- Role
+Create an account as either a student or organizer. A student chooses a skill during signup. After login, Hackitt opens the dashboard for that role.
 
-The user can select either:
+**Signup page**
 
-- Student
-- Organizer
+<img width="502" height="800" alt="Hackitt signup page" src="https://github.com/user-attachments/assets/ffe934a9-33b7-4623-bd1b-47321b33e8a4" />
 
-For students, skills can also be provided.
+**Login page**
 
-### Signup Page
+<img width="454" height="540" alt="Hackitt login page" src="https://github.com/user-attachments/assets/ec38227b-95d8-4e96-a89e-bb591e67770c" />
 
-<img width="502" height="800" alt="image" src="https://github.com/user-attachments/assets/ffe934a9-33b7-4623-bd1b-47321b33e8a4" />
+### Student workflow
 
----
+#### 2. Open the student dashboard and profile
 
-## 2. Login
+The student dashboard links to hackathons, the team page, and the profile. The profile stores the student's skills and shows participation information.
 
-After creating an account, the user logs in using their registered email and password.
+**Student dashboard**
 
-The system checks the user's role and redirects them to the appropriate dashboard.
+<img width="1913" height="765" alt="Student dashboard" src="https://github.com/user-attachments/assets/c50e5fef-abd2-4931-9145-bfbfcaa88cf1" />
 
-### Student
+**Student profile**
 
-Student → Student Dashboard
+<img width="946" height="825" alt="Student profile" src="https://github.com/user-attachments/assets/382cb851-4392-4560-8e44-5f01c336a858" />
 
-### Organizer
+#### 3. Browse and join a hackathon
 
-Organizer → Organizer Dashboard
+The student sees open hackathons and can join when registration is open and their skill meets the event requirements. The API prevents duplicate registration. After joining, it assigns the student to a team with space and shows the team on the student's page.
 
-### Login Page
+**Open and joined hackathons, with the assigned team shown**
 
-<img width="454" height="540" alt="image" src="https://github.com/user-attachments/assets/ec38227b-95d8-4e96-a89e-bb591e67770c" />
+![Student views open and joined hackathons](assets/screenshots/student-open-and-joined-hackathons.png)
 
----
+#### 4. Check the assigned team
 
-# Student Workflow
+The student can open **View Team** to see only their own assigned team, its capacity, members, and member skills. The student does not choose or join a team from this page. If they need a different team, they can submit a change request with a reason; an organizer reviews it.
 
-## 3. Student Dashboard
+**Student Check Team page and team-change request form**
 
-After logging in as a student, the student is redirected to the Student Dashboard.
+![Student sees their assigned team and can request a team change](assets/screenshots/student-assigned-team-and-change-request.png)
 
-The student can access:
+### Organizer workflow
 
-- Profile
-- Hackathons
-- Find a Team
-- Team information
+#### 5. Open the organizer dashboard
 
-<img width="1913" height="765" alt="image" src="https://github.com/user-attachments/assets/c50e5fef-abd2-4931-9145-bfbfcaa88cf1" />
+The organizer dashboard provides access to hackathon management, participants, teams and requests, and the organizer profile.
 
+<img width="1725" height="616" alt="Organizer dashboard" src="https://github.com/user-attachments/assets/012300d0-a88c-4610-aa89-b4d511273f92" />
 
----
+#### 6. Create and manage a hackathon
 
-## 4. Student Profile
+The organizer enters the name and description, team-size limits, starter team count, prize amounts, and any required skills. The saved event appears in the organizer's event list. From there, the organizer can view participants and assigned teams, and open or close registration.
 
-The student profile displays:
+**Create a hackathon**
 
-- Student name
-- Profile avatar
-- Email
-- Skills
-- About section
-- Hackathon history
-- Current team status
+![Organizer creates a hackathon](assets/screenshots/organizer-create-hackathon.png)
 
-The student can use the profile to view their participation information.
+**Created hackathons, registration status, and team assignments**
 
-<img width="946" height="825" alt="image" src="https://github.com/user-attachments/assets/382cb851-4392-4560-8e44-5f01c336a858" />
+![Organizer views created hackathons and assigned teams](assets/screenshots/organizer-hackathons-and-assigned-teams.png)
 
----
+#### 7. View registered participants
 
-## 5. View Hackathon
+The participant page shows registered students, including their names, emails, and skills.
 
-Students can view available hackathon information.
+![Organizer views registered participants](assets/screenshots/organizer-registered-participants.png)
 
-For the current project, the hackathon is manually added for demonstration purposes.
+#### 8. Generate and review teams
 
-Example:
+The organizer can generate teams and review saved teams, member skills, and available capacity. For hackathon-specific teams, the organizer can also inspect the team assignments from the hackathon management page.
 
-### Hackitt Summer Jam 2026
+**View Teams (organizer)**
 
-Students can view the hackathon details and registration information.
+![Organizer views saved teams and their members](assets/screenshots/organizer-saved-teams.png)
 
-<img width="1847" height="620" alt="image" src="https://github.com/user-attachments/assets/339cbae2-3713-45c2-a06f-4a2f01ea222f" />
+**Team generation**
 
----
+<img width="1831" height="746" alt="Team generation page" src="https://github.com/user-attachments/assets/c5e812b9-cd81-465c-8f24-8a9b135bfa63" />
 
-## 6. Find a Team
+#### 9. Review requests and finish the event
 
-After accessing the team matching section, students can see the teams generated by the organizer.
+The organizer reviews team-change requests and can approve or reject them. When registration is closed, the organizer can select winning teams and save the event results. The hackathon is marked completed and its results are saved for the history pages.
 
-Each team displays:
+## Project structure
 
-- Team name
-- Current number of members
-- Maximum team size
-- Team members
-- Member skills
-- Join Team option when space is available
+~~~text
+Hackitt/
+├── Frontend/                 # HTML pages
+├── assets/screenshots/       # Workflow screenshots used in this README
+├── css/                      # Shared stylesheets
+├── js/                       # Frontend logic and API client
+├── backend/
+│   ├── server.js             # Backend entry point
+│   └── src/
+│       ├── config/           # MongoDB connection
+│       ├── controllers/      # Request handlers
+│       ├── middleware/       # JWT and role checks
+│       ├── models/           # Mongoose schemas
+│       ├── routes/           # REST API routes
+│       └── services/         # Team assignment and related logic
+├── thunder-client/           # Thunder Client collection and environment
+└── render.yaml               # Render Blueprint configuration
+~~~
 
-<img width="1855" height="766" alt="image" src="https://github.com/user-attachments/assets/d42a954e-d774-4837-b30f-5a43719e117b" />
+## Run the project locally
 
----
+### Requirements
 
-## 7. Join a Team
+- Node.js LTS and npm
+- A MongoDB Atlas database, or another reachable MongoDB instance
+- VS Code with the Live Server extension for the frontend
 
-If a team has available space, the student can click:
+### Configure and start the backend
 
-**Join Team**
+1. Open a terminal in the project folder.
+2. Create the backend environment file from the example:
 
-The student is added to the selected team.
+   ~~~powershell
+   Copy-Item backend/.env.example backend/.env
+   ~~~
 
-The system checks whether the student is already part of another team before allowing them to join.
+3. Edit backend/.env and set MONGO_URI to your MongoDB connection string and JWT_SECRET to a long private value. Keep this file private; it is ignored by Git.
+4. Install dependencies and start the API:
 
-A student cannot join multiple teams.
+   ~~~powershell
+   cd backend
+   npm install
+   npm run dev
+   ~~~
 
-After joining:
+5. Check the API at http://localhost:5000/api/health. The response should say that the Hackitt API is working.
 
-- The student is added to the selected team's member list.
-- The team's member count is updated.
-- The student cannot join another team.
-- The student's team status can be viewed from the student side.
+### Open the frontend
 
-<img width="1718" height="747" alt="image" src="https://github.com/user-attachments/assets/37d0c2d0-2b86-478d-9206-05dcb5a4021c" />
+Open Frontend/index.html in VS Code and click Go Live. The frontend API address is configured in js/api.js. It currently points to the deployed Render API. To use a local backend instead, set API_URL in js/api.js to:
 
----
+~~~text
+http://localhost:5000/api
+~~~
 
-# Organizer Workflow
+The frontend and backend run separately: Live Server serves the HTML/CSS/JS, while the Node.js server handles API requests.
 
-## 8. Organizer Dashboard
+## API and authentication
 
-After logging in as an organizer, the organizer is redirected to the Organizer Dashboard.
+### Base URLs
 
-The dashboard provides options to:
+- Deployed API: https://hackitt-api.onrender.com/api
+- Local API: http://localhost:5000/api
 
-- View Profile
-- View Participants
-- View Hackathon
-- Generate Teams
+All protected endpoints use the request header Authorization: Bearer <token>. In Thunder Client, set Auth to Bearer and paste the token. Use the organizer token for organizer-only requests and the student token for student-only requests.
 
-<img width="1725" height="616" alt="image" src="https://github.com/user-attachments/assets/012300d0-a88c-4610-aa89-b4d511273f92" />
+### Signup and login
 
----
+- POST /auth/signup — create an account. Send firstName, lastName, email, password, role, and optional skill. role must be student or organizer.
+- POST /auth/login — send email and password. Copy the token from the response.
+- GET /auth/profile — get the logged-in user's profile.
+- PUT /auth/profile — update the logged-in user's profile.
+- DELETE /auth/profile — delete the logged-in account and its associated student records. An organizer must delete their hackathons first.
 
-## 9. View Participants
+Signup and login are public; the profile routes require that account's token.
 
-The organizer can view students registered for the hackathon.
+### Hackathons
 
-Each participant displays:
+| Method | Endpoint | Access | Purpose |
+| --- | --- | --- | --- |
+| GET | /hackathons | Student or organizer token | List available/joined hackathons for a student, or the organizer's own hackathons |
+| GET | /hackathons/:id | Student or owning organizer token | View one hackathon and team information |
+| POST | /hackathons | Organizer token | Create a hackathon |
+| PUT | /hackathons/:id | Owning organizer token | Update a hackathon before students join and while registration is open |
+| PATCH | /hackathons/:id/status | Owning organizer token | Open or close registration |
+| PATCH | /hackathons/:id/results | Owning organizer token | Save winners after closing registration |
+| DELETE | /hackathons/:id | Owning organizer token | Delete the hackathon, its teams, and related team-change requests |
+| POST | /hackathons/:id/join | Student token | Join an open, skill-eligible hackathon |
 
-- Name
-- Email
-- Skill
+### Participants
 
-The participant data is taken from the registered student information.
+| Method | Endpoint | Access | Purpose |
+| --- | --- | --- | --- |
+| GET | /participants | Organizer token | List registered students |
+| GET | /participants/:id | Organizer token | View one participant |
+| POST | /participants | Organizer token | Create a student participant |
+| PUT | /participants/:id | Organizer token | Update participant details |
+| DELETE | /participants/:id | Organizer token | Delete a participant and related participation data |
 
-<img width="1813" height="719" alt="image" src="https://github.com/user-attachments/assets/a978ae8e-566c-4c3a-9f8f-ac7011e2b90a" />
+### Teams
 
----
+| Method | Endpoint | Access | Purpose |
+| --- | --- | --- | --- |
+| GET | /teams | Public | List general teams not linked to a hackathon; not used by the current student View Team page |
+| GET | /teams/:id | Public | View one team |
+| GET | /teams/pending | Organizer token | List students waiting for a general team |
+| POST | /teams | Organizer token | Create a team |
+| POST | /teams/generate | Organizer token | Generate general teams |
+| PUT | /teams/:id | Organizer token | Update a team |
+| DELETE | /teams/:id | Organizer token | Delete a team |
+| POST | /teams/:id/join | Student token | Backend endpoint for joining a general team; not part of the current student UI flow |
 
-## 10. View Hackathon
+For teams belonging to a hackathon, use GET /hackathons/:id. The organizer sees all teams and members; a student sees their assigned team information.
 
-The organizer can view the current hackathon and its details.
+### Team-change requests
 
-Example:
+| Method | Endpoint | Access | Purpose |
+| --- | --- | --- | --- |
+| POST | /team-change-requests | Student token | Submit a team-change request with a reason |
+| GET | /team-change-requests/mine | Student token | View the logged-in student's request |
+| GET | /team-change-requests | Organizer token | List all requests |
+| GET | /team-change-requests/:id | Request owner or organizer token | View one request |
+| PUT or PATCH | /team-change-requests/:id | Organizer token | Approve or reject a pending request |
+| DELETE | /team-change-requests/:id | Request owner or organizer token | Delete a request; students can delete their own pending request |
 
-**Hackitt Summer Jam 2026**
+### PUT and PATCH
 
-The page also provides access to team generation.
+- PUT is used for updating a record's editable details, such as a hackathon or participant.
+- PATCH is used for a focused update, such as opening/closing hackathon registration, saving results, or approving/rejecting a team-change request.
 
-<img width="1791" height="755" alt="image" src="https://github.com/user-attachments/assets/ebdd307c-524f-4379-9cb5-e0f4d2f103de" />
+Use a test record when demonstrating DELETE because the change is permanent.
 
----
+## Thunder Client testing
 
-## 11. Generate Teams
+The repository includes a ready-made Thunder Client collection and local environment:
 
-The organizer can generate balanced team suggestions based on participant skills.
+- Collection: thunder-client/thunder-collection_Hackitt API.json
+- Environment: thunder-client/thunder-environment_Hackitt Local.json
 
-The organizer selects the desired team size.
+In VS Code, import both files into Thunder Client and select the Hackitt Local environment. Its baseUrl is http://localhost:5000/api. Start the local backend before sending requests. After signup/login, put the returned token in the matching organizerToken or studentToken environment variable. The collection includes requests for health, authentication, participants, hackathons, teams, and team-change requests.
 
-For example:
+To test the deployed API instead, change baseUrl to https://hackitt-api.onrender.com/api. Never save real JWT tokens or database credentials in a shared collection or commit them to Git.
 
-- 12 participants
-- Team size = 4
+## MongoDB and Render deployment
 
-The system generates:
+### MongoDB
 
-- Team 1
-- Team 2
-- Team 3
+The API uses MongoDB through Mongoose. Set MONGO_URI in backend/.env for local work. On Render, configure MONGO_URI as a private environment variable. Do not put database credentials in README, frontend files, or Thunder Client collection exports.
 
-The team generation algorithm distributes participants across teams based on their skills and displays recommended members for each team.
+### Render
 
-The recommended members are shown to help students identify suitable teams.
+The root render.yaml configures the web service:
 
-Students are **not automatically added** to the generated teams.
+- Service name: hackitt-api
+- Root directory: backend
+- Build command: npm ci
+- Start command: npm start
+- Health check: /api/health
+- Required environment variable: MONGO_URI
+- JWT_SECRET is generated by Render
 
-The generated teams initially have available space. Students can later open the **Find a Team** page and choose a suitable team.
+Create or update the Render Blueprint from the GitHub repository, set MONGO_URI in the service environment, and wait for deployment to finish. Confirm the deployment by requesting https://hackitt-api.onrender.com/api/health.
 
-### Example
+If a route returns 404 after a code change, confirm that Render deployed the latest GitHub commit and that the request URL uses the deployed service URL plus the correct /api route.
 
-If there are:
+## License
 
-- 12 participants
-- Team size = 4
+No license file is currently included in this repository.
 
-The system creates:
-
-- Team 1
-- Team 2
-- Team 3
-
-Each team has a maximum capacity of 4 members.
-
-<img width="1831" height="746" alt="image" src="https://github.com/user-attachments/assets/c5e812b9-cd81-465c-8f24-8a9b135bfa63" />
-
----
-
-# Team Formation Workflow
-
-The complete team formation process is:
-
-```text
-Student Signup
-       ↓
-Student Login
-       ↓
-Student Adds Profile & Skill
-       ↓
-Student Data Stored
-       ↓
-Organizer Views Participants
-       ↓
-Organizer Selects Team Size
-       ↓
-Organizer Generates Teams
-       ↓
-Teams Become Available
-       ↓
-Student Opens Find a Team
-       ↓
-Student Views Available Teams
-       ↓
-Student Selects a Suitable Team
-       ↓
-Student Clicks Join Team
-       ↓
-Student Added to Team
-       ↓
-Team Member Count Updated
-       ↓
-Student Team Status Updated
