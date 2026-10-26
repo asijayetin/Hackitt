@@ -5,3 +5,8 @@
   from = "/"
   to = "/Frontend/index.html"
   status = 200
+
+[[redirects]]
+  from = "/favicon.svg"
+  to = "/Frontend/favicon.svg"
+  status = 200
