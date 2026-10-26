@@ -23,6 +23,8 @@ app.use("/api/teams", teamRoutes);
 app.use("/api/team-change-requests", teamChangeRequestRoutes);
 app.use("/api/hackathons", hackathonRoutes);
 
+app.use(express.static(path.join(__dirname, "../public")));
+
 const projectRoot = path.resolve(__dirname, "../..");
 app.use("/css", express.static(path.join(projectRoot, "css")));
 app.use("/js", express.static(path.join(projectRoot, "js")));
